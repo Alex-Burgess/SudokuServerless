@@ -1,0 +1,14 @@
+{
+    "GetPuzzleFunction": {
+        "lambda": {},
+        "apigateway": {
+            "path": "/getNewPuzzle",
+            "method": {
+                "value": "GET",
+                "items": [
+                    "GET"
+                ]
+            }
+        }
+    }
+}

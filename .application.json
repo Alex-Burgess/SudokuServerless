@@ -1,0 +1,11 @@
+{
+    "Functions": {
+        "GetPuzzleFunction": {
+            "PhysicalId": {
+                "eu-west-1": "cloud9-SudokuServerless-GetPuzzleFunction-DZ3AVYQEE2L2"
+            }
+        }
+    },
+    "RestApiId": "pjtxq2f4h6",
+    "StackName": "cloud9-SudokuServerless"
+}

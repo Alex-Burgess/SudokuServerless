@@ -1,0 +1,33 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Serverless resources for SudokuServerless application
+
+Resources:
+    GetPuzzleFunction:
+        Type: AWS::Serverless::Function 
+        Properties:
+            CodeUri: application/
+            Handler: get_puzzle.handler
+            Runtime: python3.6
+            Environment:
+                Variables:
+                    UNSOLVED_BUCKET_NAME: VALUE
+            Events:
+                HelloWorld:
+                    Type: Api
+                    Properties:
+                        Path: /getNewPuzzle
+                        Method: get
+
+Outputs:
+    GetPuzzleFunctionApi:
+      Description: "API Gateway endpoint URL for Prod stage for GetPuzzleFunction function"
+      Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
+
+    GetPuzzleFunction:
+      Description: "GetPuzzleFunction Lambda Function ARN"
+      Value: !GetAtt GetPuzzleFunction.Arn
+
+    GetPuzzleFunctionIamRole:
+      Description: "Implicit IAM Role created for GetPuzzleFunction function"
+      Value: !GetAtt GetPuzzleFunctionRole.Arn
