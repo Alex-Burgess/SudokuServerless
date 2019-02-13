@@ -6,18 +6,23 @@ Resources:
     GetPuzzleFunction:
         Type: AWS::Serverless::Function 
         Properties:
-            CodeUri: application/
-            Handler: get_puzzle.handler
+            Handler: application/get_puzzle.handler
             Runtime: python3.6
+            Description: Gets an unsolved puzzle from an s3 bucket
             Environment:
                 Variables:
                     UNSOLVED_BUCKET_NAME: VALUE
             Events:
-                HelloWorld:
+                GetNewPuzzle:
                     Type: Api
                     Properties:
                         Path: /getNewPuzzle
                         Method: get
+
+    SudokuUnsolvedPuzzlesBucket:
+        Type: 'AWS::S3::Bucket'
+        Properties:
+          BucketName: 'sudoku-unsolved-puzzles'
 
 Outputs:
     GetPuzzleFunctionApi:
@@ -31,3 +36,7 @@ Outputs:
     GetPuzzleFunctionIamRole:
       Description: "Implicit IAM Role created for GetPuzzleFunction function"
       Value: !GetAtt GetPuzzleFunctionRole.Arn
+    
+    SudokuUnsolvedPuzzlesBucket:
+        Description: "Bucket used to store unsolved sudoku puzzles"
+        Value: SudokuUnsolvedPuzzlesBucket
