@@ -4,34 +4,74 @@ Description: Serverless resources for SudokuServerless application
 
 Resources:
     GetPuzzleFunction:
-        Type: AWS::Serverless::Function 
-        Properties:
-            Handler: application/get_puzzle.handler
-            Runtime: python3.6
-            Description: Gets an unsolved puzzle from an s3 bucket
-            Role:
-                Fn::GetAtt:
-                - GetPuzzleFunctionRole
-                - Arn
-            Environment:
-                Variables:
-                    UNSOLVED_BUCKET_NAME: 'sudoku-unsolved-puzzles'
-            Events:
-                GetNewPuzzle:
-                    Type: Api
-                    Properties:
-                        Path: /getNewPuzzle
-                        Method: get
+      Type: AWS::Serverless::Function 
+      Properties:
+          Handler: application/get_puzzle.handler
+          Runtime: python3.6
+          Description: Gets an unsolved puzzle from an s3 bucket
+          Role:
+              Fn::GetAtt:
+              - GetPuzzleFunctionRole
+              - Arn
+          Environment:
+              Variables:
+                  UNSOLVED_BUCKET_NAME: 'sudoku-unsolved-puzzles'
+          Events:
+              GetNewPuzzle:
+                  Type: Api
+                  Properties:
+                      Path: /getNewPuzzle
+                      Method: get
 
     SudokuUnsolvedPuzzlesBucket:
-        Type: 'AWS::S3::Bucket'
-        Properties:
-          BucketName: 'sudoku-unsolved-puzzles'
+      Type: 'AWS::S3::Bucket'
+      Properties:
+        BucketName: 'sudoku-unsolved-puzzles'
 
     GetPuzzleFunctionRole:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: 'SudokuServerless-GetPuzzle-Role'
+        AssumeRolePolicyDocument:
+          Statement:
+          - Effect: Allow
+            Principal:
+              Service: [lambda.amazonaws.com]
+            Action: sts:AssumeRole
+        ManagedPolicyArns: [
+          "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+          "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+        ]
+
+    SolvePuzzleFunction:
+      Type: AWS::Serverless::Function 
+      Properties:
+          Handler: application/solve_puzzle.handler
+          Runtime: python3.6
+          Description: Solves an incomplete puzzle and uploads it to an s3 bucket
+          Role:
+              Fn::GetAtt:
+              - SolvePuzzleFunctionRole
+              - Arn
+          Environment:
+              Variables:
+                  SOLVED_BUCKET_NAME: 'sudoku-solved-puzzles'
+          Events:
+              SolvePuzzle:
+                  Type: Api
+                  Properties:
+                      Path: /solvePuzzle
+                      Method: post
+
+    SudokuSolvedPuzzlesBucket:
+        Type: 'AWS::S3::Bucket'
+        Properties:
+          BucketName: 'sudoku-solved-puzzles'
+
+    SolvePuzzleFunctionRole:
         Type: AWS::IAM::Role
         Properties:
-          RoleName: 'SudokuServerless-GetPuzzle-Role'
+          RoleName: 'SudokuServerless-SolvePuzzle-Role'
           AssumeRolePolicyDocument:
             Statement:
             - Effect: Allow
@@ -44,18 +84,26 @@ Resources:
           ]
 
 Outputs:
-    GetPuzzleFunctionApi:
-      Description: "API Gateway endpoint URL for Prod stage for GetPuzzleFunction function"
-      Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
+  GetPuzzleFunctionApi:
+    Description: "API Gateway endpoint URL for Prod stage for GetPuzzleFunction function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/getNewPuzzle/"
 
-    GetPuzzleFunction:
-      Description: "GetPuzzleFunction Lambda Function ARN"
-      Value: !GetAtt GetPuzzleFunction.Arn
+  GetPuzzleFunctionIamRole:
+    Description: "Implicit IAM Role created for GetPuzzleFunction function"
+    Value: !GetAtt GetPuzzleFunctionRole.Arn
+  
+  SudokuUnsolvedPuzzlesBucket:
+      Description: "Bucket used to store unsolved sudoku puzzles"
+      Value: !Ref SudokuUnsolvedPuzzlesBucket
 
-    GetPuzzleFunctionIamRole:
-      Description: "Implicit IAM Role created for GetPuzzleFunction function"
-      Value: !GetAtt GetPuzzleFunctionRole.Arn
-    
-    SudokuUnsolvedPuzzlesBucket:
-        Description: "Bucket used to store unsolved sudoku puzzles"
-        Value: SudokuUnsolvedPuzzlesBucket
+  SolvePuzzleFunctionApi:
+    Description: "API Gateway endpoint URL for Prod stage for SolvePuzzleFunction function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/solvePuzzle/"
+
+  SolvePuzzleFunctionIamRole:
+    Description: "Implicit IAM Role created for SolvePuzzleFunction function"
+    Value: !GetAtt SolvePuzzleFunctionRole.Arn
+  
+  SudokuSolvedPuzzlesBucket:
+      Description: "Bucket used to store solved sudoku puzzles"
+      Value: !Ref SudokuSolvedPuzzlesBucket
