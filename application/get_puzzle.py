@@ -1,36 +1,31 @@
 import json
+import os
+import boto3
+import random
+
+s3_client = boto3.client('s3')
 
 def handler(event, context):
-    data = {
-        'output': 'Unsolved puzzle returned.',
-        'level': 'easy',
-        'puzzle': '[123456789,123456789,123456789,123456789...]'
-    }
+    puzzle_data = get_puzzle_from_s3()
 
     return {'statusCode': 200,
-            'body': json.dumps(data),
+            'body': puzzle_data,
             'headers': {'Content-Type': 'application/json'}}
 
 
-# def handler(event, context):
-#     inputNumber = event['pathParameters']['number']
 
-#     result = do_function_logic(inputNumber)
-#     data = json_output(result)
+def get_puzzle_from_s3():
+    s3 = boto3.resource('s3')
+    bucket_name = os.environ['UNSOLVED_BUCKET_NAME']
 
-#     return {'statusCode': 200,
-#             'body': json.dumps(data),
-#             'headers': {'Content-Type': 'application/json'}}
-
-# def do_function_logic(number):
-#     result = 5 + int(number)
+    # TODO - get maximum number of puzzles in bucket
+    # TODO - s3 role should least permissions, right now it has all permissons
+    random_key = str(random.randint(0, 7)) + '.json'
+    print ('DEBUG: Puzzle Key: ' + str(random_key))
     
-#     return result
-
-# def json_output(number):
-#     data = {
-#         'output': 'Numbers added to url were: ' + str(number),
-#         'timestamp': datetime.datetime.utcnow().isoformat()
-#     }
+    print("Getting S3 object...")
+    obj = s3.Object(bucket_name, random_key)
+    puzzle_data = obj.get()['Body'].read().decode('utf-8')
     
-#     return data
+    return puzzle_data
+

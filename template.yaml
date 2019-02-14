@@ -9,9 +9,13 @@ Resources:
             Handler: application/get_puzzle.handler
             Runtime: python3.6
             Description: Gets an unsolved puzzle from an s3 bucket
+            Role:
+                Fn::GetAtt:
+                - GetPuzzleFunctionRole
+                - Arn
             Environment:
                 Variables:
-                    UNSOLVED_BUCKET_NAME: VALUE
+                    UNSOLVED_BUCKET_NAME: 'sudoku-unsolved-puzzles'
             Events:
                 GetNewPuzzle:
                     Type: Api
@@ -23,6 +27,21 @@ Resources:
         Type: 'AWS::S3::Bucket'
         Properties:
           BucketName: 'sudoku-unsolved-puzzles'
+
+    GetPuzzleFunctionRole:
+        Type: AWS::IAM::Role
+        Properties:
+          RoleName: 'SudokuServerless-GetPuzzle-Role'
+          AssumeRolePolicyDocument:
+            Statement:
+            - Effect: Allow
+              Principal:
+                Service: [lambda.amazonaws.com]
+              Action: sts:AssumeRole
+          ManagedPolicyArns: [
+            "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+            "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+          ]
 
 Outputs:
     GetPuzzleFunctionApi:
