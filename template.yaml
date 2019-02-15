@@ -31,16 +31,16 @@ Resources:
       RoleName: 'SudokuServerless-GetPuzzle-Role'
       AssumeRolePolicyDocument:
         Statement:
-          - Effect: Allow
-            Principal:
-              Service: 
-                - lambda.amazonaws.com
+        - Effect: Allow
+          Principal:
+            Service: 
+              - lambda.amazonaws.com
           Action: 
             - sts:AssumeRole
       ManagedPolicyArns: 
         - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
         - "arn:aws:iam::aws:policy/AmazonS3FullAccess"
-
+    
   SolvePuzzleFunction:
     Type: AWS::Serverless::Function 
     Properties:
@@ -50,7 +50,7 @@ Resources:
       Role: !GetAtt SolvePuzzleFunctionRole.Arn
       Environment:
         Variables:
-          SOLVED_BUCKET_NAME: 'sudoku-solved-puzzles'
+            SOLVED_BUCKET_NAME: 'sudoku-solved-puzzles'
       Events:
         SolvePuzzle:
           Type: Api
