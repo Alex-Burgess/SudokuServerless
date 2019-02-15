@@ -6,20 +6,20 @@ import random
 s3_client = boto3.client('s3')
 
 def handler(event, context):
+    # TODO Add checks to validate that was a json object and was a sudoku puzzle
     unsolved_puzzle = json.dumps(event, indent=2)
-    
+
     solved_puzzle = get_solved_puzzle(unsolved_puzzle)
     
     data = {
         'output': 'Puzzle successfully solved.',
         'Solved Puzzle': solved_puzzle
     }
-
+    
     return {'statusCode': 200,
-            'body': data,
+            'body': json.dumps(data),
             'headers': {'Content-Type': 'application/json'}}
-
-
+            
 
 def get_solved_puzzle(puzzle_input):
     print("DEBUG: Unsolved puzzle: " + puzzle_input)
