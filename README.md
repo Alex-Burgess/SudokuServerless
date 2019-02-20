@@ -10,6 +10,9 @@ $ sam deploy --template-file packaged.yaml --stack-name cloud9-SudokuServerless 
 
 Copying test puzzles to s3 bucket:
 ```
-aws s3 cp puzzles/ s3://sudoku-unsolved-puzzles --recursive
+aws s3 cp test_puzzles/ s3://sudoku-unsolved-puzzles --recursive
 ```
 
+
+Worlds hardest sudoku
+https://www.telegraph.co.uk/news/science/science-news/9359579/Worlds-hardest-sudoku-can-you-crack-it.html 

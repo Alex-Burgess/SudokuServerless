@@ -79,6 +79,29 @@ Resources:
         - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
         - "arn:aws:iam::aws:policy/AmazonS3FullAccess"
 
+  PuzzleAlgoFunction:
+    Type: AWS::Serverless::Function 
+    Properties:
+      Handler: puzzle/solver.handler
+      Runtime: python3.6
+      Description: The sudoku puzzle solver aglorithm
+      Role: !GetAtt PuzzleAlgoFunctionRole.Arn
+
+  PuzzleAlgoFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: 'SudokuServerless-PuzzleAlgo-Role'
+      AssumeRolePolicyDocument:
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service: 
+              - lambda.amazonaws.com
+          Action: 
+            - sts:AssumeRole
+      ManagedPolicyArns: 
+        - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+
 Outputs:
   UnsolvedPuzzleFunctionApi:
     Description: "API Gateway endpoint URL for Prod stage for UnsolvedPuzzleFunction function"
@@ -103,3 +126,7 @@ Outputs:
   SolvedPuzzlesBucket:
     Description: "Bucket used to store solved sudoku puzzles"
     Value: !Ref SolvedPuzzlesBucket
+
+  PuzzleAlgoFunctionIamRole:
+    Description: "Implicit IAM Role created for PuzzleAlgoFunctionRole function"
+    Value: !GetAtt PuzzleAlgoFunctionRole.Arn
