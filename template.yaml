@@ -3,13 +3,13 @@ Transform: AWS::Serverless-2016-10-31
 Description: Serverless resources for SudokuServerless application
 
 Resources:
-  GetPuzzleFunction:
+  UnsolvedPuzzleFunction:
     Type: AWS::Serverless::Function 
     Properties:
-      Handler: application/get_puzzle.handler
+      Handler: apis/unsolved.handler
       Runtime: python3.6
       Description: Gets an unsolved puzzle from an s3 bucket
-      Role: !GetAtt GetPuzzleFunctionRole.Arn
+      Role: !GetAtt UnsolvedPuzzleFunctionRole.Arn
       Environment:
         Variables:
           UNSOLVED_BUCKET_NAME: 'sudoku-unsolved-puzzles'
@@ -17,18 +17,18 @@ Resources:
         GetNewPuzzle:
           Type: Api
           Properties:
-            Path: /getNewPuzzle
+            Path: /unsolvedPuzzle
             Method: get
 
-  SudokuUnsolvedPuzzlesBucket:
+  UnsolvedPuzzlesBucket:
     Type: 'AWS::S3::Bucket'
     Properties:
       BucketName: 'sudoku-unsolved-puzzles'
 
-  GetPuzzleFunctionRole:
+  UnsolvedPuzzleFunctionRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: 'SudokuServerless-GetPuzzle-Role'
+      RoleName: 'SudokuServerless-UnsolvedPuzzle-Role'
       AssumeRolePolicyDocument:
         Statement:
         - Effect: Allow
@@ -44,7 +44,7 @@ Resources:
   SolvePuzzleFunction:
     Type: AWS::Serverless::Function 
     Properties:
-      Handler: application/solve_puzzle.handler
+      Handler: apis/solve.handler
       Runtime: python3.6
       Description: Solves an incomplete puzzle and uploads it to an s3 bucket
       Role: !GetAtt SolvePuzzleFunctionRole.Arn
@@ -58,7 +58,7 @@ Resources:
             Path: /solvePuzzle
             Method: post
 
-  SudokuSolvedPuzzlesBucket:
+  SolvedPuzzlesBucket:
     Type: 'AWS::S3::Bucket'
     Properties:
       BucketName: 'sudoku-solved-puzzles'
@@ -80,17 +80,17 @@ Resources:
         - "arn:aws:iam::aws:policy/AmazonS3FullAccess"
 
 Outputs:
-  GetPuzzleFunctionApi:
-    Description: "API Gateway endpoint URL for Prod stage for GetPuzzleFunction function"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/getNewPuzzle/"
+  UnsolvedPuzzleFunctionApi:
+    Description: "API Gateway endpoint URL for Prod stage for UnsolvedPuzzleFunction function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/unsolvedPuzzle/"
 
-  GetPuzzleFunctionIamRole:
-    Description: "Implicit IAM Role created for GetPuzzleFunction function"
-    Value: !GetAtt GetPuzzleFunctionRole.Arn
+  UnsolvedPuzzleFunctionIamRole:
+    Description: "Implicit IAM Role created for UnsolvedPuzzleFunction function"
+    Value: !GetAtt UnsolvedPuzzleFunctionRole.Arn
   
-  SudokuUnsolvedPuzzlesBucket:
+  UnsolvedPuzzlesBucket:
     Description: "Bucket used to store unsolved sudoku puzzles"
-    Value: !Ref SudokuUnsolvedPuzzlesBucket
+    Value: !Ref UnsolvedPuzzlesBucket
 
   SolvePuzzleFunctionApi:
     Description: "API Gateway endpoint URL for Prod stage for SolvePuzzleFunction function"
@@ -100,6 +100,6 @@ Outputs:
     Description: "Implicit IAM Role created for SolvePuzzleFunction function"
     Value: !GetAtt SolvePuzzleFunctionRole.Arn
   
-  SudokuSolvedPuzzlesBucket:
+  SolvedPuzzlesBucket:
     Description: "Bucket used to store solved sudoku puzzles"
-    Value: !Ref SudokuSolvedPuzzlesBucket
+    Value: !Ref SolvedPuzzlesBucket

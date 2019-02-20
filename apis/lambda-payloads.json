@@ -47,5 +47,17 @@
                 ]
             }
         }
+    },
+    "UnsolvedPuzzleFunction": {
+        "lambda": {},
+        "apigateway": {
+            "path": "/unsolvedPuzzle",
+            "method": {
+                "value": "GET",
+                "items": [
+                    "GET"
+                ]
+            }
+        }
     }
 }
