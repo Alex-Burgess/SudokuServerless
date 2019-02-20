@@ -1,13 +1,18 @@
 {
     "Functions": {
-        "GetPuzzleFunction": {
+        "UnsolvedPuzzleFunction": {
             "PhysicalId": {
-                "eu-west-1": "cloud9-SudokuServerless-GetPuzzleFunction-DZ3AVYQEE2L2"
+                "eu-west-1": "cloud9-SudokuServerless-UnsolvedPuzzleFunction-18I1OF56CLOPW"
             }
         },
         "SolvePuzzleFunction": {
             "PhysicalId": {
-                "eu-west-1": "cloud9-SudokuServerless-SolvePuzzleFunction-OLQDCTP5ON6B"
+                "eu-west-1": "cloud9-SudokuServerless-SolvePuzzleFunction-1E6VY8V161W7B"
+            }
+        },
+        "PuzzleAlgoFunction": {
+            "PhysicalId": {
+                "eu-west-1": "cloud9-SudokuServerless-PuzzleAlgoFunction-16NXJUTNDM1JR"
             }
         }
     },
