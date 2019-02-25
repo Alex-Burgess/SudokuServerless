@@ -30,9 +30,10 @@ def test_get_bucket_name(monkeypatch):
     name = unsolved.get_bucket_name()
     assert name == 'sudoku-unsolved-puzzles'
 
+# def test_get_puzzle_from_s3
+# mock s3 call (moto)  Presumably if change name of bucket, the moto call will still work
 
-
-# def test_handler_response_body():
+# def test_handler_response_body():  Needs to be mocked
 #     response = unsolved.handler(api_gateway_event(), None)
     
 #     {
