@@ -63,6 +63,7 @@ def apigw_event():
     }
 
 
+
 def test_lambda_handler(apigw_event, mocker):
 
     requests_response_mock = namedtuple("response", ["text"])
