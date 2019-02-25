@@ -1,6 +1,9 @@
 # SAM Files
 packaged.yaml
 
+# Test coverage files
+htmlcov/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

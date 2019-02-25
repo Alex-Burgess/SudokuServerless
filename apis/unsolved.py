@@ -6,6 +6,7 @@ import random
 s3_client = boto3.client('s3')
 
 def handler(event, context):
+    print("DEBUG" + json.dumps(event))
     key = generate_random_key()
     bucket = get_bucket_name()
     

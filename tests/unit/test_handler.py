@@ -63,7 +63,7 @@ def apigw_event():
     }
 
 
-
+@pytest.mark.skip(reason="This is an example of mocking")
 def test_lambda_handler(apigw_event, mocker):
 
     requests_response_mock = namedtuple("response", ["text"])
