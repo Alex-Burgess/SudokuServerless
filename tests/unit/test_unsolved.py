@@ -104,12 +104,12 @@ def test_get_puzzle_from_s3(s3_bucket_mock):
 #     assert json.loads(puzzle_object) == test_object
 
 
-# # TODO - this fails now, because we don't have any logic to limit the random number generation to the number of puzzles in the bucket
-# def test_handler_response(s3_bucket_with_one_file, bucket_name, api_gateway_event, monkeypatch):
-#     monkeypatch.setitem(os.environ, 'UNSOLVED_BUCKET_NAME', bucket_name)
-#     response = unsolved.handler(api_gateway_event, None)
-#     print (json.dumps(response))
-#     assert response['statusCode']  == 200
+def test_handler_response(s3_bucket_mock, api_gateway_event, monkeypatch):
+    monkeypatch.setitem(os.environ, 'UNSOLVED_BUCKET_NAME', bucket_name)
+    response = unsolved.handler(api_gateway_event, None)
+    print (json.dumps(response))
+    assert response['statusCode']  == 200
+
 
 # TODO mock s3 call for bucket and key
 # def test_handler_response_body():  Needs to be mocked
