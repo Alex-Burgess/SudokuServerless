@@ -115,13 +115,6 @@ def test_get_puzzle_from_s3(s3_bucket_mock):
     assert json.loads(puzzle_object) == test_object
 
 
-# TODO Assert that the get puzzle method returns a not found error.  handle exceptions.
-# def test_get_puzzle_from_s3_not_found(s3_bucket_with_one_file):
-#     puzzle_object = unsolved.get_puzzle_from_s3('sudoku-test-bucket', '2.json')
-#     test_object = {'level': 'easy','puzzle_rows': ["080064703","720503698","000002410","000007009","096308150","800100000","042800000","978605041","605470080"]}
-#     assert json.loads(puzzle_object) == test_object
-
-
 def test_handler_response(s3_bucket_mock, api_gateway_event, monkeypatch):
     """Tests that the lambda handler function returns a response, with status code of 200 and a valid json puzzle object."""
     
@@ -129,22 +122,22 @@ def test_handler_response(s3_bucket_mock, api_gateway_event, monkeypatch):
     response = unsolved.handler(api_gateway_event, None)
     print (json.dumps(response))
     assert response['statusCode']  == 200
-    # TODO add puzzle object test
-
-
-# TODO mock s3 call for bucket and key
-# def test_handler_response_body():  Needs to be mocked
-#     response = unsolved.handler(api_gateway_event(), None)
     
-#     {
-#     "level": "easy",
-#     "puzzle_rows": [
-#         "000010820",
-#         "008700000"
-#     ]
-# }
+    puzzle_dict = json.loads(response['body'])
+    assert puzzle_dict['level'] in ['easy', 'meduim', 'hard', 'extreme']
     
-#     assert response['body'] == 'Puzzle data'
+    puzzle_rows = puzzle_dict['puzzle_rows']
+    assert len(puzzle_rows) ==  9
+    
+    for row in puzzle_rows:
+        assert len(row) == 9
+    
+
+# TODO Assert that the get puzzle method returns a not found error.  handle exceptions.
+# def test_get_puzzle_from_s3_not_found(s3_bucket_with_one_file):
+#     puzzle_object = unsolved.get_puzzle_from_s3('sudoku-test-bucket', '2.json')
+#     test_object = {'level': 'easy','puzzle_rows': ["080064703","720503698","000002410","000007009","096308150","800100000","042800000","978605041","605470080"]}
+#     assert json.loads(puzzle_object) == test_object
 
 
 
