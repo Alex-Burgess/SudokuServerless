@@ -90,7 +90,7 @@ def test_get_bucket_name(monkeypatch):
     monkeypatch.setitem(os.environ, 'UNSOLVED_BUCKET_NAME', bucket_name)
     name = unsolved.get_bucket_name()
     assert name == bucket_name
-
+    
 
 def test_get_random_key_in_range(s3_bucket_mock):
     """Tests that the get_random_key function returns a filename key that will exist in the puzzle s3 bucket.
@@ -132,6 +132,17 @@ def test_handler_response(s3_bucket_mock, api_gateway_event, monkeypatch):
     for row in puzzle_rows:
         assert len(row) == 9
     
+
+
+def test_no_bucket_name_environment_varaible():
+    """Tests that the get_bucket_name function returns an error if the UNSOLVED_BUCKET_NAME environment variable is not set."""
+    name = unsolved.get_bucket_name()
+    assert name == 'No bucket name'
+    
+
+
+
+
 
 # TODO Assert that the get puzzle method returns a not found error.  handle exceptions.
 # def test_get_puzzle_from_s3_not_found(s3_bucket_with_one_file):

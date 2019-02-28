@@ -8,18 +8,29 @@ s3_client = boto3.client('s3')
 # TODO - logging
 
 def handler(event, context):
-    bucket_name = get_bucket_name()
-    key = get_random_key(bucket_name)
-    
-    puzzle_data = get_puzzle_from_s3(bucket_name, key)
+    try: 
+        bucket_name = get_bucket_name()
+        key = get_random_key(bucket_name)
+        puzzle_data = get_puzzle_from_s3(bucket_name, key)
 
-    return {'statusCode': 200,
-            'body': puzzle_data,
-            'headers': {'Content-Type': 'application/json'}}
+        return {'statusCode': 200,
+                'body': puzzle_data,
+                'headers': {'Content-Type': 'application/json'}}
+    
+    except Exception as e:
+        print(e)
+        return {'statusCode': 500,
+                'body': json.dumps({'error': str(e)}),
+                'headers': {'Content-Type': 'application/json'}}
+
 
 
 def get_bucket_name():
-    bucket_name = os.environ['UNSOLVED_BUCKET_NAME']
+    try: 
+        bucket_name = os.environ['UNSOLVED_BUCKET_NAM']
+    except:
+        raise Exception('UNSOLVED_BUCKET_NAME environment variable not set correctly')
+        
     return bucket_name
     
     
