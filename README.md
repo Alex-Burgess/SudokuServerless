@@ -7,8 +7,13 @@ Create the website:
 ```
 hugo new site sudoku-serverless-hugo
 git init
-git submodule add git@github.com:Alex-Burgess/kube.git themes/kube
 ```
+
+Add a theme:
+```
+git submodule add git@github.com:Alex-Burgess/kube.git sudoku-serverless-hugo/themes/kube
+```
+
 Copy and Update the config:
 ```
 cp themes/kube/exampleSite/config.toml .
