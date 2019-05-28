@@ -1,18 +1,31 @@
 # SudokuServerless
-A serverless website with a sudoku theme
-
-## Setup
-Deploying sam application for remote testing:
-```
-$ sam package --output-template-file packaged.yaml --s3-bucket serverless-remote-builds
-$ sam deploy --template-file packaged.yaml --stack-name cloud9-SudokuServerless --capabilities CAPABILITY_NAMED_IAM --region eu-west-1
-```
-
-Copying test puzzles to s3 bucket:
-```
-aws s3 cp test_puzzles/ s3://sudoku-unsolved-puzzles --recursive
-```
+A serverless website with a sudoku theme, based on [Build a Serverless Web App...](https://aws.amazon.com/getting-started/projects/build-serverless-web-app-lambda-apigateway-s3-dynamodb-cognito/).
 
 
-Worlds hardest sudoku
-https://www.telegraph.co.uk/news/science/science-news/9359579/Worlds-hardest-sudoku-can-you-crack-it.html 
+### Quick start
+Create the website:
+```
+hugo new site sudoku-serverless-hugo
+git init
+git submodule add git@github.com:Alex-Burgess/kube.git themes/kube
+```
+Copy and Update the config:
+```
+cp themes/kube/exampleSite/config.toml .
+```
+
+Create main stack:
+```
+aws cloudformation create-stack --stack-name Sudoku-Serverless-Main --template-body file://main.yaml
+```
+
+Build and Copy website content:
+```
+hugo
+aws s3 sync public/ s3://sudoku-serverless --delete
+```
+
+
+
+# Reference
+To do.
