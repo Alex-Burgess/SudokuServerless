@@ -2,24 +2,18 @@ baseURL = "/"
 languageCode = "en-us"
 title = "Sudoku Serverless"
 theme = "kube"
-description = "An demo application using AWS Serverless"
 Paginate = 4
 [Params]
-  RSSLink = "/index.xml"
-  author = "newpixcom" # add your company name
-  github = "" # add your github profile name
-  twitter = "" # add your twitter profile
-  email = "myemail@myaddress.xxx"
+  description = "A Serverless demo application using AWS"
 
 [[menu.main]]
-    name = "Docs"
+    name = "Try"
     weight = -100
-    url = "/docs/"
+    url = "/try/"
 [[menu.main]]
-    name = "Blog"
+    name = "Solve"
     weight = -100
-    url = "/blog/"
-[[menu.main]]
-    name = "Faq"
-    weight = -100
-    url = "/faq/"
+    url = "/solve/"
+[[menu.extra]]
+    name = "Account"
+    url = "/account/"
