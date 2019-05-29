@@ -1,0 +1,24 @@
+{{ define "title"}} {{ .Site.Title}} {{end}}
+{{ define "header"}} {{ partial "header_register" .}} {{end}}
+{{ define "main"}}
+
+
+<div id="main">
+  <div id="hero">
+    <div id="title">
+      <h1>{{.Title}}</h1>
+      <p>{{.Description}}</p>
+    </div>
+    <div id="registration_form">
+      Email<br></br>
+      Password<br></br>
+      Confirm password<br></br>
+
+      Register (Button)
+
+    </div>
+  </div>
+</div>
+
+
+{{ end }}
