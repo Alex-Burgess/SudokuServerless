@@ -1,0 +1,8 @@
+#form-wrap {
+    width: 35%;
+    margin: 0 auto;
+}
+
+input[type=text], input[type=password], input[type=email] {
+    margin: 10px 0 10px;
+}

@@ -2,22 +2,21 @@
 {{ define "header"}} {{ partial "header_register" .}} {{end}}
 {{ define "main"}}
 
-
 <div id="main">
   <div id="hero">
     <div id="title">
       <h1>{{.Title}}</h1>
       <p>{{.Description}}</p>
     </div>
-    <div id="registration_form">
-      Email<br></br>
-      Verification Code<br></br>
+    <div id="form-wrap">
+      <form id="verifyForm">
+        <input type="email" id="emailInputVerify" placeholder="Email" required>
+        <input type="text" id="codeInputVerify" placeholder="Verification Code" pattern=".*" required>
 
-      Verify (Button)
-
+        <input type="submit" value="Verify" class="button primary big">
+      </form>
     </div>
   </div>
 </div>
-
 
 {{ end }}

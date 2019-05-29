@@ -9,13 +9,14 @@
       <h1>{{.Title}}</h1>
       <p>{{.Description}}</p>
     </div>
-    <div id="registration_form">
-      Email<br></br>
-      Password<br></br>
-      Confirm password<br></br>
+    <div id="form-wrap">
+      <form id="registrationForm">
+        <input type="email" id="emailInputRegister" placeholder="Email" pattern=".*" required>
+        <input type="password" id="passwordInputRegister" placeholder="Password" pattern=".*" required>
+        <input type="password" id="password2InputRegister" placeholder="Confirm Password" pattern=".*" required>
 
-      Register (Button)
-
+        <input type="submit" value="Let's Sudoku" class="button primary big">
+      </form>
     </div>
   </div>
 </div>
