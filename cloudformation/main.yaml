@@ -28,8 +28,28 @@ Resources:
             Action: s3:GetObject
             Resource: !Sub "arn:aws:s3:::${WebsiteBucket}/*"
 
+  UserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: SudokuServerless
+      AliasAttributes:
+        - email
+      AutoVerifiedAttributes:
+        - email
 
+  UserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      ClientName: SudokuServerlessWeb
+      UserPoolId: !Ref UserPool
+      GenerateSecret: false
 
 Outputs:
   WebsiteURL:
     Value: !GetAtt WebsiteBucket.WebsiteURL
+
+  userPoolId:
+    Value: !Ref UserPool
+
+  userPoolClientId:
+    Value: !Ref UserPoolClient

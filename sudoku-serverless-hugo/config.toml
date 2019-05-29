@@ -5,6 +5,7 @@ theme = "kube"
 Paginate = 4
 [Params]
   description = "A Serverless demo application using AWS"
+  custom_js = ["js/aws-cognito-sdk.min.js", "js/amazon-cognito-identity.min.js", "js/config.js", "js/cognito-auth.js"]
 
 [[menu.main]]
     name = "Try"
