@@ -3,7 +3,9 @@
 var WildRydes = window.WildRydes || {};
 
 (function scopeWrapper($) {
-    var signinUrl = 'signin.html';
+    var signinUrl = '/signin/';
+    var verifyUrl = '/verify/';
+    var starterUrl = '/solve/';
 
     var poolData = {
         UserPoolId: _config.cognito.userPoolId,
@@ -59,11 +61,11 @@ var WildRydes = window.WildRydes || {};
          };
          var attributeEmail = new AmazonCognitoIdentity.CognitoUserAttribute(dataEmail);
 
-         alert('user name is ' + email)
+         // alert('user name is ' + email)
+         // userPool.signUp('dummy', password, [attributeEmail], null, // sudoku 1
+         // userPool.signUp(email, password, [attributeEmail], null, // sudoku2
 
-         // userPool.signUp(email, password, [attributeEmail], null,
-
-         userPool.signUp('dummy', password, [attributeEmail], null,
+         userPool.signUp(email, password, [attributeEmail], null,
              function signUpCallback(err, result) {
                  if (!err) {
                      onSuccess(result);
@@ -76,8 +78,8 @@ var WildRydes = window.WildRydes || {};
 
     function signin(email, password, onSuccess, onFailure) {
         var authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails({
-            // Username: email,
-            Username: 'dummy',
+            Username: email,
+            // Username: 'dummy',  //Sudoku 1
             Password: password
         });
 
@@ -90,7 +92,7 @@ var WildRydes = window.WildRydes || {};
 
     function verify(email, code, onSuccess, onFailure) {
         // Having issue with using email as username with cognito.
-        email = 'dummy'
+        // email = 'dummy'  // Sudoku1
         createCognitoUser(email).confirmRegistration(code, true, function confirmCallback(err, result) {
             if (!err) {
                 onSuccess(result);
@@ -124,7 +126,7 @@ var WildRydes = window.WildRydes || {};
         signin(email, password,
             function signinSuccess() {
                 console.log('Successfully Logged In');
-                window.location.href = 'ride.html';
+                window.location.href = starterUrl;
             },
             function signinError(err) {
                 alert(err);
@@ -142,7 +144,7 @@ var WildRydes = window.WildRydes || {};
             console.log('user name is ' + cognitoUser.getUsername());
             var confirmation = ('Registration successful. Please check your email inbox or spam folder for your verification code.');
             if (confirmation) {
-                window.location.href = 'verify.html';
+                window.location.href = verifyUrl;
             }
         };
         var onFailure = function registerFailure(err) {

@@ -7,14 +7,21 @@ Paginate = 4
   description = "A Serverless demo application using AWS"
   custom_js = ["js/aws-cognito-sdk.min.js", "js/amazon-cognito-identity.min.js", "js/config.js", "js/cognito-auth.js"]
 
-[[menu.main]]
+[[menu.login]]
+    name = "Log In"
+    url = "/signin/"
+[[menu.signup]]
+    name = "Sign Up"
+    url = "/register/"
+[[menu.account]]
+    name = "Account"
+    url = "/account/"
+
+[[menu.auth]]
     name = "Try"
     weight = -100
     url = "/try/"
-[[menu.main]]
+[[menu.auth]]
     name = "Solve"
     weight = -100
     url = "/solve/"
-[[menu.extra]]
-    name = "Account"
-    url = "/account/"
