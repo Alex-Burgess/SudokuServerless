@@ -32,7 +32,7 @@ Resources:
     Type: AWS::Cognito::UserPool
     Properties:
       UserPoolName: SudokuServerless
-      AliasAttributes:
+      UsernameAttributes:
         - email
       AutoVerifiedAttributes:
         - email

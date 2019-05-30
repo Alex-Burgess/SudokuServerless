@@ -30,7 +30,10 @@ hugo
 aws s3 sync public/ s3://sudoku-serverless --delete
 ```
 
-
+Update stack:
+```
+aws cloudformation update-stack --stack-name Sudoku-Serverless-Main --template-body file://main.yaml
+```
 
 # Reference
 To do.
