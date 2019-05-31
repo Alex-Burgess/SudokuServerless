@@ -5,7 +5,7 @@ var WildRydes = window.WildRydes || {};
 (function scopeWrapper($) {
     var signinUrl = '/signin/';
     var verifyUrl = '/verify/';
-    var starterUrl = '/solve/';
+    var starterUrl = '/user/';
 
     var poolData = {
         UserPoolId: _config.cognito.userPoolId,
@@ -61,10 +61,6 @@ var WildRydes = window.WildRydes || {};
          };
          var attributeEmail = new AmazonCognitoIdentity.CognitoUserAttribute(dataEmail);
 
-         // alert('user name is ' + email)
-         // userPool.signUp('dummy', password, [attributeEmail], null, // sudoku 1
-         // userPool.signUp(email, password, [attributeEmail], null, // sudoku2
-
          userPool.signUp(email, password, [attributeEmail], null,
              function signUpCallback(err, result) {
                  if (!err) {
@@ -79,7 +75,6 @@ var WildRydes = window.WildRydes || {};
     function signin(email, password, onSuccess, onFailure) {
         var authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails({
             Username: email,
-            // Username: 'dummy',  //Sudoku 1
             Password: password
         });
 
@@ -91,8 +86,6 @@ var WildRydes = window.WildRydes || {};
     }
 
     function verify(email, code, onSuccess, onFailure) {
-        // Having issue with using email as username with cognito.
-        // email = 'dummy'  // Sudoku1
         createCognitoUser(email).confirmRegistration(code, true, function confirmCallback(err, result) {
             if (!err) {
                 onSuccess(result);
