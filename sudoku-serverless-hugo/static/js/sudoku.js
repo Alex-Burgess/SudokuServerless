@@ -3,7 +3,7 @@
 var WildRydes = window.WildRydes || {};
 WildRydes.map = WildRydes.map || {};
 
-var signinUrl = '/signin/';
+var homePageUrl = '/';
 var dashboardUrl = '/user/';
 
 (function rideScopeWrapper($) {
@@ -17,12 +17,12 @@ var dashboardUrl = '/user/';
             }
         } else {
           if (!((/signin/.test(window.location.href)) || (/register/.test(window.location.href)) || (/verify/.test(window.location.href)) || (window.location.pathname == "/") )) {
-            window.location.href = signinUrl;
+            window.location.href = homePageUrl;
           }
         }
     }).catch(function handleTokenError(error) {
         alert(error);
-        window.location.href = signinUrl;
+        window.location.href = homePageUrl;
     });
 
     // Register click handler for #request button
@@ -30,7 +30,7 @@ var dashboardUrl = '/user/';
         $('#signOut').click(function() {
             WildRydes.signOut();
             alert("You have been signed out.");
-            window.location = signinUrl;
+            window.location = homePageUrl;
         });
     });
 

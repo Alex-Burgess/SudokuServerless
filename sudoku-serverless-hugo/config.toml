@@ -20,6 +20,10 @@ Paginate = 4
     url = "/account/"
 
 [[menu.auth]]
+    name = "Dashboard"
+    weight = -100
+    url = "/user/"
+[[menu.auth]]
     name = "Try"
     weight = -100
     url = "/try/"
