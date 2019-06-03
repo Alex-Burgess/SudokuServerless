@@ -35,5 +35,10 @@ Update stack:
 aws cloudformation update-stack --stack-name Sudoku-Serverless-Main --template-body file://main.yaml
 ```
 
+Add data to sudoku unsolved puzzles bucket:
+```
+aws s3 cp data/example_puzzles/ s3://sudoku-unsolved-puzzles --recursive
+```
+
 # Reference
 To do.

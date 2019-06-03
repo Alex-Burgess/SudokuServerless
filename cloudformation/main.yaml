@@ -44,6 +44,11 @@ Resources:
       UserPoolId: !Ref UserPool
       GenerateSecret: false
 
+  UnsolvedPuzzlesBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: 'sudoku-unsolved-puzzles'
+
 Outputs:
   WebsiteURL:
     Value: !GetAtt WebsiteBucket.WebsiteURL
