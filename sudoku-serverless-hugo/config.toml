@@ -25,9 +25,9 @@ Paginate = 4
     url = "/user/"
 [[menu.auth]]
     name = "Try"
-    weight = -100
+    weight = -90
     url = "/try/"
 [[menu.auth]]
     name = "Solve"
-    weight = -100
+    weight = -80
     url = "/solve/"
