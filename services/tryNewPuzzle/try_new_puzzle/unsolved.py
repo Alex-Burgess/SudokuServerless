@@ -15,12 +15,18 @@ def handler(event, context):
 
         return {'statusCode': 200,
                 'body': puzzle_data,
-                'headers': {'Content-Type': 'application/json'}}
+                'headers': {
+                    'Content-Type': 'application/json', 
+                    'Access-Control-Allow-Origin': '*'
+                }}
     except Exception as e:
         print(e)
         return {'statusCode': 500,
                 'body': json.dumps({'error': str(e)}),
-                'headers': {'Content-Type': 'application/json'}}
+                'headers': {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                }}
 
 def get_bucket_name():
     try:
