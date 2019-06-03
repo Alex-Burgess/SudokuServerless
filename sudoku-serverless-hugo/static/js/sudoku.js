@@ -50,12 +50,16 @@ var dashboardUrl = '/user/';
         console.log('Level: ', level);
         console.log('Puzzle Rows: ', puzzle_rows);
 
-        $('#level').append(level);
-        $('#puzzle-section').show();
+        $('#level').text('Level: ' + level);
+
+        var table_body = '<table border="1">';
         for (const row of puzzle_rows){
-          $('#puzzle').append($('<tr><td>' + row + '</td></tr>'));
+          table_body += '<tr><td>' + row + '</td></tr>';
         }
-        // $('#puzzle').append($('<tr><td>1</td><td>2</td><td>3</td></tr>'));
+        table_body+='</table>';
+        $('#puzzle').html(table_body);
+
+        $('#puzzle-section').show();
     }
 
     // Register click handler for #request button
