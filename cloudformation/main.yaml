@@ -44,6 +44,17 @@ Resources:
       UserPoolId: !Ref UserPool
       GenerateSecret: false
 
+  TryNewPuzzleBuildsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "${BucketName}-trynewpuzzle-builds"
+      AccessControl: Private
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: True
+        BlockPublicPolicy: True
+        IgnorePublicAcls: True
+        RestrictPublicBuckets: True
+
   UnsolvedPuzzlesBucket:
     Type: 'AWS::S3::Bucket'
     Properties:

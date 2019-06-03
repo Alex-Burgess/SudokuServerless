@@ -41,4 +41,8 @@ aws s3 cp data/example_puzzles/ s3://sudoku-unsolved-puzzles --recursive
 ```
 
 # Reference
-To do.
+
+### Create a new lambda/api service using SAM
+```
+sam init --runtime python3.6 --name tryNewPuzzle
+```

@@ -1,0 +1,47 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Serverless resources for SudokuServerless application
+
+Resources:
+  UnsolvedPuzzleFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: UnsolvedPuzzleFunction
+      Handler: try_new_puzzle/unsolved.handler
+      Runtime: python3.6
+      Description: Gets an unsolved puzzle from an s3 bucket
+      Role: !GetAtt UnsolvedPuzzleFunctionRole.Arn
+      Environment:
+        Variables:
+          UNSOLVED_BUCKET_NAME: 'sudoku-unsolved-puzzles'
+      Events:
+        GetNewPuzzle:
+          Type: Api
+          Properties:
+            Path: /tryNewPuzzle
+            Method: get
+
+  UnsolvedPuzzleFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: 'SudokuServerless-UnsolvedPuzzle-Role'
+      AssumeRolePolicyDocument:
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+              - lambda.amazonaws.com
+          Action:
+            - sts:AssumeRole
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+        - "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+
+Outputs:
+  UnsolvedPuzzleFunctionApi:
+    Description: "API Gateway endpoint URL for Prod stage for UnsolvedPuzzleFunction function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/tryNewPuzzle/"
+
+  UnsolvedPuzzleFunctionIamRole:
+    Description: "Implicit IAM Role created for UnsolvedPuzzleFunction function"
+    Value: !GetAtt UnsolvedPuzzleFunctionRole.Arn
