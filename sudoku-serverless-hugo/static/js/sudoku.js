@@ -71,10 +71,11 @@ var dashboardUrl = '/user/';
         $('#finished').show();
     }
 
-    // Register click handler for #request button
     $(function onDocReady() {
-        requestNewPuzzle();
-        // $('#request').click(requestNewPuzzle);
+        if (/try/.test(window.location.href)) {
+          requestNewPuzzle();
+        }
+
         $('#signOut').click(function() {
             Sudoku.signOut();
             alert("You have been signed out.");
@@ -113,8 +114,3 @@ var dashboardUrl = '/user/';
     });
 
 }(jQuery));
-
-// (function loadPuzzleWrapper() {
-//   alert('loading puzzle');
-//   requestNewPuzzle();
-// }(jQuery));
