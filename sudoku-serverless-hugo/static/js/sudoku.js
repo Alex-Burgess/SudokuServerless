@@ -52,11 +52,15 @@ var dashboardUrl = '/user/';
 
         $('#level').text('Level: ' + level);
 
-        var table_body = '<table id="puzzle-table" border="1">';
+        var table_body = '<table>';
         for (const row of puzzle_rows){
           table_body += '<tr>'
           for (const cell of row){
-            table_body += '<td>' + cell + '</td>';
+            if (cell == 0) {
+              table_body += '<td></td>';
+            } else {
+              table_body += '<td>' + cell + '</td>';
+            }
           }
           table_body += '</tr>'
         }

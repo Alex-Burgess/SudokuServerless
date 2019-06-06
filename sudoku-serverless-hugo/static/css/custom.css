@@ -1,10 +1,36 @@
-/* This is not taking effect */
-#puzzle-table {
-    border: 1
-    width: 90%;
+#puzzle div {
+  margin: 0 auto;
 }
 
-/* @media (min-width: 800px) */
+#puzzle table {
+    border: 2;
+    width: 60%;
+    border-collapse: none;
+    border-spacing: 0;
+    empty-cells: show;
+    display: inline-block;
+}
+
+#puzzle tbody {
+  border: solid medium;
+}
+
+#puzzle td {
+  border: solid thin;
+  padding: 0;
+  margin: 0;
+  height: 30px;
+  width: 30px;
+  text-align: center;
+}
+
+#puzzle tr:nth-of-type(3n) {
+    border-bottom: solid medium;
+}
+#puzzle td:nth-of-type(3n) {
+    border-right: solid medium;
+}
+
 @media screen and (max-width: 1200px) {
 #form-wrap {
     width: 35%;
