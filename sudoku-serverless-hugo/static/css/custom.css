@@ -1,14 +1,19 @@
-#puzzle div {
-  margin: 0 auto;
+#puzzle-section div {
+  text-align: center;
+}
+
+#puzzle {
+  width: 100%
 }
 
 #puzzle table {
     border: 2;
-    width: 60%;
     border-collapse: none;
     border-spacing: 0;
     empty-cells: show;
     display: inline-block;
+    margin: 0 auto;
+    width: auto
 }
 
 #puzzle tbody {

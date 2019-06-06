@@ -7,6 +7,7 @@ var homePageUrl = '/';
 var dashboardUrl = '/user/';
 
 (function rideScopeWrapper($) {
+
     var authToken;
     Sudoku.authToken.then(function setAuthToken(token) {
         if (token) {
@@ -50,9 +51,9 @@ var dashboardUrl = '/user/';
         console.log('Level: ', level);
         console.log('Puzzle Rows: ', puzzle_rows);
 
-        $('#level').text('Level: ' + level);
+        $('#puzzle-level').text('Level: ' + level);
 
-        var table_body = '<table>';
+        var table_body ='<table>';
         for (const row of puzzle_rows){
           table_body += '<tr>'
           for (const cell of row){
@@ -67,12 +68,13 @@ var dashboardUrl = '/user/';
         table_body+='</table>';
         $('#puzzle').html(table_body);
 
-        $('#puzzle-section').show();
+        $('#finished').show();
     }
 
     // Register click handler for #request button
     $(function onDocReady() {
-        $('#request').click(requestNewPuzzle);
+        requestNewPuzzle();
+        // $('#request').click(requestNewPuzzle);
         $('#signOut').click(function() {
             Sudoku.signOut();
             alert("You have been signed out.");
@@ -111,3 +113,8 @@ var dashboardUrl = '/user/';
     });
 
 }(jQuery));
+
+// (function loadPuzzleWrapper() {
+//   alert('loading puzzle');
+//   requestNewPuzzle();
+// }(jQuery));

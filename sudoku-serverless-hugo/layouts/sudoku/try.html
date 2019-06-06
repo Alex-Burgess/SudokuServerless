@@ -3,16 +3,11 @@
 {{ define "main"}}
 
 <div id="main">
-  <div id="hero">
-    Click to load a new puzzle.
+  <div id="puzzle-section">
+    <div id="puzzle-level"></div>
+    <div id="puzzle"></div>
     <div id="action-buttons">
-      <button id="request" class="btn btn-primary">Try a New Puzzle</button>
-    </div>
-    <div id="puzzle-section" style="display: none;">
-      <p id="level"></p>
-      <div id="puzzle">
-      </div>
-
+      <button id="finished" class="btn btn-primary" style="display: none;">Finished!</button>
     </div>
   </div>
 </div>
