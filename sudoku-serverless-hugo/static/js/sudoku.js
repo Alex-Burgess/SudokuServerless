@@ -60,7 +60,8 @@ var dashboardUrl = '/user/';
             if (cell == 0) {
               table_body += '<td><input type="text" size="1" width="100%" maxlength="1"></td>';
             } else {
-              table_body += '<td>' + cell + '</td>';
+              // table_body += '<td>' + cell + '</td>';
+              table_body += '<td><input type="text" name="country" value="' + cell + '" readonly></td>';
             }
           }
           table_body += '</tr>'
@@ -77,15 +78,18 @@ var dashboardUrl = '/user/';
         }
 
         $('#finished').click(function() {
-            alert("Puzzle Completed!");
             var $inputs = $('#tryForm :input');
             var values = {};
+            var i = 0;
             $inputs.each(function() {
-              values[this.name] = $(this).val();
-              // alert("value name: " + this.name + " value: " + $(this).val())
+              i = i + 1;
+              values[i] = $(this).val();
+              console.log("ID:" + i + " Value: " + $(this).val())
             });
 
-            alert("Values " + values);
+            console.log("Completed puzzle data: " + JSON.stringify(values))
+
+            alert("Puzzle Completed!");
         });
 
         $('#signOut').click(function() {
