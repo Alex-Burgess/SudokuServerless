@@ -58,9 +58,7 @@ var dashboardUrl = '/user/';
           table_body += '<tr>'
           for (const cell of row){
             if (cell == 0) {
-              // table_body += '<td></td>';
-              table_body += '<td><input type="text" size="1" width="100%"></td>';
-              // <INPUT TYPE="TEXT" NAME="name" SIZE="20">
+              table_body += '<td><input type="text" size="1" width="100%" maxlength="1"></td>';
             } else {
               table_body += '<td>' + cell + '</td>';
             }
@@ -77,6 +75,18 @@ var dashboardUrl = '/user/';
         if (/try/.test(window.location.href)) {
           requestNewPuzzle();
         }
+
+        $('#finished').click(function() {
+            alert("Puzzle Completed!");
+            var $inputs = $('#tryForm :input');
+            var values = {};
+            $inputs.each(function() {
+              values[this.name] = $(this).val();
+              // alert("value name: " + this.name + " value: " + $(this).val())
+            });
+
+            alert("Values " + values);
+        });
 
         $('#signOut').click(function() {
             Sudoku.signOut();

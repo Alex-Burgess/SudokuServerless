@@ -49,21 +49,6 @@
   font-family: Lato, sans-serif;
 }
 
-/*
-input, select, textarea {
-    display: block;
-    width: 100%;
-    font-family: inherit;
-    font-size: 15px;
-    height: 40px;
-    outline: 0;
-    background-color: #fff;
-    border: 1px solid #d4d4d4;
-    border-radius: 3px;
-    box-shadow: none;
-    padding: 0 12px;
-} */
-
 @media screen and (max-width: 1200px) {
 #form-wrap {
     width: 35%;
