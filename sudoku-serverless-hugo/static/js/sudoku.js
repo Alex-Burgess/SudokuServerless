@@ -58,7 +58,9 @@ var dashboardUrl = '/user/';
           table_body += '<tr>'
           for (const cell of row){
             if (cell == 0) {
-              table_body += '<td></td>';
+              // table_body += '<td></td>';
+              table_body += '<td><input type="text" size="1" width="100%"></td>';
+              // <INPUT TYPE="TEXT" NAME="name" SIZE="20">
             } else {
               table_body += '<td>' + cell + '</td>';
             }
