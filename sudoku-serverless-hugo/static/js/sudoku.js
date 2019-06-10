@@ -79,13 +79,22 @@ var dashboardUrl = '/user/';
 
         $('#finished').click(function() {
             var $inputs = $('#tryForm :input');
+
             var values = {};
             var i = 0;
+            var empty = 0;
             $inputs.each(function() {
               i = i + 1;
               values[i] = $(this).val();
-              console.log("ID:" + i + " Value: " + $(this).val())
+              if ($(this).val() == 0) {
+                empty = empty + 1;
+              }
             });
+
+            if (empty > 0){
+                alert("Puzzle is not complete. Number of cells to complete " + empty);
+                return;
+            }
 
             console.log("Completed puzzle data: " + JSON.stringify(values))
 
