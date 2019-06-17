@@ -38,6 +38,7 @@ aws cloudformation update-stack --stack-name Sudoku-Serverless-Main --template-b
 Add data to sudoku unsolved puzzles bucket:
 ```
 aws s3 cp data/example_puzzles/ s3://sudoku-unsolved-puzzles --recursive
+aws s3 cp data/example_puzzle_solutions/ s3://sudoku-unsolved-puzzle-solutions --recursive
 ```
 
 # Reference
