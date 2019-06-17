@@ -47,6 +47,7 @@
   vertical-align: middle;
   color: #313439;
   font-family: Lato, sans-serif;
+  cursor: default;
 }
 
 @media screen and (max-width: 1200px) {
