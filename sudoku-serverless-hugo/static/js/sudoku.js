@@ -58,11 +58,8 @@ var dashboardUrl = '/user/';
           table_body += '<tr>'
           for (const cell of row){
             if (cell == 0) {
-              // table_body += '<td><input type="number" size="1" width="100%" maxlength="1"></td>';
-              table_body += '<td><input type="text" size="1" width="100%" maxlength="1"></td>';
+              table_body += '<td><input pattern="[0-9]*" type="text" size="1" width="100%" maxlength="1" ></td>';
             } else {
-              // table_body += '<td>' + cell + '</td>';
-              // table_body += '<td><input type="number" value="' + cell + '" readonly></td>';
               table_body += '<td><input type="text" value="' + cell + '" readonly></td>';
             }
           }
