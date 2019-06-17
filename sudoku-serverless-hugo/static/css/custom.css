@@ -2,11 +2,11 @@
   text-align: center;
 }
 
-#puzzle {
+.puzzle {
   width: 100%
 }
 
-#puzzle table {
+.puzzle table {
     border: 2;
     border-collapse: none;
     border-spacing: 0;
@@ -16,11 +16,11 @@
     width: auto
 }
 
-#puzzle tbody {
+.puzzle tbody {
   border: solid medium;
 }
 
-#puzzle td {
+.puzzle td {
   border: solid thin;
   padding: 0;
   margin: 0;
@@ -30,14 +30,14 @@
   vertical-align: middle;
 }
 
-#puzzle tr:nth-of-type(3n) {
+.puzzle tr:nth-of-type(3n) {
     border-bottom: solid medium;
 }
-#puzzle td:nth-of-type(3n) {
+.puzzle td:nth-of-type(3n) {
     border-right: solid medium;
 }
 
-#puzzle input {
+.puzzle input {
   width: 100%;
   padding: 0;
   border-radius: 0;

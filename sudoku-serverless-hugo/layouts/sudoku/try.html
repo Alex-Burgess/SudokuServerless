@@ -6,10 +6,23 @@
   <div id="puzzle-section">
       <div id="puzzle-level"></div>
       <form id="tryForm">
-        <div id="puzzle"></div>
+        <div class="puzzle" id="puzzle"></div>
       </form>
-      <div id="action-buttons">
-        <button id="finished" type="button" class="btn btn-primary" style="display: none;">Finished!</button>
+      <div id="finished-button" style="display: none;">
+        <div id="action-buttons">
+          <button id="finished" type="button" class="btn btn-primary">Finished!</button>
+        </div>
+      </div>
+      <div id="correct" style="display: none;">
+        <p>Well done! Try another puzzle, or view all your results.</p>
+        <div id="action-buttons">
+          <button onclick="window.location.href = '/try/';" id="request" class="btn btn-primary">Try</button>
+          <button onclick="window.location.href = '/user/';" id="results" class="btn btn-primary">Results</button>
+        </div>
+      </div>
+      <div id="failed" style="display: none;">
+        <p>Not quite! Here is the solution to see where you went wrong.</p>
+        <div class="puzzle" id="puzzle-solution"></div>
       </div>
   </div>
 </div>

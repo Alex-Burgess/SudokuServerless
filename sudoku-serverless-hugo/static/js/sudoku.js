@@ -35,7 +35,7 @@ var dashboardUrl = '/user/';
               Authorization: authToken,
           },
           contentType: 'application/json',
-          success: completeRequest,
+          success: completeRequestNewPuzzle,
           error: function ajaxError(jqXHR, textStatus, errorThrown) {
               console.error('Error requesting puzzle: ', textStatus, ', Details: ', errorThrown);
               console.error('Response: ', jqXHR.responseText);
@@ -44,7 +44,7 @@ var dashboardUrl = '/user/';
       });
     }
 
-    function completeRequest(result) {
+    function completeRequestNewPuzzle(result) {
         console.log('Response received from API: ', result);
         var level = result.level;
         var puzzle_rows = result.puzzle_rows;
@@ -68,7 +68,91 @@ var dashboardUrl = '/user/';
         table_body+='</table>';
         $('#puzzle').html(table_body);
 
-        $('#finished').show();
+        $('#finished-button').show();
+    }
+
+    function puzzleFinished(){
+      var $inputs = $('#tryForm :input');
+
+      var attemptValues = [];
+      var i = 0;
+      var empty = 0;
+      $inputs.each(function() {
+        attemptValues.push($(this).val());
+
+        if ($(this).val() == 0) {
+          empty = empty + 1;
+        }
+      });
+
+      if (empty > 0){
+          alert("Puzzle is not complete. Number of cells to complete " + empty);
+          return;
+      } else {
+        console.log("Completed puzzle data: " + attemptValues);
+
+        var solutionJson = getPuzzleSolution();
+        checkPuzzleCorrect(attemptValues,solutionJson);
+      }
+    }
+
+    function getPuzzleSolution(){
+      // Retrive the puzzle using api call
+      // var solution_puzzle_rows = result.puzzle_rows;
+
+      var solution_puzzle_rows = [
+        [5,8,1,9,6,4,7,2,3],
+        [7,2,4,5,1,3,6,9,8],
+        [3,6,9,7,8,2,4,1,5],
+        [4,1,9,2,5,7,8,6,9],
+        [2,9,6,3,4,8,1,5,7],
+        [8,5,7,1,9,6,2,3,4],
+        [1,4,2,8,3,9,5,7,6],
+        [9,7,8,6,2,5,3,4,1],
+        [6,3,5,4,7,1,9,8,2]
+      ];
+
+      return solution_puzzle_rows;
+    }
+
+    function checkPuzzleCorrect(attemptValues,solutionJson){
+      var solutionValues = [];
+
+      for (const row of solutionJson){
+        for (const cell of row){
+          solutionValues.push(cell);
+        }
+      }
+
+      var i;
+      for (i = 0; i < 81; i++) {
+      // for (i = 0; i < 9; i++) {
+        if (attemptValues[i] != solutionValues[i]) {
+          console.log("Attempt did not match the solution. AttemptValue:" + attemptValues[i] + " SolutionValue:" + solutionValues[i]);
+          $('#finished-button').hide();
+          $('#failed').show();
+
+          displaySolution(solutionJson);
+          return;
+        }
+      }
+
+
+      $('#finished-button').hide();
+      $('#correct').show();
+    }
+
+    function displaySolution(solutionValues){
+      var table_body ='<table>';
+      for (const row of solutionValues){
+        table_body += '<tr>'
+        for (const cell of row){
+          table_body += '<td><input type="text" value="' + cell + '" readonly></td>';
+        }
+        table_body += '</tr>'
+      }
+      table_body+='</table>';
+      $('#puzzle-solution').html(table_body);
     }
 
     $(function onDocReady() {
@@ -76,29 +160,7 @@ var dashboardUrl = '/user/';
           requestNewPuzzle();
         }
 
-        $('#finished').click(function() {
-            var $inputs = $('#tryForm :input');
-
-            var values = {};
-            var i = 0;
-            var empty = 0;
-            $inputs.each(function() {
-              i = i + 1;
-              values[i] = $(this).val();
-              if ($(this).val() == 0) {
-                empty = empty + 1;
-              }
-            });
-
-            if (empty > 0){
-                alert("Puzzle is not complete. Number of cells to complete " + empty);
-                return;
-            }
-
-            console.log("Completed puzzle data: " + JSON.stringify(values))
-
-            alert("Puzzle Completed!");
-        });
+        $('#finished').click(puzzleFinished);
 
         $('#signOut').click(function() {
             Sudoku.signOut();
