@@ -29,8 +29,7 @@ var dashboardUrl = '/user/';
     function requestNewPuzzle(){
       $.ajax({
           method: 'GET',
-          // url: _config.api.invokeUrl + '/tryNewPuzzle',
-          url: _config.api.invokeUrl,
+          url: _config.api.requestNewPuzzleUrl,
           headers: {
               Authorization: authToken,
           },
@@ -72,12 +71,33 @@ var dashboardUrl = '/user/';
     }
 
     function puzzleFinished(){
-      var $inputs = $('#tryForm :input');
+      var inputs = $('#tryForm :input');
 
+      var attemptValues = validateFinishedPuzzle(inputs);
+
+      $.ajax({
+          method: 'GET',
+          url: _config.api.getNewPuzzleSolutionUrl + '1',
+          headers: {
+              Authorization: authToken,
+          },
+          contentType: 'application/json',
+          success: function(response){
+            completeGetNewPuzzleSolution(response, attemptValues);
+          },
+          error: function ajaxError(jqXHR, textStatus, errorThrown) {
+              console.error('Error requesting puzzle solution: ', textStatus, ', Details: ', errorThrown);
+              console.error('Response: ', jqXHR.responseText);
+              alert('An error occured when requesting your puzzle solution:\n' + jqXHR.responseText);
+          }
+      });
+    }
+
+    function validateFinishedPuzzle(inputs){
       var attemptValues = [];
       var i = 0;
       var empty = 0;
-      $inputs.each(function() {
+      inputs.each(function() {
         attemptValues.push($(this).val());
 
         if ($(this).val() == 0) {
@@ -85,34 +105,35 @@ var dashboardUrl = '/user/';
         }
       });
 
-      if (empty > 0){
-          alert("Puzzle is not complete. Number of cells to complete " + empty);
-          return;
-      } else {
-        console.log("Completed puzzle data: " + attemptValues);
-
-        var solutionJson = getPuzzleSolution();
-        checkPuzzleCorrect(attemptValues,solutionJson);
-      }
+      return attemptValues
     }
 
-    function getPuzzleSolution(){
-      // Retrive the puzzle using api call
-      // var solution_puzzle_rows = result.puzzle_rows;
+    function completeGetNewPuzzleSolution(result, attemptValues) {
+        console.log('Response received from getNewPuzzleSolution API: ', result);
+        console.log("Completed puzzle data: " + attemptValues);
 
-      var solution_puzzle_rows = [
-        [5,8,1,9,6,4,7,2,3],
-        [7,2,4,5,1,3,6,9,8],
-        [3,6,9,7,8,2,4,1,5],
-        [4,1,9,2,5,7,8,6,9],
-        [2,9,6,3,4,8,1,5,7],
-        [8,5,7,1,9,6,2,3,4],
-        [1,4,2,8,3,9,5,7,6],
-        [9,7,8,6,2,5,3,4,1],
-        [6,3,5,4,7,1,9,8,2]
-      ];
+        solutionPuzzleJson = result.puzzle_rows;
 
-      return solution_puzzle_rows;
+        var puzzleCorrect = checkPuzzleCorrect(attemptValues,solutionPuzzleJson);
+
+        if (puzzleCorrect == true) {
+          $('#finished-button').hide();
+          $('#correct').show();
+        } else {
+          var table_body ='<table>';
+          for (const row of solutionPuzzleJson){
+            table_body += '<tr>'
+            for (const cell of row){
+              table_body += '<td><input type="text" value="' + cell + '" readonly></td>';
+            }
+            table_body += '</tr>'
+          }
+          table_body+='</table>';
+
+          $('#finished-button').hide();
+          $('#failed').show();
+          $('#puzzle-solution').html(table_body);
+        }
     }
 
     function checkPuzzleCorrect(attemptValues,solutionJson){
@@ -126,33 +147,13 @@ var dashboardUrl = '/user/';
 
       var i;
       for (i = 0; i < 81; i++) {
-      // for (i = 0; i < 9; i++) {
         if (attemptValues[i] != solutionValues[i]) {
           console.log("Attempt did not match the solution. AttemptValue:" + attemptValues[i] + " SolutionValue:" + solutionValues[i]);
-          $('#finished-button').hide();
-          $('#failed').show();
-
-          displaySolution(solutionJson);
-          return;
+          return false;
         }
       }
 
-
-      $('#finished-button').hide();
-      $('#correct').show();
-    }
-
-    function displaySolution(solutionValues){
-      var table_body ='<table>';
-      for (const row of solutionValues){
-        table_body += '<tr>'
-        for (const cell of row){
-          table_body += '<td><input type="text" value="' + cell + '" readonly></td>';
-        }
-        table_body += '</tr>'
-      }
-      table_body+='</table>';
-      $('#puzzle-solution').html(table_body);
+      return true;
     }
 
     $(function onDocReady() {

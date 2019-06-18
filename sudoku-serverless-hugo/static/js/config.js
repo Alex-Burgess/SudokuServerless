@@ -5,6 +5,7 @@ window._config = {
         region: 'eu-west-1' // e.g. us-east-2
     },
     api: {
-        invokeUrl: 'https://eed4cfchp9.execute-api.eu-west-1.amazonaws.com/Prod/tryNewPuzzle/'
+        requestNewPuzzleUrl: 'https://eed4cfchp9.execute-api.eu-west-1.amazonaws.com/Prod/tryNewPuzzle/',
+        getNewPuzzleSolutionUrl: 'https://yu9gozion4.execute-api.eu-west-1.amazonaws.com/Prod/getNewPuzzleSolution/',
     }
 };
