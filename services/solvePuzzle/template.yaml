@@ -1,0 +1,118 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Serverless resources for SolvePuzzle service
+
+Parameters:
+  CognitoUserPoolId:
+    Type: String
+    Default: eu-west-1_TGh4Ec2cx
+
+Resources:
+  SolvePuzzleApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      DefinitionBody:
+        swagger: "2.0"
+        info:
+          version: "1.0"
+          title: !Ref 'AWS::StackName'
+        schemes:
+        - "https"
+        paths:
+          "/solvePuzzle":
+            post:
+              responses:
+                "200":
+                  description: "200 response"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
+              security:
+              - SudokuServerlessAuthorizer: []
+              x-amazon-apigateway-integration:
+                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${SolvePuzzleFunction.Arn}/invocations'
+                passthroughBehavior: "when_no_match"
+                httpMethod: "POST"
+                type: "aws_proxy"
+            options:
+              consumes:
+              - "application/json"
+              produces:
+              - "application/json"
+              responses:
+                "200":
+                  description: "200 response"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
+                    Access-Control-Allow-Methods:
+                      type: "string"
+                    Access-Control-Allow-Headers:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                responses:
+                  default:
+                    statusCode: "200"
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+                      method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                    responseTemplates:
+                      application/json: "{}\n"
+                requestTemplates:
+                  application/json: "{\n  \"statusCode\" : 200\n}\n"
+                passthroughBehavior: "when_no_match"
+                type: "mock"
+        securityDefinitions:
+          SudokuServerlessAuthorizer:
+            type: "apiKey"
+            name: "Authorization"
+            in: "header"
+            x-amazon-apigateway-authtype: "cognito_user_pools"
+            x-amazon-apigateway-authorizer:
+              providerARNs:
+              - !Sub "arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${CognitoUserPoolId}"
+              type: "cognito_user_pools"
+
+
+  SolvePuzzleFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: SolvePuzzleFunction
+      Handler: solve_puzzle/solve.handler
+      Runtime: python3.6
+      Description: Gets a puzzle solution from an s3 bucket
+      Role: !GetAtt SolvePuzzleFunctionRole.Arn
+      Events:
+        GetNewPuzzle:
+          Type: Api
+          Properties:
+            RestApiId: !Ref SolvePuzzleApi
+            Path: /solvePuzzle
+            Method: POST
+
+  SolvePuzzleFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: 'SudokuServerless-SolvePuzzle-Role'
+      AssumeRolePolicyDocument:
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+              - lambda.amazonaws.com
+          Action:
+            - sts:AssumeRole
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+        # - "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+
+Outputs:
+  SolvePuzzleFunctionApi:
+    Description: "API Gateway endpoint URL for Prod stage for SolvePuzzleFunction function"
+    Value: !Sub 'https://${SolvePuzzleApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/getNewSolvePuzzle/{id}'
+
+  SolvePuzzleFunctionIamRole:
+    Description: "Implicit IAM Role created for SolvePuzzleFunction function"
+    Value: !GetAtt SolvePuzzleFunctionRole.Arn
