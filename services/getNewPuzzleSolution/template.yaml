@@ -1,44 +1,121 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: >
-    getNewPuzzleSolution
+Description: Serverless resources for getNewPuzzleSolution service
 
-    Sample SAM Template for getNewPuzzleSolution
-
-# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
-Globals:
-    Function:
-        Timeout: 3
-
+Parameters:
+  CognitoUserPoolId:
+    Type: String
+    Default: eu-west-1_TGh4Ec2cx
 
 Resources:
+  PuzzleSolutionApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      DefinitionBody:
+        swagger: "2.0"
+        info:
+          version: "1.0"
+          title: !Ref 'AWS::StackName'
+        schemes:
+        - "https"
+        paths:
+          "/getNewPuzzleSolution/{id}":
+            get:
+              responses:
+                "200":
+                  description: "200 response"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
+              security:
+              - SudokuServerlessAuthorizer: []
+              x-amazon-apigateway-integration:
+                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${PuzzleSolutionFunction.Arn}/invocations'
+                passthroughBehavior: "when_no_match"
+                httpMethod: "POST"
+                type: "aws_proxy"
+            options:
+              consumes:
+              - "application/json"
+              produces:
+              - "application/json"
+              responses:
+                "200":
+                  description: "200 response"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
+                    Access-Control-Allow-Methods:
+                      type: "string"
+                    Access-Control-Allow-Headers:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                responses:
+                  default:
+                    statusCode: "200"
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+                      method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                    responseTemplates:
+                      application/json: "{}\n"
+                requestTemplates:
+                  application/json: "{\n  \"statusCode\" : 200\n}\n"
+                passthroughBehavior: "when_no_match"
+                type: "mock"
+        securityDefinitions:
+          SudokuServerlessAuthorizer:
+            type: "apiKey"
+            name: "Authorization"
+            in: "header"
+            x-amazon-apigateway-authtype: "cognito_user_pools"
+            x-amazon-apigateway-authorizer:
+              providerARNs:
+              - !Sub "arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${CognitoUserPoolId}"
+              type: "cognito_user_pools"
 
-    HelloWorldFunction:
-        Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-        Properties:
-            CodeUri: hello_world/
-            Handler: app.lambda_handler
-            Runtime: python3.6
-            Events:
-                HelloWorld:
-                    Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-                    Properties:
-                        Path: /hello
-                        Method: get
+
+  PuzzleSolutionFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: PuzzleSolutionFunction
+      Handler: get_new_puzzle_solution/solution.handler
+      Runtime: python3.6
+      Description: Gets a puzzle solution from an s3 bucket
+      Role: !GetAtt PuzzleSolutionFunctionRole.Arn
+      Environment:
+        Variables:
+          SOLUTIONS_BUCKET_NAME: 'sudoku-unsolved-puzzle-solutions'
+      Events:
+        GetNewPuzzle:
+          Type: Api
+          Properties:
+            RestApiId: !Ref PuzzleSolutionApi
+            Path: /getNewPuzzleSolution/{id}
+            Method: GET
+
+  PuzzleSolutionFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: 'SudokuServerless-PuzzleSolution-Role'
+      AssumeRolePolicyDocument:
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+              - lambda.amazonaws.com
+          Action:
+            - sts:AssumeRole
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+        - "arn:aws:iam::aws:policy/AmazonS3FullAccess"
 
 Outputs:
+  PuzzleSolutionFunctionApi:
+    Description: "API Gateway endpoint URL for Prod stage for PuzzleSolutionFunction function"
+    Value: !Sub 'https://${PuzzleSolutionApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/getNewPuzzleSolution/{id}'
 
-    # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
-    # Find out more about other implicit resources you can reference within SAM
-    # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
-    HelloWorldApi:
-      Description: "API Gateway endpoint URL for Prod stage for Hello World function"
-      Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
-
-    HelloWorldFunction:
-      Description: "Hello World Lambda Function ARN"
-      Value: !GetAtt HelloWorldFunction.Arn
-
-    HelloWorldFunctionIamRole:
-      Description: "Implicit IAM Role created for Hello World function"
-      Value: !GetAtt HelloWorldFunctionRole.Arn
+  PuzzleSolutionFunctionIamRole:
+    Description: "Implicit IAM Role created for PuzzleSolutionFunction function"
+    Value: !GetAtt PuzzleSolutionFunctionRole.Arn
