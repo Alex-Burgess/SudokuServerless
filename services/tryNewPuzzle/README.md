@@ -7,6 +7,7 @@ This API is called by a web page when a user requests to attempt a new puzzle.  
 
 * AWS CLI already configured with Administrator permission
 * [Python 3 installed](https://www.python.org/downloads/)
+* Python dependencies, e.g. pytest, boto3, moto.
 * [Docker installed](https://www.docker.com/community-edition)
 * An S3 bucket with the unsolved puzzles
 
@@ -49,10 +50,8 @@ sam logs -n UnsolvedPuzzleFunction --stack-name Service-TryNewPuzzle --tail
 ```
 
 ## Testing
-Next, we install test dependencies and we run `pytest` against our `tests` folder to run our initial unit tests:
-
+To execute `pytest` against our `tests` folder to run our initial unit tests:
 ```
-pip install pytest pytest-mock --user
 python -m pytest tests/ -v
 ```
 

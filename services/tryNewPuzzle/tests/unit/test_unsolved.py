@@ -4,7 +4,7 @@ import os
 import pytest
 import boto3
 from moto import mock_s3
-from apis import unsolved
+from try_new_puzzle import unsolved
 
 bucket_name = 'mytestbucket'
 example_puzzles_path = '/home/ec2-user/environment/SudokuServerless/example_puzzles'
