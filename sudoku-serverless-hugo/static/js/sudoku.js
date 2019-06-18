@@ -78,7 +78,14 @@ var dashboardUrl = '/user/';
       var puzzleId = $('#puzzle-id').val()
       console.log('Puzzle ID: ', puzzleId);
 
-      var attemptValues = validateFinishedPuzzle(inputs);
+      var validateResult = validateFinishedPuzzle(inputs);
+      empty = validateResult.empty;
+      attemptValues = validateResult.attemptValues;
+
+      if (empty > 0){
+        alert("Puzzle is not complete. Number of cells to complete " + empty);
+        return
+      }
 
       $.ajax({
           method: 'GET',
@@ -110,7 +117,10 @@ var dashboardUrl = '/user/';
         }
       });
 
-      return attemptValues
+      return {
+        attemptValues: attemptValues,
+        empty: empty
+      };
     }
 
     function completeGetNewPuzzleSolution(result, attemptValues) {
