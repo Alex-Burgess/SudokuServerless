@@ -3,9 +3,11 @@ import os
 import boto3
 import random
 
+
 s3_client = boto3.client('s3')
 # TODO - s3 role should least permissions, right now it has all permissons
 # TODO - logging
+
 
 def handler(event, context):
     try:
@@ -16,7 +18,7 @@ def handler(event, context):
         return {'statusCode': 200,
                 'body': puzzle_data,
                 'headers': {
-                    'Content-Type': 'application/json', 
+                    'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*'
                 }}
     except Exception as e:
@@ -28,10 +30,11 @@ def handler(event, context):
                     'Access-Control-Allow-Origin': '*'
                 }}
 
+
 def get_bucket_name():
     try:
         bucket_name = os.environ['UNSOLVED_BUCKET_NAME']
-    except:
+    except KeyError:
         raise Exception('UNSOLVED_BUCKET_NAME environment variable not set correctly')
 
     return bucket_name
