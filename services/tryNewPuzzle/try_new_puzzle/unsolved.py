@@ -13,10 +13,11 @@ def handler(event, context):
     try:
         bucket_name = get_bucket_name()
         key = get_random_key(bucket_name)
-        puzzle_data = get_puzzle_from_s3(bucket_name, key)
+        puzzle_data_object = get_puzzle_from_s3(bucket_name, key)
+        return_data = add_puzzle_id(puzzle_data_object, key)
 
         return {'statusCode': 200,
-                'body': puzzle_data,
+                'body': return_data,
                 'headers': {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*'
@@ -29,6 +30,12 @@ def handler(event, context):
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*'
                 }}
+
+
+def add_puzzle_id(puzzle_data, id):
+    data = json.loads(puzzle_data)
+    data['id'] = id
+    return json.dumps(data)
 
 
 def get_bucket_name():

@@ -45,11 +45,14 @@ var dashboardUrl = '/user/';
 
     function completeRequestNewPuzzle(result) {
         console.log('Response received from API: ', result);
+        var id = result.id;
         var level = result.level;
         var puzzle_rows = result.puzzle_rows;
+        console.log('ID: ', id);
         console.log('Level: ', level);
         console.log('Puzzle Rows: ', puzzle_rows);
 
+        $('#puzzle-id').val(id);
         $('#puzzle-level').text('Level: ' + level);
 
         var table_body ='<table>';
@@ -72,12 +75,14 @@ var dashboardUrl = '/user/';
 
     function puzzleFinished(){
       var inputs = $('#tryForm :input');
+      var puzzleId = $('#puzzle-id').val()
+      console.log('Puzzle ID: ', puzzleId);
 
       var attemptValues = validateFinishedPuzzle(inputs);
 
       $.ajax({
           method: 'GET',
-          url: _config.api.getNewPuzzleSolutionUrl + '1',
+          url: _config.api.getNewPuzzleSolutionUrl + puzzleId,
           headers: {
               Authorization: authToken,
           },

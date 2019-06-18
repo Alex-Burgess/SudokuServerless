@@ -13,7 +13,7 @@ def handler(event, context):
 
     try:
         bucket_name = get_bucket_name()
-        key = puzzle_id + '.json'
+        key = puzzle_id
         puzzle_data = get_puzzle_from_s3(bucket_name, key)
 
         return {'statusCode': 200,
