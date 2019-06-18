@@ -2,7 +2,80 @@ AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: Serverless resources for SudokuServerless application
 
+Parameters:
+  CognitoUserPoolId:
+    Type: String
+    Default: eu-west-1_TGh4Ec2cx
+
 Resources:
+  UnsolvedPuzzleApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      DefinitionBody:
+        swagger: "2.0"
+        info:
+          version: "1.0"
+          title: !Ref 'AWS::StackName'
+        schemes:
+        - "https"
+        paths:
+          "/tryNewPuzzle":
+            get:
+              responses:
+                "200":
+                  description: "200 response"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
+              security:
+              - SudokuServerlessAuthorizer: []
+              x-amazon-apigateway-integration:
+                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${UnsolvedPuzzleFunction.Arn}/invocations'
+                passthroughBehavior: "when_no_match"
+                httpMethod: "POST"
+                type: "aws_proxy"
+            options:
+              consumes:
+              - "application/json"
+              produces:
+              - "application/json"
+              responses:
+                "200":
+                  description: "200 response"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
+                    Access-Control-Allow-Methods:
+                      type: "string"
+                    Access-Control-Allow-Headers:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                responses:
+                  default:
+                    statusCode: "200"
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+                      method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                    responseTemplates:
+                      application/json: "{}\n"
+                requestTemplates:
+                  application/json: "{\n  \"statusCode\" : 200\n}\n"
+                passthroughBehavior: "when_no_match"
+                type: "mock"
+        securityDefinitions:
+          SudokuServerlessAuthorizer:
+            type: "apiKey"
+            name: "Authorization"
+            in: "header"
+            x-amazon-apigateway-authtype: "cognito_user_pools"
+            x-amazon-apigateway-authorizer:
+              providerARNs:
+              - !Sub "arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${CognitoUserPoolId}"
+              type: "cognito_user_pools"
+
+
   UnsolvedPuzzleFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -18,8 +91,9 @@ Resources:
         GetNewPuzzle:
           Type: Api
           Properties:
+            RestApiId: !Ref UnsolvedPuzzleApi
             Path: /tryNewPuzzle
-            Method: get
+            Method: GET
 
   UnsolvedPuzzleFunctionRole:
     Type: AWS::IAM::Role
@@ -40,7 +114,7 @@ Resources:
 Outputs:
   UnsolvedPuzzleFunctionApi:
     Description: "API Gateway endpoint URL for Prod stage for UnsolvedPuzzleFunction function"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/tryNewPuzzle/"
+    Value: !Sub 'https://${UnsolvedPuzzleApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/tryNewPuzzle/'
 
   UnsolvedPuzzleFunctionIamRole:
     Description: "Implicit IAM Role created for UnsolvedPuzzleFunction function"
