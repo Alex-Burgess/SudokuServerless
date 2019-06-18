@@ -39,7 +39,7 @@ After deployment is complete you can run the following command to retrieve the A
 ```
 aws cloudformation describe-stacks \
     --stack-name Service-GetNewPuzzleSolution \
-    --query 'Stacks[].Outputs[?OutputKey==`UnsolvedPuzzleFunctionApi`]' \
+    --query 'Stacks[].Outputs[?OutputKey==`PuzzleSolutionApi`]' \
     --output table
 ```
 
@@ -87,7 +87,7 @@ All commands used throughout this document
 sam local generate-event apigateway aws-proxy > event.json
 
 # Invoke function locally with event.json as an input
-sam local invoke UnsolvedPuzzleFunction --event event.json
+sam local invoke PuzzleSolutionFunction --event event.json
 
 # Run API Gateway locally
 sam local start-api
