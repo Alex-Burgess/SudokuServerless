@@ -1,4 +1,5 @@
 import json
+from solve_puzzle import validate
 
 
 def handler(event, context):
@@ -8,7 +9,15 @@ def handler(event, context):
     try:
         puzzle_object = get_puzzle_object(unsolved_puzzle_form_data)
 
-        validate_puzzle(puzzle_object)
+        val_result = validate.validate_puzzle(puzzle_object)
+
+        if not val_result:
+            return {'statusCode': 500,
+                    'body': 'Puzzle was not validated',
+                    'headers': {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    }}
 
         solved_puzzle = solve_puzzle(puzzle_object)
 
@@ -56,21 +65,3 @@ def solve_puzzle(puzzle):
     print("DEBUG: Solved puzzle: " + json.dumps(puzzle))
 
     return puzzle
-
-
-def validate_puzzle(puzzle):
-    row1 = puzzle[0]
-    validate_row(row1)
-
-    return True
-
-
-def validate_row(row):
-    max_cell_value_occurences = 1
-    for x in range(1, 10):
-        if row.count(x) > max_cell_value_occurences:
-            print("Number (" + str(x) + ") occurred more than once in row (" + str(row) + ")")
-            return False
-
-    print("No duplicates found in row (" + str(row) + ")")
-    return True
