@@ -171,12 +171,103 @@ var dashboardUrl = '/user/';
       return true;
     }
 
+    function emptyPuzzle(){
+      var table_body ='<table>';
+
+      for (i = 0; i < 9; i++) {
+        table_body += '<tr>'
+        for (j = 0; j < 9; j++) {
+          table_body += '<td><input pattern="[0-9]*" type="text" size="1" width="100%" maxlength="1"></td>';
+        }
+        table_body += '</tr>'
+      }
+      table_body+='</table>';
+      $('#puzzle').html(table_body);
+    }
+
+    function solvePuzzle(){
+      var inputs = $('#solveForm :input');
+
+      var validateResult = validateFinishedPuzzle(inputs);
+      empty = validateResult.empty;
+      if (empty > 65) {
+        alert("This doesn't look like a valid puzzle.  The smallest solvable puzzles have at least 17 squares.");
+        return;
+      }
+
+      puzzleJson = createPuzzleJson(inputs);
+
+      $.ajax({
+          method: 'POST',
+          url: _config.api.solvePuzzle,
+          headers: {
+              Authorization: authToken,
+          },
+          data: puzzleJson,
+          contentType: 'application/json',
+          success: completeSolvePuzzle,
+          error: function ajaxError(jqXHR, textStatus, errorThrown) {
+              console.error('Error requesting puzzle solution: ', textStatus, ', Details: ', errorThrown);
+              console.error('Response: ', jqXHR.responseText);
+              alert('An error occured when requesting your puzzle solution:\n' + jqXHR.responseText);
+          }
+      });
+    }
+
+    function createPuzzleJson(inputs){
+      var puzzleData = {
+          puzzle_rows : []
+      };
+
+      var puzzleRows = [];
+      for (row = 0; row < 9; row++) {
+        var puzzleRow = [];
+        for (col = 0; col < 9; col++) {
+          cell = (row * 9) + col;
+          if (inputs[cell].value) {
+            puzzleRow.push(inputs[cell].value);
+          } else {
+            puzzleRow.push(0);
+          }
+        }
+        puzzleData.puzzle_rows.push(puzzleRow);
+      }
+
+      console.log("puzzleData stringify: " + JSON.stringify(puzzleData));
+
+      return JSON.stringify(puzzleData);
+    }
+
+    function completeSolvePuzzle(result) {
+        console.log('Response received from solvePuzzle API: ', result);
+
+        solutionPuzzleJson = result.puzzle_rows;
+
+        var table_body ='<table>';
+        for (const row of solutionPuzzleJson){
+          table_body += '<tr>'
+          for (const cell of row){
+            table_body += '<td><input type="text" value="' + cell + '" readonly></td>';
+          }
+          table_body += '</tr>'
+        }
+        table_body+='</table>';
+
+        $('#puzzle-solved').html(table_body);
+    }
+
     $(function onDocReady() {
         if (/try/.test(window.location.href)) {
           requestNewPuzzle();
         }
 
+        if (/solve/.test(window.location.href)) {
+          emptyPuzzle();
+        }
+
         $('#finished').click(puzzleFinished);
+
+        $('#solve').click(solvePuzzle);
 
         $('#signOut').click(function() {
             Sudoku.signOut();

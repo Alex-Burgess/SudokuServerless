@@ -55,7 +55,7 @@ Resources:
                   default:
                     statusCode: "200"
                     responseParameters:
-                      method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+                      method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS,POST'"
                       method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
                       method.response.header.Access-Control-Allow-Origin: "'*'"
                     responseTemplates:
@@ -106,12 +106,11 @@ Resources:
             - sts:AssumeRole
       ManagedPolicyArns:
         - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-        # - "arn:aws:iam::aws:policy/AmazonS3FullAccess"
 
 Outputs:
-  SolvePuzzleFunctionApi:
+  SolvePuzzleApi:
     Description: "API Gateway endpoint URL for Prod stage for SolvePuzzleFunction function"
-    Value: !Sub 'https://${SolvePuzzleApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/getNewSolvePuzzle/{id}'
+    Value: !Sub 'https://${SolvePuzzleApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/solvePuzzle'
 
   SolvePuzzleFunctionIamRole:
     Description: "Implicit IAM Role created for SolvePuzzleFunction function"

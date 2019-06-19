@@ -5,18 +5,30 @@ def handler(event, context):
     # TODO Add checks to validate that was a json object and was a sudoku puzzle
     unsolved_puzzle_form_data = json.dumps(event, indent=2)
 
-    puzzle_object = get_puzzle_object(unsolved_puzzle_form_data)
+    try:
+        puzzle_object = get_puzzle_object(unsolved_puzzle_form_data)
 
-    solved_puzzle = solve_puzzle(puzzle_object)
+        solved_puzzle = solve_puzzle(puzzle_object)
 
-    data = {
-        'output': 'Puzzle successfully solved.',
-        'Solved Puzzle': solved_puzzle
-    }
+        data = {
+            'output': 'Puzzle successfully solved.',
+            'puzzle_rows': solved_puzzle
+        }
 
-    return {'statusCode': 200,
-            'body': json.dumps(data),
-            'headers': {'Content-Type': 'application/json'}}
+        return {'statusCode': 200,
+                'body': json.dumps(data),
+                'headers': {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                }}
+    except Exception as e:
+        print(e)
+        return {'statusCode': 500,
+                'body': json.dumps({'error': str(e)}),
+                'headers': {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                }}
 
 
 def get_puzzle_object(unsolved_puzzle_form_data):

@@ -7,5 +7,6 @@ window._config = {
     api: {
         requestNewPuzzleUrl: 'https://eed4cfchp9.execute-api.eu-west-1.amazonaws.com/Prod/tryNewPuzzle/',
         getNewPuzzleSolutionUrl: 'https://yu9gozion4.execute-api.eu-west-1.amazonaws.com/Prod/getNewPuzzleSolution/',
+        solvePuzzle: 'https://61bft8kr75.execute-api.eu-west-1.amazonaws.com/Prod/solvePuzzle'
     }
 };
