@@ -5,16 +5,46 @@ from solve_puzzle import validate
 
 def test_validate_row_col_grid():
     row = [1, 1, 0, 0, 0, 0, 0, 0, 0]
-    result = validate.validate_row_col_grid(row)
+    result = validate.validate_row_col_grid(row, "row")
     assert not result, "Validation should fail due to duplicate 1s."
 
     row = [0, 0, 0, 0, 0, 0, 0, 9, 9]
-    result = validate.validate_row_col_grid(row)
+    result = validate.validate_row_col_grid(row, "row")
     assert not result, "Validation should fail due to duplicate 9s."
 
     row = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    result = validate.validate_row_col_grid(row)
+    result = validate.validate_row_col_grid(row, "row")
     assert result, "Validation should succeed as no duplicates."
+
+
+def test_array_for_data_type():
+    puzzle = [
+        ["1", "1", "3", "4", "5", "6", "7", "8", "9"],
+        [2, 0, 0, 0, 0, 0, 0, 0, 0],
+        [3, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 7],
+        [0, 0, 0, 0, 0, 0, 0, 0, 8],
+        [0, 0, 0, 0, 0, 0, 0, 0, 9]
+    ]
+    result = validate.validata_data_types(puzzle)
+    assert not result, "Validation should fail due to string values."
+
+    puzzle = [
+        [1, 0, 0, 0, 0, 0, 0, 0, 0],
+        [2, 0, 0, 0, 0, 0, 0, 0, 0],
+        [3, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 7],
+        [0, 0, 0, 0, 0, 0, 0, 0, 8],
+        [0, 0, 0, 0, 0, 0, 0, 0, 9]
+    ]
+    result = validate.validata_data_types(puzzle)
+    assert result, "Validation should succeed as array is of ints."
 
 
 def test_get_column():

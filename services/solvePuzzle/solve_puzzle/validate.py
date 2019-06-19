@@ -1,33 +1,41 @@
 def validate_puzzle(puzzle):
-    # print("INFO: Validating puzzle (" + str(puzzle) + ")")
+    print("INFO: Validating puzzle (" + str(puzzle) + ")")
 
     for r in range(0, 9):
         row = puzzle[r]
-        if not validate_row_col_grid(row):
+        if not validate_row_col_grid(row, "row"):
             return False
 
     for c in range(0, 9):
         column = get_column(c, puzzle)
-        if not validate_row_col_grid(column):
+        if not validate_row_col_grid(column, "column"):
             return False
 
     for g in range(0, 9):
         grid = get_grid(g, puzzle)
-        if not validate_row_col_grid(grid):
+        if not validate_row_col_grid(grid, "grid"):
             return False
 
     return True
 
 
-def validate_row_col_grid(row):
-    # print("\nINFO: Validating row (" + str(row) + ")")
+def validata_data_types(puzzle):
+    for r in range(0, 9):
+        row = puzzle[r]
+        for x in row:
+            if not isinstance(x, int):
+                return False
+    return True
+
+def validate_row_col_grid(array, type):
+    print("\nINFO: Validating " + type + " (" + str(array) + ")")
     max_cell_value_occurences = 1
     for x in range(1, 10):
-        if row.count(x) > max_cell_value_occurences:
-            print("ERROR: Number (" + str(x) + ") occurred more than once in row (" + str(row) + ")")
+        if array.count(x) > max_cell_value_occurences:
+            print("ERROR: Number (" + str(x) + ") occurred more than once in row (" + str(array) + ")")
             return False
 
-    # print("INFO: No duplicates found in row (" + str(row) + ")")
+    print("INFO: No duplicates found in " + type + " (" + str(array) + ")")
     return True
 
 
@@ -45,7 +53,7 @@ def get_grid(grid_num, puzzle):
         for c in range(first_col, last_col):
             grid.append(puzzle[r][c])
 
-    # print("Grid number (" + str(grid_num) + ") values are: " + str(grid))
+    print("Grid number (" + str(grid_num) + ") values are: " + str(grid))
 
     return grid
 

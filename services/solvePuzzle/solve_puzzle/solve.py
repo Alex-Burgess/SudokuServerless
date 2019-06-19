@@ -9,11 +9,21 @@ def handler(event, context):
     try:
         puzzle_object = get_puzzle_object(unsolved_puzzle_form_data)
 
+        data_result = validate.validata_data_types(puzzle_object)
+
+        if not data_result:
+            return {'statusCode': 500,
+                    'body': 'Puzzle was not validated due to wrong data types',
+                    'headers': {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    }}
+
         val_result = validate.validate_puzzle(puzzle_object)
 
         if not val_result:
             return {'statusCode': 500,
-                    'body': 'Puzzle was not validated',
+                    'body': 'Puzzle was not validated due to invalid row, column or grid.',
                     'headers': {
                         'Content-Type': 'application/json',
                         'Access-Control-Allow-Origin': '*'

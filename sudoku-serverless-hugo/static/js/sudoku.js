@@ -225,7 +225,8 @@ var dashboardUrl = '/user/';
         for (col = 0; col < 9; col++) {
           cell = (row * 9) + col;
           if (inputs[cell].value) {
-            puzzleRow.push(inputs[cell].value);
+            val = Number(inputs[cell].value)
+            puzzleRow.push(val);
           } else {
             puzzleRow.push(0);
           }
