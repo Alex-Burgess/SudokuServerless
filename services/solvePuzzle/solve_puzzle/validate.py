@@ -27,15 +27,15 @@ def validata_data_types(puzzle):
                 return False
     return True
 
-def validate_row_col_grid(array, type):
-    print("\nINFO: Validating " + type + " (" + str(array) + ")")
+def validate_row_col_grid(number_list, type):
+    print("\nINFO: Validating " + type + " (" + str(number_list) + ")")
     max_cell_value_occurences = 1
     for x in range(1, 10):
-        if array.count(x) > max_cell_value_occurences:
-            print("ERROR: Number (" + str(x) + ") occurred more than once in row (" + str(array) + ")")
+        if number_list.count(x) > max_cell_value_occurences:
+            print("ERROR: Number (" + str(x) + ") occurred more than once in row (" + str(number_list) + ")")
             return False
 
-    print("INFO: No duplicates found in " + type + " (" + str(array) + ")")
+    print("INFO: No duplicates found in " + type + " (" + str(number_list) + ")")
     return True
 
 
