@@ -99,7 +99,18 @@ def solve_puzzle(puzzle):
     return {'puzzle': puzzle, 'status': False}
 
 
+
 def update_cell(puzzle, row, col, value):
     puzzle[row][col] = value
     print("DEBUG: Updated row (" + str(row) + "), col (" + str(col) + ") with value (" + str(value) + ").")
     return puzzle
+
+
+def elimate_values(number_list):
+    starting_list = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    for val in number_list:
+        if starting_list.count(val) > 0:
+            starting_list.remove(val)
+            print("DEBUG: Elimated value (" + str(val) + ").  List of cell possibilities now (" + str(starting_list) + ")")
+
+    return starting_list
