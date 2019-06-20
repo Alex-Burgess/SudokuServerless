@@ -97,3 +97,25 @@ def test_get_grid_number():
 
     grid_num = common.get_grid_number(test_puzzle, 8, 8)
     assert grid_num == 8, "Grid number for row 8, col 8 should be 8."
+
+
+def test_cell_contains_number():
+    test_puzzle = [
+        [1, 0, 0, 0, 0, 0, 0, 0, 0],
+        [2, 0, 0, 0, 0, 0, 0, 0, 0],
+        [3, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 7],
+        [0, 0, 0, 0, 0, 0, 0, 0, 8],
+        [0, 0, 0, 0, 0, 0, 0, 0, 9]
+    ]
+    result = common.cell_contains_number(test_puzzle, 0, 0)
+    assert result, "Cell in row 0, col 0 countains a value."
+
+    result = common.cell_contains_number(test_puzzle, 0, 1)
+    assert not result, "Cell in row 0, col 1 does not countain a value."
+
+    result = common.cell_contains_number(test_puzzle, 8, 8)
+    assert result, "Cell in row 8, col 8 countains a value."

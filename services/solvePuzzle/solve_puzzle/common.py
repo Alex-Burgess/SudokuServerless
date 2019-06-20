@@ -2,7 +2,7 @@
 
 
 def get_row(puzzle, row_num):
-    print("INFO: Row number (" + str(row_num) + ") being returned (" + str(puzzle[row_num]) + ")")
+    # print("INFO: Row number (" + str(row_num) + ") being returned (" + str(puzzle[row_num]) + ")")
     return puzzle[row_num]
 
 
@@ -12,7 +12,7 @@ def get_column(puzzle, col_num):
         cell_value = puzzle[r][col_num]
         column.append(cell_value)
 
-    print("INFO: Column number (" + str(col_num) + ") being returned (" + str(column) + ")")
+    # print("INFO: Column number (" + str(col_num) + ") being returned (" + str(column) + ")")
 
     return column
 
@@ -58,7 +58,7 @@ def get_grid(puzzle, grid_num):
         for c in range(first_col, last_col):
             grid.append(puzzle[r][c])
 
-    print("Grid number (" + str(grid_num) + ") values are: " + str(grid))
+    # print("Grid number (" + str(grid_num) + ") values are: " + str(grid))
 
     return grid
 
@@ -79,3 +79,13 @@ def grid_top_left_cell_number(number):
     coordinates = grids[number]
     # print("Grid number (" + str(number) + ") coordinates: " + str(coordinates))
     return coordinates
+
+
+def cell_contains_number(puzzle, row_num, col_num):
+    cell_value = puzzle[row_num][col_num]
+    if cell_value > 0:
+        # print("Cell of row (" + str(row_num) + ") and col (" + str(col_num) + ") contains a value (" + str(cell_value) + ")")
+        return True
+
+    # print("Cell of row (" + str(row_num) + ") and col (" + str(col_num) + ") does not contain a value (" + str(cell_value) + ")")
+    return False

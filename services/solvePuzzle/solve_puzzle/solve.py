@@ -89,9 +89,17 @@ def solve_puzzle(puzzle):
     # Start - for each cell, elimate numbers that it can't be by row, column and cell
     # If left with only one number, then update the puzzle.
 
-    value = 4
-    update_cell[puzzle, 0, 0, value]
-    print("DEBUG: puzzle updated: " + json.dumps(puzzle))
+    for loop in range(0, 10):
+        for r in range(0, 9):
+            for c in range(0, 9):
+                cell_contains_value = common.cell_contains_number(puzzle, r, c)
+                if not cell_contains_value:
+                    result = eliminate_cell_values(puzzle, r, c)
+
+                    if result['status']:
+                        puzzle = update_cell(puzzle, r, c, result['values'][0])
+        print("DEBUG: Loop (" + str(loop) + "), puzzle status: " + json.dumps(puzzle))
+
 
     # if puzzle solved:
     #     return {'puzzle': puzzle, 'status': True }
@@ -128,6 +136,6 @@ def elimate_list_values(possible_vals, number_list):
     for val in number_list:
         if possible_vals.count(val) > 0:
             possible_vals.remove(val)
-            print("DEBUG: Elimated value (" + str(val) + ").  List of cell possibilities now (" + str(possible_vals) + ")")
+            # print("DEBUG: Elimated value (" + str(val) + ").  List of cell possibilities now (" + str(possible_vals) + ")")
 
     return possible_vals
