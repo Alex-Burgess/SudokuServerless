@@ -1,5 +1,6 @@
 import json
 from solve_puzzle import validate
+from solve_puzzle import common
 
 
 def handler(event, context):
@@ -99,6 +100,23 @@ def solve_puzzle(puzzle):
     return {'puzzle': puzzle, 'status': False}
 
 
+def eliminate_cell_values(puzzle, row_num, col_num):
+    remaining_values = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    row = common.get_row(puzzle, row_num)
+    remaining_values = elimate_list_values(remaining_values, row)
+
+    col = common.get_column(puzzle, col_num)
+    remaining_values = elimate_list_values(remaining_values, col)
+
+    grid_num = common.get_grid_number(puzzle, row_num, col_num)
+    grid = common.get_grid(puzzle, grid_num)
+    remaining_values = elimate_list_values(remaining_values, grid)
+
+    if len(remaining_values) == 1:
+        return {'values': remaining_values, 'status': True}
+
+    return {'values': remaining_values, 'status': False}
+
 
 def update_cell(puzzle, row, col, value):
     puzzle[row][col] = value
@@ -106,11 +124,10 @@ def update_cell(puzzle, row, col, value):
     return puzzle
 
 
-def elimate_values(number_list):
-    starting_list = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+def elimate_list_values(possible_vals, number_list):
     for val in number_list:
-        if starting_list.count(val) > 0:
-            starting_list.remove(val)
-            print("DEBUG: Elimated value (" + str(val) + ").  List of cell possibilities now (" + str(starting_list) + ")")
+        if possible_vals.count(val) > 0:
+            possible_vals.remove(val)
+            print("DEBUG: Elimated value (" + str(val) + ").  List of cell possibilities now (" + str(possible_vals) + ")")
 
-    return starting_list
+    return possible_vals

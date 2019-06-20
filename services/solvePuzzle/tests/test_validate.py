@@ -16,7 +16,7 @@ def test_validate_row_col_grid():
     assert result, "Validation should succeed as no duplicates."
 
 
-def test_array_for_data_type():
+def test_object_for_data_type():
     test_puzzle = [
         ["1", "1", "3", "4", "5", "6", "7", "8", "9"],
         [2, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -44,54 +44,6 @@ def test_array_for_data_type():
     ]
     result = validate.validata_data_types(test_puzzle)
     assert result, "Validation should succeed as array is of ints."
-
-
-def test_get_column():
-    test_puzzle = [
-        [1, 0, 0, 0, 0, 0, 0, 0, 0],
-        [2, 0, 0, 0, 0, 0, 0, 0, 0],
-        [3, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 7],
-        [0, 0, 0, 0, 0, 0, 0, 0, 8],
-        [0, 0, 0, 0, 0, 0, 0, 0, 9]
-    ]
-
-    first_column = validate.get_column(0, test_puzzle)
-    assert first_column == [1, 2, 3, 0, 0, 0, 0, 0, 0], "First column did not match expected values."
-
-    last_column = validate.get_column(8, test_puzzle)
-    assert last_column == [0, 0, 0, 0, 0, 0, 7, 8, 9], "Last column did not match expected values."
-
-
-def test_get_grid():
-    test_puzzle = [
-        [1, 2, 3, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 7],
-        [0, 0, 0, 0, 0, 0, 0, 0, 8],
-        [0, 0, 0, 0, 0, 0, 0, 0, 9]
-    ]
-
-    first_grid = validate.get_grid(0, test_puzzle)
-    assert first_grid == [1, 2, 3, 0, 0, 0, 0, 0, 0], "First grid did not match expected values."
-
-    last_grid = validate.get_grid(8, test_puzzle)
-    assert last_grid == [0, 0, 7, 0, 0, 8, 0, 0, 9], "Last grid did not match expected values."
-
-
-def test_grid_top_left_cell_number():
-    grid1 = validate.grid_top_left_cell_number(0)
-    assert grid1 == [0, 0], "Grid 1 coordinates did not match expected values."
-
-    grid9 = validate.grid_top_left_cell_number(8)
-    assert grid9 == [6, 6], "Grid 9 coordinates did not match expected values."
 
 
 def test_validate_puzzle_duplicate_in_row():
@@ -189,7 +141,7 @@ def test_validate_puzzle_duplicate_in_grid():
         [0, 0, 0, 0, 0, 0, 0, 0, 9]
     ]
 
-    result = validate.validate_puzzle(test_puzzle)
+    result = validate.validate_puzzle(test_puzzle2)
     assert not result, "Puzzle validation should not succeed as duplicates in grid 9."
 
 
