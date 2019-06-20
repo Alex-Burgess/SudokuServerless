@@ -83,12 +83,8 @@ def get_puzzle_object(unsolved_puzzle_form_data):
 
 
 def solve_puzzle(puzzle):
-    # row1_col1 = puzzle[0][0]
-    # print("DEBUG: Row 1, col 1: " + str(row1_col1))
-
     # Start - for each cell, elimate numbers that it can't be by row, column and cell
     # If left with only one number, then update the puzzle.
-
     for loop in range(0, 10):
         for r in range(0, 9):
             for c in range(0, 9):
@@ -98,14 +94,46 @@ def solve_puzzle(puzzle):
 
                     if result['status']:
                         puzzle = update_cell(puzzle, r, c, result['values'][0])
-        print("DEBUG: Loop (" + str(loop) + "), puzzle status: " + json.dumps(puzzle))
 
+        print("DEBUG: Loop (" + str(loop) + "), puzzle update: " + json.dumps(puzzle))
 
-    # if puzzle solved:
-    #     return {'puzzle': puzzle, 'status': True }
+        if puzzle_complete(puzzle):
+            return {'puzzle': puzzle, 'status': True}
 
     # Puzzle not solved
     return {'puzzle': puzzle, 'status': False}
+
+
+def puzzle_complete(puzzle):
+    if row_col_grid_complete(puzzle, "rows"):
+        if row_col_grid_complete(puzzle, "cols"):
+            if row_col_grid_complete(puzzle, "grids"):
+                print("DEBUG: Puzzle complete")
+                return True
+
+    print("DEBUG: Puzzle not complete")
+    return False
+
+
+def row_col_grid_complete(puzzle, type):
+    test_list = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    for i in range(0, 9):
+        type_list = []
+        if type == "rows":
+            type_list = common.get_row(puzzle, i)
+        elif type == "cols":
+            type_list = common.get_column(puzzle, i)
+        elif type == "grids":
+            type_list = common.get_grid(puzzle, i)
+        else:
+            # if type not row, col or grid, throw exception.
+            print("ERROR....")
+
+        if not set(type_list) == set(test_list):
+            print("DEBUG: " + type + " (" + str(i) + ") with values (" + str(type_list) + ") is not complete.")
+            return False
+
+    return True
 
 
 def eliminate_cell_values(puzzle, row_num, col_num):

@@ -19,7 +19,7 @@ def test_solve_puzzle1():
         [5, 8, 1, 9, 6, 4, 7, 2, 3],
         [7, 2, 4, 5, 1, 3, 6, 9, 8],
         [3, 6, 9, 7, 8, 2, 4, 1, 5],
-        [4, 1, 9, 2, 5, 7, 8, 6, 9],
+        [4, 1, 3, 2, 5, 7, 8, 6, 9],
         [2, 9, 6, 3, 4, 8, 1, 5, 7],
         [8, 5, 7, 1, 9, 6, 2, 3, 4],
         [1, 4, 2, 8, 3, 9, 5, 7, 6],
@@ -190,3 +190,79 @@ def test_eliminate_cell_values():
     result = solve.eliminate_cell_values(test_puzzle, 8, 8)
     assert not result['status'], "Cell is not solved as row 8 and col 8 leave a number of values."
     assert result['values'] == [3, 5, 7], "List of values for cell should be [3, 5, 7]."
+
+
+def test_row_col_grid_complete():
+    test_puzzle = [
+        [0, 8, 0, 0, 6, 4, 7, 0, 3],
+        [7, 2, 0, 5, 0, 3, 6, 9, 8],
+        [0, 0, 0, 0, 0, 2, 4, 1, 0],
+        [0, 0, 0, 0, 0, 7, 0, 0, 9],
+        [0, 9, 6, 3, 0, 8, 1, 5, 0],
+        [8, 0, 0, 1, 0, 0, 0, 0, 0],
+        [0, 4, 2, 8, 0, 0, 0, 0, 0],
+        [9, 7, 8, 6, 0, 5, 0, 4, 1],
+        [6, 0, 5, 4, 7, 0, 0, 8, 0]
+    ]
+
+    result = solve.row_col_grid_complete(test_puzzle, "rows")
+    assert not result, "Rows should not be complete."
+
+    result = solve.row_col_grid_complete(test_puzzle, "cols")
+    assert not result, "Cols should not be complete."
+
+    result = solve.row_col_grid_complete(test_puzzle, "grids")
+    assert not result, "Grids should not be complete."
+
+    test_puzzle_result = [
+        [5, 8, 1, 9, 6, 4, 7, 2, 3],
+        [7, 2, 4, 5, 1, 3, 6, 9, 8],
+        [3, 6, 9, 7, 8, 2, 4, 1, 5],
+        [4, 1, 3, 2, 5, 7, 8, 6, 9],
+        [2, 9, 6, 3, 4, 8, 1, 5, 7],
+        [8, 5, 7, 1, 9, 6, 2, 3, 4],
+        [1, 4, 2, 8, 3, 9, 5, 7, 6],
+        [9, 7, 8, 6, 2, 5, 3, 4, 1],
+        [6, 3, 5, 4, 7, 1, 9, 8, 2]
+    ]
+
+    result = solve.row_col_grid_complete(test_puzzle_result, "rows")
+    assert result, "Rows should be complete."
+
+    result = solve.row_col_grid_complete(test_puzzle_result, "cols")
+    assert result, "Cols should be complete."
+
+    result = solve.row_col_grid_complete(test_puzzle_result, "grids")
+    assert result, "Grids should be complete."
+
+
+def test_puzzle_complete():
+    test_puzzle = [
+        [0, 8, 0, 0, 6, 4, 7, 0, 3],
+        [7, 2, 0, 5, 0, 3, 6, 9, 8],
+        [0, 0, 0, 0, 0, 2, 4, 1, 0],
+        [0, 0, 0, 0, 0, 7, 0, 0, 9],
+        [0, 9, 6, 3, 0, 8, 1, 5, 0],
+        [8, 0, 0, 1, 0, 0, 0, 0, 0],
+        [0, 4, 2, 8, 0, 0, 0, 0, 0],
+        [9, 7, 8, 6, 0, 5, 0, 4, 1],
+        [6, 0, 5, 4, 7, 0, 0, 8, 0]
+    ]
+
+    result = solve.puzzle_complete(test_puzzle)
+    assert not result, "Puzzle should not be complete."
+
+    test_puzzle_result = [
+        [5, 8, 1, 9, 6, 4, 7, 2, 3],
+        [7, 2, 4, 5, 1, 3, 6, 9, 8],
+        [3, 6, 9, 7, 8, 2, 4, 1, 5],
+        [4, 1, 3, 2, 5, 7, 8, 6, 9],
+        [2, 9, 6, 3, 4, 8, 1, 5, 7],
+        [8, 5, 7, 1, 9, 6, 2, 3, 4],
+        [1, 4, 2, 8, 3, 9, 5, 7, 6],
+        [9, 7, 8, 6, 2, 5, 3, 4, 1],
+        [6, 3, 5, 4, 7, 1, 9, 8, 2]
+    ]
+
+    result = solve.puzzle_complete(test_puzzle_result)
+    assert result, "Puzzle should be complete."
