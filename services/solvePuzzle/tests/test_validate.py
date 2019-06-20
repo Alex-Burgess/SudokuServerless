@@ -1,5 +1,4 @@
 import pytest
-from solve_puzzle import solve
 from solve_puzzle import validate
 
 
