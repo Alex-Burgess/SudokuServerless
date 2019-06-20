@@ -17,7 +17,7 @@ def test_validate_row_col_grid():
 
 
 def test_array_for_data_type():
-    puzzle = [
+    test_puzzle = [
         ["1", "1", "3", "4", "5", "6", "7", "8", "9"],
         [2, 0, 0, 0, 0, 0, 0, 0, 0],
         [3, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -28,10 +28,10 @@ def test_array_for_data_type():
         [0, 0, 0, 0, 0, 0, 0, 0, 8],
         [0, 0, 0, 0, 0, 0, 0, 0, 9]
     ]
-    result = validate.validata_data_types(puzzle)
+    result = validate.validata_data_types(test_puzzle)
     assert not result, "Validation should fail due to string values."
 
-    puzzle = [
+    test_puzzle = [
         [1, 0, 0, 0, 0, 0, 0, 0, 0],
         [2, 0, 0, 0, 0, 0, 0, 0, 0],
         [3, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -42,12 +42,12 @@ def test_array_for_data_type():
         [0, 0, 0, 0, 0, 0, 0, 0, 8],
         [0, 0, 0, 0, 0, 0, 0, 0, 9]
     ]
-    result = validate.validata_data_types(puzzle)
+    result = validate.validata_data_types(test_puzzle)
     assert result, "Validation should succeed as array is of ints."
 
 
 def test_get_column():
-    puzzle = [
+    test_puzzle = [
         [1, 0, 0, 0, 0, 0, 0, 0, 0],
         [2, 0, 0, 0, 0, 0, 0, 0, 0],
         [3, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -59,15 +59,15 @@ def test_get_column():
         [0, 0, 0, 0, 0, 0, 0, 0, 9]
     ]
 
-    first_column = validate.get_column(0, puzzle)
+    first_column = validate.get_column(0, test_puzzle)
     assert first_column == [1, 2, 3, 0, 0, 0, 0, 0, 0], "First column did not match expected values."
 
-    last_column = validate.get_column(8, puzzle)
+    last_column = validate.get_column(8, test_puzzle)
     assert last_column == [0, 0, 0, 0, 0, 0, 7, 8, 9], "Last column did not match expected values."
 
 
 def test_get_grid():
-    puzzle = [
+    test_puzzle = [
         [1, 2, 3, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -79,10 +79,10 @@ def test_get_grid():
         [0, 0, 0, 0, 0, 0, 0, 0, 9]
     ]
 
-    first_grid = validate.get_grid(0, puzzle)
+    first_grid = validate.get_grid(0, test_puzzle)
     assert first_grid == [1, 2, 3, 0, 0, 0, 0, 0, 0], "First grid did not match expected values."
 
-    last_grid = validate.get_grid(8, puzzle)
+    last_grid = validate.get_grid(8, test_puzzle)
     assert last_grid == [0, 0, 7, 0, 0, 8, 0, 0, 9], "Last grid did not match expected values."
 
 
@@ -96,7 +96,7 @@ def test_grid_top_left_cell_number():
 
 def test_validate_puzzle_duplicate_in_row():
     # Puzzle with duplicates in two rows, columns and grids
-    puzzle = [
+    test_puzzle = [
         [1, 0, 0, 0, 0, 0, 0, 0, 1],
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -108,10 +108,10 @@ def test_validate_puzzle_duplicate_in_row():
         [0, 0, 0, 0, 0, 0, 0, 0, 0]
     ]
 
-    result = validate.validate_puzzle(puzzle)
+    result = validate.validate_puzzle(test_puzzle)
     assert not result, "Puzzle validation should not succeed as duplicates in row 1."
 
-    puzzle2 = [
+    test_puzzle2 = [
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -123,13 +123,13 @@ def test_validate_puzzle_duplicate_in_row():
         [9, 0, 0, 0, 0, 0, 0, 0, 9]
     ]
 
-    result = validate.validate_puzzle(puzzle2)
+    result = validate.validate_puzzle(test_puzzle2)
     assert not result, "Puzzle validation should not succeed as duplicates in row 9."
 
 
 def test_validate_puzzle_duplicate_in_column():
     # Puzzle with duplicates in two rows, columns and grids
-    puzzle = [
+    test_puzzle = [
         [1, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -141,10 +141,10 @@ def test_validate_puzzle_duplicate_in_column():
         [1, 0, 0, 0, 0, 0, 0, 0, 0]
     ]
 
-    result = validate.validate_puzzle(puzzle)
+    result = validate.validate_puzzle(test_puzzle)
     assert not result, "Puzzle validation should not succeed as duplicates in column 1."
 
-    puzzle2 = [
+    test_puzzle2 = [
         [0, 0, 0, 0, 0, 0, 0, 0, 9],
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -156,13 +156,13 @@ def test_validate_puzzle_duplicate_in_column():
         [0, 0, 0, 0, 0, 0, 0, 0, 9]
     ]
 
-    result = validate.validate_puzzle(puzzle2)
+    result = validate.validate_puzzle(test_puzzle2)
     assert not result, "Puzzle validation should not succeed as duplicates in column 9."
 
 
 def test_validate_puzzle_duplicate_in_grid():
     # Puzzle with duplicates in two rows, columns and grids
-    puzzle = [
+    test_puzzle = [
         [1, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 1, 0, 0, 0, 0, 0, 0],
@@ -174,10 +174,10 @@ def test_validate_puzzle_duplicate_in_grid():
         [0, 0, 0, 0, 0, 0, 0, 0, 0]
     ]
 
-    result = validate.validate_puzzle(puzzle)
+    result = validate.validate_puzzle(test_puzzle)
     assert not result, "Puzzle validation should not succeed as duplicates in grid 1."
 
-    puzzle2 = [
+    test_puzzle2 = [
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -189,13 +189,13 @@ def test_validate_puzzle_duplicate_in_grid():
         [0, 0, 0, 0, 0, 0, 0, 0, 9]
     ]
 
-    result = validate.validate_puzzle(puzzle2)
+    result = validate.validate_puzzle(test_puzzle)
     assert not result, "Puzzle validation should not succeed as duplicates in grid 9."
 
 
 def test_validate_puzzle():
     # Puzzle with duplicates in two rows, columns and grids
-    puzzle = [
+    test_puzzle = [
         [0, 0, 0, 0, 1, 0, 2, 9, 0],
         [9, 7, 0, 0, 0, 8, 0, 6, 0],
         [3, 0, 1, 0, 0, 4, 0, 0, 8],
@@ -207,5 +207,5 @@ def test_validate_puzzle():
         [0, 6, 9, 0, 8, 0, 0, 0, 0]
     ]
 
-    result = validate.validate_puzzle(puzzle)
+    result = validate.validate_puzzle(test_puzzle)
     assert result, "Puzzle expected to be validated"
