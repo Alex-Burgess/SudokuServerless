@@ -104,3 +104,56 @@ def cell_contains_number(puzzle, row_num, col_num):
 
     # print("Cell of row (" + str(row_num) + ") and col (" + str(col_num) + ") does not contain a value (" + str(cell_value) + ")")
     return False
+
+
+def get_row_numbers_from_grid(puzzle, grid_num):
+    grid_coordinates = grid_top_left_cell_number(grid_num)
+
+    rows = [
+        grid_coordinates[0],
+        grid_coordinates[0] + 1,
+        grid_coordinates[0] + 2
+    ]
+
+    return rows
+
+
+def get_col_numbers_from_grid(puzzle, grid_num):
+    grid_coordinates = grid_top_left_cell_number(grid_num)
+
+    cols = [
+        grid_coordinates[1],
+        grid_coordinates[1] + 1,
+        grid_coordinates[1] + 2
+    ]
+
+    return cols
+
+
+def get_row_number_from_grid(puzzle, grid_num, cel_num):
+    grid_coordinates = grid_top_left_cell_number(grid_num)
+
+    row_num = 0
+    if cel_num < 3:
+        row_num = grid_coordinates[0]
+    elif cel_num < 6:
+        row_num = grid_coordinates[0] + 1
+    else:
+        row_num = grid_coordinates[0] + 2
+
+    return row_num
+
+
+def get_col_number_from_grid(puzzle, grid_num, cel_num):
+    grid_coordinates = grid_top_left_cell_number(grid_num)
+
+    col_num = 0
+
+    if (cel_num == 0) or (cel_num == 3) or (cel_num == 6):
+        col_num = grid_coordinates[1]
+    elif (cel_num == 1) or (cel_num == 4) or (cel_num == 7):
+        col_num = grid_coordinates[1] + 1
+    else:
+        col_num = grid_coordinates[1] + 2
+
+    return col_num

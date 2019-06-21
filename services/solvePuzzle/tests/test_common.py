@@ -119,3 +119,103 @@ def test_cell_contains_number():
 
     result = common.cell_contains_number(test_puzzle, 8, 8)
     assert result, "Cell in row 8, col 8 countains a value."
+
+
+def test_get_row_numbers_from_grid():
+    test_puzzle = [
+        [1, 0, 0, 0, 0, 0, 0, 0, 0],
+        [2, 0, 0, 0, 0, 0, 0, 0, 0],
+        [3, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 7],
+        [0, 0, 0, 0, 0, 0, 0, 0, 8],
+        [0, 0, 0, 0, 0, 0, 0, 0, 9]
+    ]
+    result = common.get_row_numbers_from_grid(test_puzzle, 0)
+    assert result == [0, 1, 2], "Row numbers from grid 0 should be 0, 1, 2"
+
+    result = common.get_row_numbers_from_grid(test_puzzle, 3)
+    assert result == [3, 4, 5], "Row numbers from grid 3 should be 3, 4, 5"
+
+    result = common.get_row_numbers_from_grid(test_puzzle, 8)
+    assert result == [6, 7, 8], "Row numbers from grid 8 should be 6, 7, 8"
+
+
+def test_get_row_number_from_grid():
+    test_puzzle = [
+        [1, 0, 0, 0, 0, 0, 0, 0, 0],
+        [2, 0, 0, 0, 0, 0, 0, 0, 0],
+        [3, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 7],
+        [0, 0, 0, 0, 0, 0, 0, 0, 8],
+        [0, 0, 0, 0, 0, 0, 0, 0, 9]
+    ]
+    result = common.get_row_number_from_grid(test_puzzle, 0, 0)
+    assert result == 0, "Row number should be 0."
+
+    result = common.get_row_number_from_grid(test_puzzle, 0, 1)
+    assert result == 0, "Row number should be 0."
+
+    result = common.get_row_number_from_grid(test_puzzle, 0, 3)
+    assert result == 1, "Row number should be 2."
+
+    result = common.get_row_number_from_grid(test_puzzle, 8, 8)
+    assert result == 8, "Row number should be 8."
+
+
+def test_get_col_numbers_from_grid():
+    test_puzzle = [
+        [1, 0, 0, 0, 0, 0, 0, 0, 0],
+        [2, 0, 0, 0, 0, 0, 0, 0, 0],
+        [3, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 7],
+        [0, 0, 0, 0, 0, 0, 0, 0, 8],
+        [0, 0, 0, 0, 0, 0, 0, 0, 9]
+    ]
+    result = common.get_col_numbers_from_grid(test_puzzle, 0)
+    assert result == [0, 1, 2], "Row numbers from grid 0 should be 0, 1, 2"
+
+    result = common.get_col_numbers_from_grid(test_puzzle, 3)
+    assert result == [0, 1, 2], "Row numbers from grid 3 should be 0, 1, 2"
+
+    result = common.get_col_numbers_from_grid(test_puzzle, 4)
+    assert result == [3, 4, 5], "Row numbers from grid 4 should be 3, 4, 5"
+
+    result = common.get_col_numbers_from_grid(test_puzzle, 8)
+    assert result == [6, 7, 8], "Row numbers from grid should be 6, 7, 8"
+
+
+def test_get_col_number_from_grid():
+    test_puzzle = [
+        [1, 0, 0, 0, 0, 0, 0, 0, 0],
+        [2, 0, 0, 0, 0, 0, 0, 0, 0],
+        [3, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 7],
+        [0, 0, 0, 0, 0, 0, 0, 0, 8],
+        [0, 0, 0, 0, 0, 0, 0, 0, 9]
+    ]
+    result = common.get_col_number_from_grid(test_puzzle, 0, 0)
+    assert result == 0, "Col number should be 0."
+
+    result = common.get_col_number_from_grid(test_puzzle, 0, 1)
+    assert result == 1, "Col number should be 1."
+
+    result = common.get_col_number_from_grid(test_puzzle, 0, 3)
+    assert result == 0, "Col number should be 0."
+
+    result = common.get_col_number_from_grid(test_puzzle, 8, 0)
+    assert result == 6, "Col number should be 6."
+
+    result = common.get_col_number_from_grid(test_puzzle, 8, 8)
+    assert result == 8, "Col number should be 8."
