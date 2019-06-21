@@ -80,7 +80,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: SolvePuzzleFunction
-      Handler: solve_puzzle/solve.handler
+      Handler: solve_puzzle/solve_handler.handler
       Runtime: python3.6
       Description: Gets a puzzle solution from an s3 bucket
       Role: !GetAtt SolvePuzzleFunctionRole.Arn

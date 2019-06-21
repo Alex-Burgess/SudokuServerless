@@ -3,89 +3,13 @@ from solve_puzzle import validate
 from solve_puzzle import common
 
 
-def handler(event, context):
-    # TODO Add checks to validate that was a json object and was a sudoku puzzle
-    try:
-        unsolved_puzzle_form_data = json.dumps(event, indent=2)
-    except Exception as e:
-        print(e)
-        return {'statusCode': 500,
-                'body': json.dumps({'error': str(e)}),
-                'headers': {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                }}
-
-    puzzle_object = get_puzzle_object(unsolved_puzzle_form_data)
-
-    data_result = validate.validata_data_types(puzzle_object)
-
-    if not data_result:
-        return {'statusCode': 500,
-                'body': 'Puzzle was not validated due to wrong data types',
-                'headers': {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                }}
-
-    val_result = validate.validate_puzzle(puzzle_object)
-
-    if not val_result:
-        return {'statusCode': 500,
-                'body': 'Puzzle was not validated due to invalid row, column or grid.',
-                'headers': {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                }}
-
-    solved_result = solve_puzzle(puzzle_object)
-
-    if solved_result['status']:
-        data = {
-            'status': 'Solved',
-            'message': 'Puzzle successfully solved.',
-            'puzzle_rows': solved_result['puzzle']
-        }
-
-        return {'statusCode': 200,
-                'body': json.dumps(data),
-                'headers': {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                }}
-    else:
-        data = {
-            'status': 'Unsolved',
-            'message': 'Puzzle could not be solved.',
-            'puzzle_rows': solved_result['puzzle']
-        }
-
-        return {'statusCode': 200,
-                'body': json.dumps(data),
-                'headers': {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                }}
-
-
-def get_puzzle_object(unsolved_puzzle_form_data):
-    # print("DEBUG: form data: " + unsolved_puzzle_form_data)
-
-    data = json.loads(unsolved_puzzle_form_data)
-    body = data['body']
-    # print("DEBUG: Body data: " + body)
-
-    body_data = json.loads(body)
-    puzzle = body_data['puzzle_rows']
-
-    print("DEBUG: Unsolved puzzle object: " + json.dumps(puzzle))
-    return puzzle
-
-
 def solve_puzzle(puzzle):
-    # Start - for each cell, elimate numbers that it can't be by row, column and cell
-    # If left with only one number, then update the puzzle.
-    for loop in range(0, 10):
+    for loop in range(0, 5):
+        # Method 2 - Row elimination
+        for r in range(0, 9):
+            puzzle = row_elimination(puzzle, r)
+
+        # Method 1 - Cell Elimination
         for r in range(0, 9):
             for c in range(0, 9):
                 cell_contains_value = common.cell_contains_number(puzzle, r, c)
@@ -95,7 +19,7 @@ def solve_puzzle(puzzle):
                     if result['status']:
                         puzzle = update_cell(puzzle, r, c, result['values'][0])
 
-        print("DEBUG: Loop (" + str(loop) + "), puzzle update: " + json.dumps(puzzle))
+        print("INFO: Loop (" + str(loop) + "), puzzle update: " + json.dumps(puzzle))
 
         if puzzle_complete(puzzle):
             return {'puzzle': puzzle, 'status': True}
@@ -104,20 +28,66 @@ def solve_puzzle(puzzle):
     return {'puzzle': puzzle, 'status': False}
 
 
+def row_elimination(puzzle, row_num):
+    row = common.get_row(puzzle, row_num)
+
+    # Determine remaining values to solve in row.
+    value_test_list = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    remaining_values = elimate_list_values(value_test_list, row)
+    # print("DEBUG: Row (" + str(row_num) + ") has remaining values (" + str(remaining_values) + ")")
+
+    for test_val in remaining_values:
+        # print("DEBUG: Checking if all but one of the cells in row ({}) can be elimindated for value ({}).".format(row_num, test_val))
+
+        # Tracking list, when this reaches a size of 1, for the test value, the cell is solved.
+        unsolved_cell_list = [0, 1, 2, 3, 4, 5, 6, 7, 8]
+
+        for cell in range(0, 9):
+            # Test if cell can be eliminated, as already contains value
+            if row[cell] > 0:
+                unsolved_cell_list.remove(cell)
+                continue
+
+            # Test if cell can be eliminated, due to a column match.
+            col = common.get_column(puzzle, cell)
+            if test_val in col:
+                unsolved_cell_list.remove(cell)
+                # print("DEBUG: Removed cell ({},{}) of Col ({}) contains val ({}).".format(row_num, cell, col, test_val))
+                continue
+
+            # Test if a cell can be eliminated, due to grid match.
+            grid_num = common.get_grid_number(puzzle, row_num, cell)
+            grid = common.get_grid(puzzle, grid_num)
+            if test_val in grid:
+                unsolved_cell_list.remove(cell)
+                # print("DEBUG: Removed cell ({},{}) of Grid ({}) contains val ({}).".format(row_num, cell, grid, test_val))
+                continue
+
+        if len(unsolved_cell_list) == 1:
+            print("INFO: Eliminated all cells in row {} ({}) for value ({}) to reference ({})".format(row_num, row, test_val, unsolved_cell_list))
+            puzzle = update_cell(puzzle, row_num, unsolved_cell_list[0], test_val)
+        # else:
+        #     print("DEBUG: All cells in row {} ({}) could not be eliminated for value ({}). Remaining cell references ({})".format(
+        #         row_num, row, test_val, unsolved_cell_list))
+
+    return puzzle
+
+
 def puzzle_complete(puzzle):
     if row_col_grid_complete(puzzle, "rows"):
         if row_col_grid_complete(puzzle, "cols"):
             if row_col_grid_complete(puzzle, "grids"):
-                print("DEBUG: Puzzle complete")
+                print("INFO: Puzzle complete")
                 return True
 
-    print("DEBUG: Puzzle not complete")
+    # print("DEBUG: Puzzle not complete")
     return False
 
 
 def row_col_grid_complete(puzzle, type):
     test_list = [1, 2, 3, 4, 5, 6, 7, 8, 9]
     for i in range(0, 9):
+        # TODO
         type_list = []
         if type == "rows":
             type_list = common.get_row(puzzle, i)
@@ -130,7 +100,7 @@ def row_col_grid_complete(puzzle, type):
             print("ERROR....")
 
         if not set(type_list) == set(test_list):
-            print("DEBUG: " + type + " (" + str(i) + ") with values (" + str(type_list) + ") is not complete.")
+            # print("DEBUG: " + type + " (" + str(i) + ") with values (" + str(type_list) + ") is not complete.")
             return False
 
     return True
@@ -156,7 +126,7 @@ def eliminate_cell_values(puzzle, row_num, col_num):
 
 def update_cell(puzzle, row, col, value):
     puzzle[row][col] = value
-    print("DEBUG: Updated row (" + str(row) + "), col (" + str(col) + ") with value (" + str(value) + ").")
+    print("INFO: Updated row (" + str(row) + "), col (" + str(col) + ") with value (" + str(value) + ").")
     return puzzle
 
 

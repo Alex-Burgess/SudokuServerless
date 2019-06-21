@@ -1,4 +1,19 @@
 # A collection of methods that help interact with the puzzle
+import json
+
+
+def get_puzzle_object(unsolved_puzzle_form_data):
+    # print("DEBUG: form data: " + unsolved_puzzle_form_data)
+
+    data = json.loads(unsolved_puzzle_form_data)
+    body = data['body']
+    # print("DEBUG: Body data: " + body)
+
+    body_data = json.loads(body)
+    puzzle = body_data['puzzle_rows']
+
+    print("DEBUG: Unsolved puzzle object: " + json.dumps(puzzle))
+    return puzzle
 
 
 def get_row(puzzle, row_num):
