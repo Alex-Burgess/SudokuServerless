@@ -159,7 +159,7 @@ def get_col_number_from_grid(puzzle, grid_num, cel_num):
     return col_num
 
 
-def get_empty_row_col_grid_cell_refs(num_list):
+def get_empty_cell_refs(num_list):
     cel_refs = []
 
     for x in range(0, 9):

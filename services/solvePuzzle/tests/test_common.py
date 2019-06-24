@@ -129,15 +129,15 @@ def test_cell_contains_number(test_puzzle):
     assert result, "Cell in row 8, col 8 countains a value."
 
 
-def test_get_empty_row_col_grid_cell_refs():
+def test_get_empty_cell_refs():
     row = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    result = common.get_empty_row_col_grid_cell_refs(row)
+    result = common.get_empty_cell_refs(row)
     assert result == [], "row should return empty array as no empty cells."
 
     row = [0, 2, 3, 4, 5, 6, 7, 8, 9]
-    result = common.get_empty_row_col_grid_cell_refs(row)
+    result = common.get_empty_cell_refs(row)
     assert result == [0], "row should return cell ref 0."
 
     row = [0, 2, 3, 4, 5, 6, 7, 0, 0]
-    result = common.get_empty_row_col_grid_cell_refs(row)
+    result = common.get_empty_cell_refs(row)
     assert result == [0, 7, 8], "row should return cell refs 0, 7 and 8."
