@@ -73,42 +73,42 @@ def test_validate_puzzle(valid_incomplete_puzzle):
 
 
 class TestDuplicates:
-    def test_validate_puzzle_duplicate_in_row0(empty_puzzle):
+    def test_validate_puzzle_duplicate_in_row0(self, empty_puzzle):
         empty_puzzle[0][1] = 1
         empty_puzzle[0][8] = 1
 
         result = validate.validate_puzzle(empty_puzzle)
         assert not result, "Puzzle validation should not succeed as duplicates in row 1."
 
-    def test_validate_puzzle_duplicate_in_row8(empty_puzzle):
+    def test_validate_puzzle_duplicate_in_row8(self, empty_puzzle):
         empty_puzzle[8][1] = 9
         empty_puzzle[8][8] = 9
 
         result = validate.validate_puzzle(empty_puzzle)
         assert not result, "Puzzle validation should not succeed as duplicates in row 9."
 
-    def test_validate_puzzle_duplicate_in_column0(empty_puzzle):
+    def test_validate_puzzle_duplicate_in_column0(self, empty_puzzle):
         empty_puzzle[0][0] = 1
         empty_puzzle[8][0] = 1
 
         result = validate.validate_puzzle(empty_puzzle)
         assert not result, "Puzzle validation should not succeed as duplicates in column 1."
 
-    def test_validate_puzzle_duplicate_in_column8(empty_puzzle):
+    def test_validate_puzzle_duplicate_in_column8(self, empty_puzzle):
         empty_puzzle[0][8] = 9
         empty_puzzle[8][8] = 9
 
         result = validate.validate_puzzle(empty_puzzle)
         assert not result, "Puzzle validation should not succeed as duplicates in column 9."
 
-    def test_validate_puzzle_duplicate_in_grid0(empty_puzzle):
+    def test_validate_puzzle_duplicate_in_grid0(self, empty_puzzle):
         empty_puzzle[0][0] = 1
         empty_puzzle[2][2] = 1
 
         result = validate.validate_puzzle(empty_puzzle)
         assert not result, "Puzzle validation should not succeed as duplicates in grid 1."
 
-    def test_validate_puzzle_duplicate_in_grid8(empty_puzzle):
+    def test_validate_puzzle_duplicate_in_grid8(self, empty_puzzle):
         empty_puzzle[6][6] = 9
         empty_puzzle[8][8] = 9
 
