@@ -1,65 +1,44 @@
-# import pytest
+import pytest
 from solve_puzzle import common
 
 
-def test_get_row():
+@pytest.fixture
+def test_puzzle():
     test_puzzle = [
         [1, 2, 3, 0, 0, 0, 0, 0, 0],
-        [2, 0, 0, 0, 0, 0, 0, 0, 0],
-        [3, 0, 0, 0, 0, 0, 0, 0, 0],
         [4, 0, 0, 0, 0, 0, 0, 0, 0],
         [5, 0, 0, 0, 0, 0, 0, 0, 0],
+        [6, 0, 0, 0, 0, 0, 0, 0, 0],
+        [7, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [0, 0, 0, 0, 0, 0, 0, 0, 2],
         [0, 0, 0, 0, 0, 0, 7, 8, 9]
     ]
-
-    first_row = common.get_row(test_puzzle, 0)
-    assert first_row == [1, 2, 3, 0, 0, 0, 0, 0, 0], "First row did not match expected values."
-
-    last_row = common.get_row(test_puzzle, 8)
-    assert last_row == [0, 0, 0, 0, 0, 0, 7, 8, 9], "Last row did not match expected values."
+    return test_puzzle
 
 
-def test_get_column():
-    test_puzzle = [
-        [1, 0, 0, 0, 0, 0, 0, 0, 0],
-        [2, 0, 0, 0, 0, 0, 0, 0, 0],
-        [3, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 7],
-        [0, 0, 0, 0, 0, 0, 0, 0, 8],
-        [0, 0, 0, 0, 0, 0, 0, 0, 9]
-    ]
+class TestGetLists:
+    def test_get_row(sef, test_puzzle):
+        first_row = common.get_row(test_puzzle, 0)
+        assert first_row == [1, 2, 3, 0, 0, 0, 0, 0, 0], "First row did not match expected values."
 
-    first_column = common.get_column(test_puzzle, 0)
-    assert first_column == [1, 2, 3, 0, 0, 0, 0, 0, 0], "First column did not match expected values."
+        last_row = common.get_row(test_puzzle, 8)
+        assert last_row == [0, 0, 0, 0, 0, 0, 7, 8, 9], "Last row did not match expected values."
 
-    last_column = common.get_column(test_puzzle, 8)
-    assert last_column == [0, 0, 0, 0, 0, 0, 7, 8, 9], "Last column did not match expected values."
+    def test_get_column(self, test_puzzle):
+        first_column = common.get_column(test_puzzle, 0)
+        assert first_column == [1, 4, 5, 6, 7, 0, 0, 0, 0], "First column did not match expected values."
 
+        last_column = common.get_column(test_puzzle, 8)
+        assert last_column == [0, 0, 0, 0, 0, 0, 1, 2, 9], "Last column did not match expected values."
 
-def test_get_grid():
-    test_puzzle = [
-        [1, 2, 3, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 7],
-        [0, 0, 0, 0, 0, 0, 0, 0, 8],
-        [0, 0, 0, 0, 0, 0, 0, 0, 9]
-    ]
+    def test_get_grid(self, test_puzzle):
+        first_grid = common.get_grid(test_puzzle, 0)
+        assert first_grid == [1, 2, 3, 4, 0, 0, 5, 0, 0], "First grid did not match expected values."
 
-    first_grid = common.get_grid(test_puzzle, 0)
-    assert first_grid == [1, 2, 3, 0, 0, 0, 0, 0, 0], "First grid did not match expected values."
-
-    last_grid = common.get_grid(test_puzzle, 8)
-    assert last_grid == [0, 0, 7, 0, 0, 8, 0, 0, 9], "Last grid did not match expected values."
+        last_grid = common.get_grid(test_puzzle, 8)
+        assert last_grid == [0, 0, 1, 0, 0, 2, 7, 8, 9], "Last grid did not match expected values."
 
 
 def test_grid_top_left_cell_number():
