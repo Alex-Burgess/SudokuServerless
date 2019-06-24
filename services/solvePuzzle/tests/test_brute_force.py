@@ -2,7 +2,7 @@ from solve_puzzle import brute_force
 
 
 def test_solve_puzzle():
-    test_puzzle = [
+    puzzle = [
         [0, 9, 0, 2, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 3, 5, 0],
         [6, 7, 5, 0, 0, 4, 0, 0, 0],
@@ -14,7 +14,7 @@ def test_solve_puzzle():
         [0, 0, 0, 0, 0, 1, 0, 9, 0]
     ]
 
-    test_puzzle_result = [
+    puzzle_result = [
          [1, 9, 3, 2, 7, 5, 4, 8, 6],
          [8, 4, 2, 9, 1, 6, 3, 5, 7],
          [6, 7, 5, 3, 8, 4, 1, 2, 9],
@@ -26,13 +26,13 @@ def test_solve_puzzle():
          [4, 5, 8, 6, 3, 1, 7, 9, 2]
     ]
 
-    result = brute_force.solve_wrapper(test_puzzle)
+    result = brute_force.solve_wrapper(puzzle)
     assert result['status'], "Puzzle should be solved."
-    assert result['puzzle'] == test_puzzle_result, "Solution should match solution provided."
+    assert result['puzzle'] == puzzle_result, "Solution should match solution provided."
 
 
 def test_convert_for_brute_force():
-    test_puzzle = [
+    puzzle = [
         [0, 9, 0, 2, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 3, 5, 0],
         [6, 7, 5, 0, 0, 4, 0, 0, 0],
@@ -56,12 +56,12 @@ def test_convert_for_brute_force():
         0, 0, 0, 0, 0, 1, 0, 9, 0
     ]
 
-    result = brute_force.convert_to_bf(test_puzzle)
+    result = brute_force.convert_to_bf(puzzle)
     assert result == test_result
 
 
 def test_convert_from_brute_force():
-    test_puzzle = [
+    puzzle = [
          1, 9, 3, 2, 7, 5, 4, 8, 6,
          8, 4, 2, 9, 1, 6, 3, 5, 7,
          6, 7, 5, 3, 8, 4, 1, 2, 9,
@@ -73,7 +73,7 @@ def test_convert_from_brute_force():
          4, 5, 8, 6, 3, 1, 7, 9, 2
     ]
 
-    test_puzzle_result = [
+    puzzle_result = [
          [1, 9, 3, 2, 7, 5, 4, 8, 6],
          [8, 4, 2, 9, 1, 6, 3, 5, 7],
          [6, 7, 5, 3, 8, 4, 1, 2, 9],
@@ -85,5 +85,5 @@ def test_convert_from_brute_force():
          [4, 5, 8, 6, 3, 1, 7, 9, 2]
     ]
 
-    result = brute_force.convert_from_bf(test_puzzle)
-    assert result == test_puzzle_result
+    result = brute_force.convert_from_bf(puzzle)
+    assert result == puzzle_result

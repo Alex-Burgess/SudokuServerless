@@ -12,9 +12,10 @@ def solve_puzzle(puzzle):
         puzzle = attempt['puzzle']
 
     # Method 5 - Find pairs
-    method5_result = solve_with_method_5(puzzle)
-    if (method5_result['status']):
-        return {'puzzle': method5_result['puzzle'], 'status': True}
+    for type in ["rows", "cols", "grids"]:
+        method5_result = solve_with_method_5(puzzle, type)
+        if (method5_result['status']):
+            return {'puzzle': method5_result['puzzle'], 'status': True}
 
     # Method 6 - brute force
     bf_result = brute_force.solve_wrapper(puzzle)
@@ -50,51 +51,48 @@ def solve_with_methods_1_to_4(puzzle):
     return {'puzzle': puzzle, 'status': False}
 
 
-def solve_with_method_5(puzzle):
-    # Method 5 - Find pairs
-    pairs = find_pairs_by_row_col_grid(puzzle)
+# Method 5 - Find pairs
+def solve_with_method_5(puzzle, type):
+    pairs = find_pairs_by_type(puzzle, type)
 
-    # Rows
-    rows_with_pairs = list(pairs['rows'].keys())   # list of rows with empty pairs
+    if type == 'rows':
+        remaining_type_list = list(pairs['rows'].keys())
+    elif type == 'cols':
+        remaining_type_list = list(pairs['cols'].keys())
+    else:
+        remaining_type_list = list(pairs['grids'].keys())
 
-    for row_num in rows_with_pairs:
-        row = common.get_row(puzzle, row_num)
-        empty_cell_pair = common.get_empty_row_col_grid_cell_refs(row)
+    for x in remaining_type_list:
+        if type == 'rows':
+            type_list = common.get_row(puzzle, x)
+        elif type == 'cols':
+            type_list = common.get_column(puzzle, x)
+        else:
+            type_list = common.get_grid(puzzle, x)
 
-        cell_num = empty_cell_pair[0]
-        possible_values = pairs['rows'][row_num]
-        print("DEBUG: Row {} ({}) has a missing value pair ({})".format(row_num, row, possible_values))
-        print("DEBUG: Remaining empty cell references for row {} ({}) are ({})".format(row_num, row, empty_cell_pair))
+        empty_cell_pair = common.get_empty_row_col_grid_cell_refs(type_list)
+        possible_values = pairs[type][x]
+        print("DEBUG: {} {} ({}) has a missing value pair ({})".format(type, x, type_list, possible_values))
 
         for value in possible_values:
             puzzle_copy = copy.deepcopy(puzzle)
-            print("INFO: Attempting to solve puzzle again by updating Row {}, Col {} with value {}".format(row_num, cell_num, value))
-            puzzle_attempt = update_cell(puzzle_copy, row_num, cell_num, value)
+            cell_ref = empty_cell_pair[0]
+
+            if type == 'rows':
+                r = x
+                c = cell_ref
+            elif type == 'cols':
+                r = cell_ref
+                c = x
+            else:
+                r = common.get_row_number_from_grid(puzzle, x, cell_ref)
+                c = common.get_col_number_from_grid(puzzle, x, cell_ref)
+
+            print("INFO: Attempting to solve puzzle again by updating Row {}, Col {} with value {}".format(r, c, value))
+            puzzle_attempt = update_cell(puzzle_copy, r, c, value)
             puzzle_attempt = solve_with_methods_1_to_4(puzzle_attempt)
             if (puzzle_attempt['status']):
                 return {'puzzle': puzzle_attempt['puzzle'], 'status': True}
-
-    # Cols
-    # cols_with_pairs = list(pairs['rows'].keys())   # list of rows with empty pairs
-    #
-    # for row_num in rows_with_pairs:
-    #     row = common.get_row(puzzle, row_num)
-    #     empty_cell_pair = common.get_empty_row_col_grid_cell_refs(row)
-    #
-    #     cell_num = empty_cell_pair[0]
-    #     possible_values = pairs['rows'][row_num]
-    #     print("DEBUG: Row {} ({}) has a missing value pair ({})".format(row_num, row, possible_values))
-    #     print("DEBUG: Remaining empty cell references for row {} ({}) are ({})".format(row_num, row, empty_cell_pair))
-    #
-    #     for value in possible_values:
-    #         puzzle_copy = copy.deepcopy(puzzle)
-    #         print("INFO: Attempting to solve puzzle again by updating Row {}, Col {} with value {}".format(row_num, cell_num, value))
-    #         puzzle_attempt = update_cell(puzzle_copy, row_num, cell_num, value)
-    #         puzzle_attempt = solve_with_methods_1_to_4(puzzle_attempt)
-    #         if (puzzle_attempt['status']):
-    #             return {'puzzle': puzzle_attempt['puzzle'], 'status': True}
-
-    # list of grids
 
     return {'puzzle': puzzle, 'status': False}
 
@@ -112,14 +110,10 @@ def cell_elimination(puzzle, row_num, col_num):
 
 def row_elimination(puzzle, row_num):
     row = common.get_row(puzzle, row_num)
-
-    # Determine remaining values to solve in row.
-    value_test_list = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    remaining_values = elimate_list_values(value_test_list, row)
-    # print("DEBUG: Row (" + str(row_num) + ") has remaining values (" + str(remaining_values) + ")")
+    remaining_values = elimate_list_values([1, 2, 3, 4, 5, 6, 7, 8, 9], row)
+    print("DEBUG: Row (" + str(row_num) + ") has remaining values (" + str(remaining_values) + ")")
 
     for test_val in remaining_values:
-        # print("DEBUG: Checking if all but one of the cells in row ({}) can be elimindated for value ({}).".format(row_num, test_val))
         unsolved_cell_list = [0, 1, 2, 3, 4, 5, 6, 7, 8]    # When one value remains, cell is solved.
 
         for cell in range(0, 9):
@@ -132,7 +126,6 @@ def row_elimination(puzzle, row_num):
             col = common.get_column(puzzle, cell)
             if test_val in col:
                 unsolved_cell_list.remove(cell)
-                # print("DEBUG: Removed cell ({},{}) as Col ({}) contains val ({}).".format(row_num, cell, col, test_val))
                 continue
 
             # Test if a cell can be eliminated, due to grid match.
@@ -140,29 +133,24 @@ def row_elimination(puzzle, row_num):
             grid = common.get_grid(puzzle, grid_num)
             if test_val in grid:
                 unsolved_cell_list.remove(cell)
-                # print("DEBUG: Removed cell ({},{}) as Grid ({}) contains val ({}).".format(row_num, cell, grid, test_val))
                 continue
 
         if len(unsolved_cell_list) == 1:
-            # print("INFO: Eliminated all cells in row {} ({}) for value ({}) to reference ({})".format(row_num, row, test_val, unsolved_cell_list))
+            print("INFO: Eliminated all cells in row {} ({}) for value ({}) to reference ({})".format(row_num, row, test_val, unsolved_cell_list))
             puzzle = update_cell(puzzle, row_num, unsolved_cell_list[0], test_val)
-        # else:
-        #     print("DEBUG: All cells in row {} ({}) could not be eliminated for value ({}). Remaining cell references ({})".format(
-        #         row_num, row, test_val, unsolved_cell_list))
+        else:
+            print("DEBUG: All cells in row {} ({}) could not be eliminated for value ({}). Remaining cell references ({})".format(
+                row_num, row, test_val, unsolved_cell_list))
 
     return puzzle
 
 
 def col_elimination(puzzle, col_num):
     col = common.get_column(puzzle, col_num)
-
-    # Determine remaining values to solve in list.
-    value_test_list = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    remaining_values = elimate_list_values(value_test_list, col)
+    remaining_values = elimate_list_values([1, 2, 3, 4, 5, 6, 7, 8, 9], col)
     # print("DEBUG: {} ({}) has remaining values ({})".format(type, col, remaining_values))
 
     for test_val in remaining_values:
-        # print("DEBUG: Checking if all but one of the cells in Col ({}) can be elimindated for value ({}).".format(col_num, test_val))
         unsolved_cell_list = [0, 1, 2, 3, 4, 5, 6, 7, 8]    # When one value remains, cell is solved.
 
         for cell in range(0, 9):
@@ -175,7 +163,6 @@ def col_elimination(puzzle, col_num):
             row = common.get_row(puzzle, cell)
             if test_val in row:
                 unsolved_cell_list.remove(cell)
-                # print("DEBUG: Removed cell ({},{}) as Row ({}) contains val ({}).".format(cell, col_num, row, test_val))
                 continue
 
             # Test if a cell can be eliminated, due to grid match.
@@ -183,7 +170,6 @@ def col_elimination(puzzle, col_num):
             grid = common.get_grid(puzzle, grid_num)
             if test_val in grid:
                 unsolved_cell_list.remove(cell)
-                # print("DEBUG: Removed cell ({},{}) as Grid ({}) contains val ({}).".format(cell, col_num, grid, test_val))
                 continue
 
         if len(unsolved_cell_list) == 1:
@@ -198,14 +184,10 @@ def col_elimination(puzzle, col_num):
 
 def grid_elimination(puzzle, grid_num):
     grid = common.get_grid(puzzle, grid_num)
-
-    # Determine remaining values to solve in row.
-    value_test_list = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    remaining_values = elimate_list_values(value_test_list, grid)
+    remaining_values = elimate_list_values([1, 2, 3, 4, 5, 6, 7, 8, 9], grid)
     # print("DEBUG: Grid (" + str(grid_num) + ") has remaining values (" + str(remaining_values) + ")")
 
     for test_val in remaining_values:
-        # print("DEBUG: Checking if all but one of the cells in grid ({}) can be elimindated for value ({}).".format(grid_num, test_val))
         unsolved_cell_list = [0, 1, 2, 3, 4, 5, 6, 7, 8]       # When one value remains, cell is solved.
 
         for cell in range(0, 9):
@@ -219,7 +201,6 @@ def grid_elimination(puzzle, grid_num):
             row = common.get_row(puzzle, row_num)
             if test_val in row:
                 unsolved_cell_list.remove(cell)
-                # print("DEBUG: Removed grid cell reference ({}) as Row ({}) contains val ({}).".format(cell, row, test_val))
                 continue
 
             # Test if cell can be eliminated, due to a col match.
@@ -227,7 +208,6 @@ def grid_elimination(puzzle, grid_num):
             col = common.get_column(puzzle, col_num)
             if test_val in col:
                 unsolved_cell_list.remove(cell)
-                # print("DEBUG: Removed grid cell reference ({}) as Col ({}) contains val ({}).".format(cell, col, test_val))
                 continue
 
         if len(unsolved_cell_list) == 1:
@@ -303,23 +283,22 @@ def elimate_list_values(possible_vals, number_list):
     return possible_vals
 
 
-def find_pairs_by_row_col_grid(puzzle):
+def find_pairs_by_type(puzzle, type):
     pairs = {'rows': {}, 'cols': {}, 'grids': {}}
 
-    for type in ["rows", "cols", "grids"]:
-        for num in range(0, 9):
-            type_list = []
-            if type == "rows":
-                type_list = common.get_row(puzzle, num)
-            elif type == "cols":
-                type_list = common.get_column(puzzle, num)
-            else:
-                type_list = common.get_grid(puzzle, num)
+    for num in range(0, 9):
+        type_list = []
+        if type == "rows":
+            type_list = common.get_row(puzzle, num)
+        elif type == "cols":
+            type_list = common.get_column(puzzle, num)
+        else:
+            type_list = common.get_grid(puzzle, num)
 
-            if type_list.count(0) == 2:
-                remaining_pair = elimate_list_values([1, 2, 3, 4, 5, 6, 7, 8, 9], type_list)
-                print("DEBUG: {} ({}) had 2 cells remaining ({})".format(type, type_list, remaining_pair))
-                pairs[type][num] = remaining_pair
+        if type_list.count(0) == 2:
+            remaining_pair = elimate_list_values([1, 2, 3, 4, 5, 6, 7, 8, 9], type_list)
+            print("DEBUG: {} ({}) had 2 cells remaining ({})".format(type, type_list, remaining_pair))
+            pairs[type][num] = remaining_pair
 
     print("INFO: Pairs : {}".format(json.dumps(pairs)))
 

@@ -3,7 +3,7 @@ from solve_puzzle import solve
 
 
 def test_solve_puzzle1():
-    test_puzzle = [
+    puzzle = [
         [0, 8, 0, 0, 6, 4, 7, 0, 3],
         [7, 2, 0, 5, 0, 3, 6, 9, 8],
         [0, 0, 0, 0, 0, 2, 4, 1, 0],
@@ -15,7 +15,7 @@ def test_solve_puzzle1():
         [6, 0, 5, 4, 7, 0, 0, 8, 0]
     ]
 
-    test_puzzle_result = [
+    puzzle_result = [
         [5, 8, 1, 9, 6, 4, 7, 2, 3],
         [7, 2, 4, 5, 1, 3, 6, 9, 8],
         [3, 6, 9, 7, 8, 2, 4, 1, 5],
@@ -26,71 +26,13 @@ def test_solve_puzzle1():
         [9, 7, 8, 6, 2, 5, 3, 4, 1],
         [6, 3, 5, 4, 7, 1, 9, 8, 2]
     ]
-    result = solve.solve_puzzle(test_puzzle)
+    result = solve.solve_puzzle(puzzle)
     assert result['status'], "Puzzle should be solved."
-    assert result['puzzle'] == test_puzzle_result, "Solution should match solution provided."
-
-
-def test_solve_puzzle2():
-    test_puzzle = [
-        [0, 0, 0, 0, 1, 0, 2, 9, 0],
-        [9, 7, 0, 0, 0, 8, 0, 6, 0],
-        [3, 0, 0, 0, 0, 4, 0, 0, 8],
-        [2, 4, 3, 9, 6, 0, 5, 0, 1],
-        [0, 1, 6, 0, 0, 0, 9, 3, 0],
-        [5, 0, 8, 0, 3, 1, 6, 7, 2],
-        [8, 0, 0, 5, 0, 0, 0, 0, 6],
-        [0, 2, 0, 3, 0, 0, 0, 4, 9],
-        [0, 6, 9, 0, 8, 0, 0, 0, 0]
-    ]
-
-    test_puzzle_result = [
-        [6, 8, 4, 7, 1, 3, 2, 9, 5],
-        [9, 7, 1, 2, 5, 8, 4, 6, 3],
-        [3, 5, 2, 6, 9, 4, 7, 1, 8],
-        [2, 4, 3, 9, 6, 7, 5, 8, 1],
-        [7, 1, 6, 8, 2, 5, 9, 3, 4],
-        [5, 9, 8, 4, 3, 1, 6, 7, 2],
-        [8, 3, 7, 5, 4, 9, 1, 2, 6],
-        [1, 2, 5, 3, 7, 6, 8, 4, 9],
-        [4, 6, 9, 1, 8, 2, 3, 5, 7]
-    ]
-    result = solve.solve_puzzle(test_puzzle)
-    assert result['status'], "Puzzle should be solved."
-    assert result['puzzle'] == test_puzzle_result, "Solution should match solution provided."
-
-
-def test_solve_puzzle3():
-    test_puzzle = [
-        [0, 0, 0, 0, 5, 6, 0, 0, 0],
-        [0, 1, 9, 0, 0, 0, 0, 0, 0],
-        [6, 0, 0, 0, 0, 0, 7, 2, 3],
-        [0, 0, 5, 0, 6, 0, 0, 3, 7],
-        [2, 0, 0, 7, 0, 5, 0, 0, 4],
-        [8, 7, 0, 0, 2, 0, 6, 0, 0],
-        [1, 2, 7, 0, 0, 0, 0, 0, 5],
-        [0, 0, 0, 0, 0, 0, 8, 6, 0],
-        [0, 0, 0, 1, 3, 0, 0, 0, 0]
-    ]
-
-    test_puzzle_result = [
-        [7, 4, 2, 3, 5, 6, 9, 1, 8],
-        [3, 1, 9, 2, 8, 7, 5, 4, 6],
-        [6, 5, 8, 9, 1, 4, 7, 2, 3],
-        [4, 9, 5, 8, 6, 1, 2, 3, 7],
-        [2, 6, 3, 7, 9, 5, 1, 8, 4],
-        [8, 7, 1, 4, 2, 3, 6, 5, 9],
-        [1, 2, 7, 6, 4, 8, 3, 9, 5],
-        [9, 3, 4, 5, 7, 2, 8, 6, 1],
-        [5, 8, 6, 1, 3, 9, 4, 7, 2]
-    ]
-    result = solve.solve_puzzle(test_puzzle)
-    assert result['status'], "Puzzle should be solved."
-    assert result['puzzle'] == test_puzzle_result, "Solution should match solution provided."
+    assert result['puzzle'] == puzzle_result, "Solution should match solution provided."
 
 
 def test_solve_puzzle5():
-    test_puzzle = [
+    puzzle = [
         [4, 5, 0, 0, 0, 0, 3, 0, 0],
         [1, 0, 0, 9, 0, 7, 4, 0, 0],
         [0, 7, 0, 0, 5, 0, 0, 1, 6],
@@ -102,7 +44,7 @@ def test_solve_puzzle5():
         [0, 0, 4, 0, 0, 0, 0, 6, 1]
     ]
 
-    test_puzzle_result = [
+    puzzle_result = [
          [4, 5, 9, 1, 6, 2, 3, 8, 7],
          [1, 6, 8, 9, 3, 7, 4, 5, 2],
          [2, 7, 3, 8, 5, 4, 9, 1, 6],
@@ -113,13 +55,13 @@ def test_solve_puzzle5():
          [8, 3, 2, 6, 1, 5, 7, 4, 9],
          [5, 9, 4, 3, 7, 8, 2, 6, 1]
     ]
-    result = solve.solve_puzzle(test_puzzle)
+    result = solve.solve_puzzle(puzzle)
     assert result['status'], "Puzzle should be solved."
-    assert result['puzzle'] == test_puzzle_result, "Solution should match solution provided."
+    assert result['puzzle'] == puzzle_result, "Solution should match solution provided."
 
 
 def test_solve_puzzle7():
-    test_puzzle = [
+    puzzle = [
         [0, 0, 6, 0, 0, 0, 0, 1, 0],
         [1, 0, 0, 4, 3, 5, 0, 0, 0],
         [9, 0, 4, 0, 0, 0, 0, 0, 2],
@@ -131,7 +73,7 @@ def test_solve_puzzle7():
         [0, 4, 0, 0, 0, 0, 3, 0, 0]
     ]
 
-    test_puzzle_result = [
+    puzzle_result = [
         [5, 8, 6, 2, 9, 7, 4, 1, 3],
         [1, 2, 7, 4, 3, 5, 9, 6, 8],
         [9, 3, 4, 1, 6, 8, 5, 7, 2],
@@ -143,43 +85,13 @@ def test_solve_puzzle7():
         [6, 4, 8, 9, 5, 1, 3, 2, 7]
     ]
 
-    result = solve.solve_puzzle(test_puzzle)
+    result = solve.solve_puzzle(puzzle)
     assert result['status'], "Puzzle should be solved."
-    assert result['puzzle'] == test_puzzle_result, "Solution should match solution provided."
-
-
-def test_solve_puzzle8():
-    test_puzzle = [
-        [0, 9, 0, 2, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 3, 5, 0],
-        [6, 7, 5, 0, 0, 4, 0, 0, 0],
-        [0, 0, 0, 0, 4, 0, 2, 0, 8],
-        [0, 0, 9, 0, 5, 0, 6, 0, 0],
-        [2, 0, 4, 0, 6, 0, 0, 0, 0],
-        [0, 0, 0, 5, 0, 0, 8, 6, 4],
-        [0, 2, 6, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 1, 0, 9, 0]
-    ]
-
-    test_puzzle_result = [
-         [1, 9, 3, 2, 7, 5, 4, 8, 6],
-         [8, 4, 2, 9, 1, 6, 3, 5, 7],
-         [6, 7, 5, 3, 8, 4, 1, 2, 9],
-         [5, 6, 7, 1, 4, 9, 2, 3, 8],
-         [3, 8, 9, 7, 5, 2, 6, 4, 1],
-         [2, 1, 4, 8, 6, 3, 9, 7, 5],
-         [9, 3, 1, 5, 2, 7, 8, 6, 4],
-         [7, 2, 6, 4, 9, 8, 5, 1, 3],
-         [4, 5, 8, 6, 3, 1, 7, 9, 2]
-    ]
-
-    result = solve.solve_puzzle(test_puzzle)
-    assert result['status'], "Puzzle should be solved."
-    assert result['puzzle'] == test_puzzle_result, "Solution should match solution provided."
+    assert result['puzzle'] == puzzle_result, "Solution should match solution provided."
 
 
 def test_solve_puzzle_hardest():
-    test_puzzle = [
+    puzzle = [
         [8, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 3, 6, 0, 0, 0, 0, 0],
         [0, 7, 0, 0, 9, 0, 2, 0, 0],
@@ -191,7 +103,7 @@ def test_solve_puzzle_hardest():
         [0, 9, 0, 0, 0, 0, 4, 0, 0]
     ]
 
-    test_puzzle_result = [
+    puzzle_result = [
         [8, 1, 2, 7, 5, 3, 6, 4, 9],
         [9, 4, 3, 6, 8, 2, 1, 7, 5],
         [6, 7, 5, 4, 9, 1, 2, 8, 3],
@@ -203,13 +115,103 @@ def test_solve_puzzle_hardest():
         [7, 9, 6, 3, 1, 8, 4, 5, 2]
     ]
 
-    result = solve.solve_puzzle(test_puzzle)
+    result = solve.solve_puzzle(puzzle)
     assert result['status'], "Puzzle should be solved."
-    assert result['puzzle'] == test_puzzle_result, "Solution should match solution provided."
+    assert result['puzzle'] == puzzle_result, "Solution should match solution provided."
+
+
+def test_solve_with_method_5_rows():
+    puzzle = [
+        [5, 8, 6, 0, 0, 0, 4, 1, 3],
+        [1, 2, 7, 4, 3, 5, 0, 0, 8],
+        [9, 3, 4, 1, 6, 8, 0, 0, 2],
+        [0, 7, 0, 5, 4, 3, 0, 0, 6],
+        [3, 6, 0, 0, 0, 0, 0, 8, 4],
+        [4, 0, 0, 6, 8, 2, 0, 3, 0],
+        [7, 0, 0, 3, 0, 6, 8, 4, 1],
+        [0, 1, 3, 8, 7, 4, 0, 0, 9],
+        [0, 4, 0, 0, 0, 0, 3, 0, 0]
+    ]
+
+    puzzle_result = [
+        [5, 8, 6, 2, 9, 7, 4, 1, 3],
+        [1, 2, 7, 4, 3, 5, 9, 6, 8],
+        [9, 3, 4, 1, 6, 8, 5, 7, 2],
+        [8, 7, 2, 5, 4, 3, 1, 9, 6],
+        [3, 6, 5, 7, 1, 9, 2, 8, 4],
+        [4, 9, 1, 6, 8, 2, 7, 3, 5],
+        [7, 5, 9, 3, 2, 6, 8, 4, 1],
+        [2, 1, 3, 8, 7, 4, 6, 5, 9],
+        [6, 4, 8, 9, 5, 1, 3, 2, 7]
+    ]
+
+    result = solve.solve_with_method_5(puzzle, 'rows')
+    assert result['status'], "Puzzle should be solved."
+    assert result['puzzle'] == puzzle_result, "Solution should match solution provided."
+
+
+def test_solve_with_method_5_cols():
+    puzzle = [
+        [5, 8, 6, 0, 0, 0, 4, 1, 3],
+        [1, 2, 7, 4, 3, 5, 0, 0, 8],
+        [9, 3, 4, 1, 6, 8, 0, 0, 2],
+        [0, 7, 0, 5, 4, 3, 0, 0, 6],
+        [3, 6, 0, 0, 0, 0, 0, 8, 4],
+        [4, 0, 0, 6, 8, 2, 0, 3, 0],
+        [7, 0, 0, 3, 0, 6, 8, 4, 1],
+        [0, 1, 3, 8, 7, 4, 0, 0, 9],
+        [0, 4, 0, 0, 0, 0, 3, 0, 0]
+    ]
+
+    puzzle_result = [
+        [5, 8, 6, 2, 9, 7, 4, 1, 3],
+        [1, 2, 7, 4, 3, 5, 9, 6, 8],
+        [9, 3, 4, 1, 6, 8, 5, 7, 2],
+        [8, 7, 2, 5, 4, 3, 1, 9, 6],
+        [3, 6, 5, 7, 1, 9, 2, 8, 4],
+        [4, 9, 1, 6, 8, 2, 7, 3, 5],
+        [7, 5, 9, 3, 2, 6, 8, 4, 1],
+        [2, 1, 3, 8, 7, 4, 6, 5, 9],
+        [6, 4, 8, 9, 5, 1, 3, 2, 7]
+    ]
+
+    result = solve.solve_with_method_5(puzzle, 'cols')
+    assert result['status'], "Puzzle should be solved."
+    assert result['puzzle'] == puzzle_result, "Solution should match solution provided."
+
+
+def test_solve_with_method_5_grids():
+    puzzle = [
+        [5, 8, 6, 0, 0, 0, 4, 1, 3],
+        [1, 2, 7, 4, 3, 5, 0, 0, 8],
+        [9, 3, 4, 1, 6, 8, 0, 0, 2],
+        [0, 7, 0, 5, 4, 3, 0, 0, 6],
+        [3, 6, 0, 0, 0, 0, 0, 8, 4],
+        [4, 0, 0, 6, 8, 2, 0, 3, 0],
+        [7, 0, 0, 3, 0, 6, 8, 4, 1],
+        [0, 1, 3, 8, 7, 4, 6, 0, 9],
+        [0, 4, 0, 0, 0, 0, 3, 2, 0]
+    ]
+
+    puzzle_result = [
+        [5, 8, 6, 2, 9, 7, 4, 1, 3],
+        [1, 2, 7, 4, 3, 5, 9, 6, 8],
+        [9, 3, 4, 1, 6, 8, 5, 7, 2],
+        [8, 7, 2, 5, 4, 3, 1, 9, 6],
+        [3, 6, 5, 7, 1, 9, 2, 8, 4],
+        [4, 9, 1, 6, 8, 2, 7, 3, 5],
+        [7, 5, 9, 3, 2, 6, 8, 4, 1],
+        [2, 1, 3, 8, 7, 4, 6, 5, 9],
+        [6, 4, 8, 9, 5, 1, 3, 2, 7]
+    ]
+
+    result = solve.solve_with_method_5(puzzle, 'grids')
+    assert result['status'], "Puzzle should be solved."
+    assert result['puzzle'] == puzzle_result, "Solution should match solution provided."
 
 
 def test_update_cell():
-    test_puzzle = [
+    puzzle = [
         [0, 0, 0, 0, 1, 0, 2, 9, 0],
         [9, 7, 0, 0, 0, 8, 0, 6, 0],
         [3, 0, 1, 0, 0, 4, 0, 0, 8],
@@ -232,7 +234,7 @@ def test_update_cell():
         [0, 2, 0, 3, 0, 0, 0, 4, 9],
         [0, 6, 9, 0, 8, 0, 0, 0, 0]
     ]
-    puzzle_result = solve.update_cell(test_puzzle, 0, 0, 4)
+    puzzle_result = solve.update_cell(puzzle, 0, 0, 4)
     assert puzzle_result == updated_puzzle, "Cell was not updated."
 
 
@@ -254,7 +256,7 @@ def test_eliminate_row_values():
 
 
 def test_eliminate_cell_values():
-    test_puzzle = [
+    puzzle = [
         [0, 0, 0, 0, 1, 0, 2, 9, 0],
         [9, 7, 0, 0, 0, 8, 0, 6, 0],
         [3, 0, 1, 0, 0, 4, 0, 0, 8],
@@ -266,24 +268,24 @@ def test_eliminate_cell_values():
         [0, 6, 9, 0, 8, 0, 0, 0, 0]
     ]
 
-    result = solve.eliminate_cell_values(test_puzzle, 3, 5)
+    result = solve.eliminate_cell_values(puzzle, 3, 5)
     assert result['status'], "Cell should be solved as row 3 and col 5 eliminate all values except 7."
     assert result['values'] == [7], "Value for cell should be 7."
 
-    result = solve.eliminate_cell_values(test_puzzle, 4, 8)
+    result = solve.eliminate_cell_values(puzzle, 4, 8)
     assert result['values'] == [4], "Value for cell should be 4."
 
-    result = solve.eliminate_cell_values(test_puzzle, 0, 0)
+    result = solve.eliminate_cell_values(puzzle, 0, 0)
     assert not result['status'], "Cell is not solved as row 0 and col 0 leave a number of values."
     assert result['values'] == [4, 6], "List of values for cell should be [4, 6]."
 
-    result = solve.eliminate_cell_values(test_puzzle, 8, 8)
+    result = solve.eliminate_cell_values(puzzle, 8, 8)
     assert not result['status'], "Cell is not solved as row 8 and col 8 leave a number of values."
     assert result['values'] == [3, 5, 7], "List of values for cell should be [3, 5, 7]."
 
 
 def test_row_col_grid_complete():
-    test_puzzle = [
+    puzzle = [
         [0, 8, 0, 0, 6, 4, 7, 0, 3],
         [7, 2, 0, 5, 0, 3, 6, 9, 8],
         [0, 0, 0, 0, 0, 2, 4, 1, 0],
@@ -295,16 +297,16 @@ def test_row_col_grid_complete():
         [6, 0, 5, 4, 7, 0, 0, 8, 0]
     ]
 
-    result = solve.row_col_grid_complete(test_puzzle, "rows")
+    result = solve.row_col_grid_complete(puzzle, "rows")
     assert not result, "Rows should not be complete."
 
-    result = solve.row_col_grid_complete(test_puzzle, "cols")
+    result = solve.row_col_grid_complete(puzzle, "cols")
     assert not result, "Cols should not be complete."
 
-    result = solve.row_col_grid_complete(test_puzzle, "grids")
+    result = solve.row_col_grid_complete(puzzle, "grids")
     assert not result, "Grids should not be complete."
 
-    test_puzzle_result = [
+    puzzle_result = [
         [5, 8, 1, 9, 6, 4, 7, 2, 3],
         [7, 2, 4, 5, 1, 3, 6, 9, 8],
         [3, 6, 9, 7, 8, 2, 4, 1, 5],
@@ -316,18 +318,18 @@ def test_row_col_grid_complete():
         [6, 3, 5, 4, 7, 1, 9, 8, 2]
     ]
 
-    result = solve.row_col_grid_complete(test_puzzle_result, "rows")
+    result = solve.row_col_grid_complete(puzzle_result, "rows")
     assert result, "Rows should be complete."
 
-    result = solve.row_col_grid_complete(test_puzzle_result, "cols")
+    result = solve.row_col_grid_complete(puzzle_result, "cols")
     assert result, "Cols should be complete."
 
-    result = solve.row_col_grid_complete(test_puzzle_result, "grids")
+    result = solve.row_col_grid_complete(puzzle_result, "grids")
     assert result, "Grids should be complete."
 
 
-def test_puzzle_complete():
-    test_puzzle = [
+def puzzle_complete():
+    puzzle = [
         [0, 8, 0, 0, 6, 4, 7, 0, 3],
         [7, 2, 0, 5, 0, 3, 6, 9, 8],
         [0, 0, 0, 0, 0, 2, 4, 1, 0],
@@ -339,10 +341,10 @@ def test_puzzle_complete():
         [6, 0, 5, 4, 7, 0, 0, 8, 0]
     ]
 
-    result = solve.puzzle_complete(test_puzzle)
+    result = solve.puzzle_complete(puzzle)
     assert not result, "Puzzle should not be complete."
 
-    test_puzzle_result = [
+    puzzle_result = [
         [5, 8, 1, 9, 6, 4, 7, 2, 3],
         [7, 2, 4, 5, 1, 3, 6, 9, 8],
         [3, 6, 9, 7, 8, 2, 4, 1, 5],
@@ -354,12 +356,12 @@ def test_puzzle_complete():
         [6, 3, 5, 4, 7, 1, 9, 8, 2]
     ]
 
-    result = solve.puzzle_complete(test_puzzle_result)
+    result = solve.puzzle_complete(puzzle_result)
     assert result, "Puzzle should be complete."
 
 
 def test_row_elimination():
-    test_puzzle = [
+    puzzle = [
         [0, 0, 0, 0, 5, 6, 0, 0, 0],
         [0, 1, 9, 0, 0, 0, 0, 0, 0],
         [6, 0, 0, 0, 0, 0, 7, 2, 3],
@@ -371,7 +373,7 @@ def test_row_elimination():
         [0, 0, 0, 1, 3, 0, 0, 0, 0]
     ]
 
-    test_puzzle_result = [
+    puzzle_result = [
         [0, 0, 0, 0, 5, 6, 0, 0, 0],
         [0, 1, 9, 0, 0, 0, 0, 0, 0],
         [6, 0, 0, 0, 0, 0, 7, 2, 3],
@@ -383,12 +385,12 @@ def test_row_elimination():
         [0, 0, 0, 1, 3, 0, 0, 0, 0]
     ]
 
-    result = solve.row_elimination(test_puzzle, 3)
-    assert result == test_puzzle_result, "Row should be solved"
+    result = solve.row_elimination(puzzle, 3)
+    assert result == puzzle_result, "Row should be solved"
 
 
 def test_col_elimination():
-    test_puzzle = [
+    puzzle = [
         [0, 0, 0, 0, 5, 6, 0, 0, 0],
         [0, 1, 9, 0, 0, 0, 0, 0, 0],
         [6, 0, 0, 0, 0, 0, 7, 2, 3],
@@ -400,7 +402,7 @@ def test_col_elimination():
         [0, 0, 0, 1, 3, 0, 0, 0, 0]
     ]
 
-    test_puzzle_result = [
+    puzzle_result = [
         [0, 0, 0, 0, 5, 6, 0, 0, 0],
         [0, 1, 9, 0, 0, 0, 5, 0, 0],
         [6, 0, 0, 0, 0, 0, 7, 2, 3],
@@ -412,12 +414,12 @@ def test_col_elimination():
         [0, 0, 0, 1, 3, 0, 0, 0, 0]
     ]
 
-    result = solve.col_elimination(test_puzzle, 6)
-    assert result == test_puzzle_result, "Col should be solved"
+    result = solve.col_elimination(puzzle, 6)
+    assert result == puzzle_result, "Col should be solved"
 
 
 def test_grid_elimination():
-    test_puzzle = [
+    puzzle = [
         [0, 0, 0, 0, 5, 6, 0, 0, 0],
         [0, 1, 9, 0, 0, 0, 0, 0, 0],
         [6, 0, 0, 0, 0, 0, 7, 2, 3],
@@ -429,7 +431,7 @@ def test_grid_elimination():
         [0, 0, 0, 1, 3, 0, 0, 0, 0]
     ]
 
-    test_puzzle_result = [
+    puzzle_result = [
         [0, 0, 0, 0, 5, 6, 0, 0, 0],
         [0, 1, 9, 0, 0, 0, 0, 0, 0],
         [6, 0, 0, 0, 0, 0, 7, 2, 3],
@@ -441,12 +443,12 @@ def test_grid_elimination():
         [0, 0, 0, 1, 3, 0, 0, 7, 0]
     ]
 
-    result = solve.grid_elimination(test_puzzle, 8)
-    assert result == test_puzzle_result, "Grid should be solved"
+    result = solve.grid_elimination(puzzle, 8)
+    assert result == puzzle_result, "Grid should be solved"
 
 
-def test_find_pairs_by_row_col_grid():
-    test_puzzle = [
+def test_find_pairs_by_type_rows():
+    puzzle = [
         [5, 8, 6, 0, 0, 0, 4, 1, 3],
         [1, 2, 7, 4, 3, 5, 0, 0, 8],
         [9, 3, 4, 1, 6, 8, 0, 0, 2],
@@ -458,7 +460,54 @@ def test_find_pairs_by_row_col_grid():
         [0, 4, 0, 0, 0, 0, 3, 0, 0]
     ]
 
-    test_puzzle2 = [
+    result = solve.find_pairs_by_type(puzzle, 'rows')
+    keys = list(result['rows'].keys())
+    assert keys[0] == 1, "Row number should be 1"
+    assert result['rows'][1] == [6, 9], "List of values for row pais should be [6, 9]."
+
+    assert keys[1] == 2, "Row number should be 2"
+    assert result['rows'][2] == [5, 7], "List of values for row pais should be [5, 7]."
+
+
+def test_find_pairs_by_type_none():
+    puzzle = [
+        [5, 8, 6, 0, 0, 0, 4, 1, 3],
+        [1, 2, 7, 4, 3, 5, 0, 0, 8],
+        [9, 3, 4, 1, 6, 8, 0, 0, 2],
+        [0, 7, 0, 5, 4, 3, 0, 0, 6],
+        [3, 6, 0, 0, 0, 0, 0, 8, 4],
+        [4, 0, 0, 6, 8, 2, 0, 3, 0],
+        [7, 0, 0, 3, 0, 6, 8, 4, 1],
+        [0, 1, 3, 8, 7, 4, 0, 0, 9],
+        [0, 4, 0, 0, 0, 0, 3, 0, 0]
+    ]
+
+    result = solve.find_pairs_by_type(puzzle, 'grids')
+    keys = result['grids'].keys()
+    assert not keys, "There should be no grids with pairs"
+
+
+def test_find_pairs_by_type_cols():
+    puzzle = [
+        [5, 8, 6, 0, 0, 0, 4, 1, 3],
+        [1, 2, 7, 4, 3, 5, 0, 0, 8],
+        [9, 3, 4, 1, 6, 8, 0, 0, 2],
+        [0, 7, 0, 5, 4, 3, 0, 0, 6],
+        [3, 6, 0, 0, 0, 0, 0, 8, 4],
+        [4, 0, 0, 6, 8, 2, 0, 3, 0],
+        [7, 0, 0, 3, 0, 6, 8, 4, 1],
+        [0, 1, 3, 8, 7, 4, 0, 0, 9],
+        [0, 4, 0, 0, 0, 0, 3, 0, 0]
+    ]
+
+    result = solve.find_pairs_by_type(puzzle, 'cols')
+    keys = list(result['cols'].keys())
+    assert keys[0] == 1, "Col number should be 1"
+    assert result['cols'][1] == [5, 9], "List of values for col pairs should be [5, 9]."
+
+
+def test_find_pairs_by_type_grids():
+    puzzle = [
         [5, 8, 6, 0, 0, 0, 4, 1, 3],
         [1, 2, 7, 4, 3, 5, 0, 0, 8],
         [9, 3, 4, 1, 6, 8, 0, 0, 2],
@@ -470,22 +519,7 @@ def test_find_pairs_by_row_col_grid():
         [0, 4, 0, 0, 0, 0, 3, 2, 0]
     ]
 
-    result = solve.find_pairs_by_row_col_grid(test_puzzle)
-    keys = list(result['rows'].keys())
-    assert keys[0] == 1, "Row number should be 1"
-    assert result['rows'][1] == [6, 9], "List of values for row pais should be [6, 9]."
-
-    assert keys[1] == 2, "Row number should be 2"
-    assert result['rows'][2] == [5, 7], "List of values for row pais should be [5, 7]."
-
-    keys = list(result['cols'].keys())
-    assert keys[0] == 1, "Col number should be 1"
-    assert result['cols'][1] == [5, 9], "List of values for col pairs should be [5, 9]."
-
-    keys = result['grids'].keys()
-    assert not keys, "There should be no grids with pairs"
-
-    result = solve.find_pairs_by_row_col_grid(test_puzzle2)
+    result = solve.find_pairs_by_type(puzzle, 'grids')
     keys = list(result['grids'].keys())
     assert keys[0] == 8, "Grid number should be 8"
     assert result['grids'][8] == [5, 7], "List of values for grid pairs should be [5, 7]."
