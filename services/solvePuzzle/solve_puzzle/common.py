@@ -157,3 +157,13 @@ def get_col_number_from_grid(puzzle, grid_num, cel_num):
         col_num = grid_coordinates[1] + 2
 
     return col_num
+
+
+def get_empty_row_col_grid_cell_refs(num_list):
+    cel_refs = []
+
+    for x in range(0, 9):
+        if num_list[x] == 0:
+            cel_refs.append(x)
+
+    return cel_refs
