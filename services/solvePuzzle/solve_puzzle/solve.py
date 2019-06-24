@@ -70,7 +70,7 @@ def solve_with_method_5(puzzle, type):
         else:
             type_list = common.get_grid(puzzle, x)
 
-        empty_cell_pair = common.get_empty_row_col_grid_cell_refs(type_list)
+        empty_cell_pair = common.get_empty_cell_refs(type_list)
         possible_values = pairs[type][x]
         print("DEBUG: {} {} ({}) has a missing value pair ({})".format(type, x, type_list, possible_values))
 
