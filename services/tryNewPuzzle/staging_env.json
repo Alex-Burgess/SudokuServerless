@@ -1,0 +1,5 @@
+{
+  "UnsolvedPuzzleFunction": {
+    "UNSOLVED_BUCKET_NAME": "staging-sudoku-unsolved-puzzles"
+  }
+}
