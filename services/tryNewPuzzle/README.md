@@ -11,14 +11,14 @@ This API is called by a web page when a user requests to attempt a new puzzle.  
 * [Docker installed](https://www.docker.com/community-edition)
 * An S3 bucket with the unsolved puzzles
 
-# Setup process
-## Build Bucket
+## Getting Started
+### Build Bucket
 Create an S3 bucket to store the SAM builds:
 ```
 aws cloudformation create-stack --stack-name sam-builds-trynewpuzzle --template-body file://sam-builds-bucket.yaml
 ```
 
-## Packaging and deployment
+### Packaging and deployment
 Package our Lambda function to S3:
 
 ```
@@ -48,8 +48,7 @@ aws cloudformation describe-stacks \
 Add input parameter to template??
 Using gradual code deployments to production, with automated test execution and automated roll back in case of errors.  A good test, would be to deploy with the wrong bucket name, so that it fails and rolls back.
 
-# Logging
-## Fetch, tail, and filter Lambda function logs
+## Logging
 Get logs for last 10 minutes:
 ```
 sam logs -n UnsolvedPuzzleFunction
@@ -62,14 +61,14 @@ sam logs -n UnsolvedPuzzleFunction --tail
 
 See [SAM CLI Logging](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-logging.html) for more options.
 
-# Testing
-## Unit Testing
+## Testing
+### Unit Testing
 To execute `pytest` against our `tests` folder to run our initial unit tests:
 ```
 python -m pytest tests/ -v
 ```
 
-## Local Lambda Testing
+### Local Lambda Testing
 Local testing allows you to see how the function will work once deployed, e.g. with memory allocation and timeouts.
 
 1. Build:
@@ -97,7 +96,7 @@ Local testing allows you to see how the function will work once deployed, e.g. w
     echo '{"message": "Hey, are you there?" }' | sam local invoke --env-vars prod_env.json
     ```
 
-## Local API Testing
+### Local API Testing
 Local testing of the API, ensures that API and lambda function are correctly configured.
 1. Start API
     ```
@@ -109,7 +108,7 @@ Local testing of the API, ensures that API and lambda function are correctly con
     sam local start-api --env-vars prod_env.json
     ```
 
-# Cleanup
+## Cleanup
 In order to delete our Serverless Application recently deployed you can use the following AWS CLI Command:
 
 ```
