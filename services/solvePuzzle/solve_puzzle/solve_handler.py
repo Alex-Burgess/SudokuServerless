@@ -6,6 +6,8 @@ from solve_puzzle import solve
 
 def handler(event, context):
     # TODO Add checks to validate that was a json object and was a sudoku puzzle
+    print("DEBUG: Incomming event: {}".format(event))
+
     try:
         unsolved_puzzle_form_data = json.dumps(event, indent=2)
     except Exception as e:

@@ -101,7 +101,7 @@ Local testing of the API, ensures that API and lambda function are correctly con
     ```
     sam local start-api
     ```
-1. Use local endpoint in browser or with Postman: `http://localhost:3000/tryNewPuzzle`
+1. Use local endpoint in browser or with Postman: `http://localhost:3000/getNewPuzzleSolution/1.json`
 1. (Optional) Just as with invoking functions, environment variables can also be specified for local api testing.
     ```
     sam local start-api --env-vars prod_env.json
