@@ -82,6 +82,8 @@ Resources:
       FunctionName: SolvePuzzleFunction
       Handler: solve_puzzle/solve_handler.handler
       Runtime: python3.6
+      MemorySize: 1024
+      Timeout: 10
       Description: Gets a puzzle solution from an s3 bucket
       Role: !GetAtt SolvePuzzleFunctionRole.Arn
       Events:

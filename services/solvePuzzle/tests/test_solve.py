@@ -1,6 +1,9 @@
-# import pytest
+import pytest
 from solve_puzzle import solve
 
+
+# Fixtures
+# Classes
 
 def test_solve_puzzle1():
     puzzle = [

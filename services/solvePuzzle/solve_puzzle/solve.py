@@ -23,6 +23,7 @@ def solve_puzzle(puzzle):
     if (bf_result['status']):
         return {'puzzle': bf_result['puzzle'], 'status': True}
 
+    print("INFO: Puzzle could not be solved by any method.  Puzzle ({})".format(puzzle))
     return {'puzzle': puzzle, 'status': False}
 
 

@@ -1,5 +1,6 @@
 def solve_wrapper(s):
     s = convert_to_bf(s)
+    print("INFO: Executing brute force algorithm.  Puzzle ({})".format(s))
     s = solve(s)
     s = convert_from_bf(s)
 

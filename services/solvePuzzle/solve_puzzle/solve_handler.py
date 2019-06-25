@@ -42,6 +42,7 @@ def handler(event, context):
     solved_result = solve.solve_puzzle(puzzle_object)
 
     if solved_result['status']:
+        print("INFO: Puzzle was solved, returning solved puzzle.  Puzzle ({})".format(solved_result['puzzle']))
         data = {
             'status': 'Solved',
             'message': 'Puzzle successfully solved.',
@@ -55,6 +56,7 @@ def handler(event, context):
                     'Access-Control-Allow-Origin': '*'
                 }}
     else:
+        print("INFO: Puzzle could not be solved by any method, returning unsolved puzzle.  Puzzle ({})".format(solved_result['puzzle']))
         data = {
             'status': 'Unsolved',
             'message': 'Puzzle could not be solved.',
