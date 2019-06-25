@@ -3,6 +3,9 @@
 ## Description
 This API is called by a web page when a user requests to attempt a new puzzle.  When triggered, this service gets a new unsolved puzzle from an S3 bucket.
 
+## Architecture
+See project [README](../../README.md) for architecture diagram.
+
 ## Requirements
 
 * AWS CLI already configured with Administrator permission

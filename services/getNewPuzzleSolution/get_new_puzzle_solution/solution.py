@@ -9,7 +9,19 @@ s3_client = boto3.client('s3')
 
 
 def handler(event, context):
-    puzzle_id = event['pathParameters']['id']
+    # puzzle_id = event['pathParameters']['id']
+    print("DEBUG: Incomming event: {}".format(event))
+
+    try:
+        puzzle_id = event['pathParameters']['id']
+    except Exception as e:
+        print(e)
+        return {'statusCode': 500,
+                'body': json.dumps({'error': str(e), 'message': 'Event did not contain pathParameters with puzzle json file.'}),
+                'headers': {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                }}
 
     try:
         bucket_name = get_bucket_name()
