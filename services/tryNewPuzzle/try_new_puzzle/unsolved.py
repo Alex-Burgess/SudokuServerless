@@ -6,8 +6,9 @@ import logging
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
-handler = logger.handlers[0]
-handler.setFormatter(logging.Formatter("[%(levelname)s]\t%(asctime)s.%(msecs)dZ\t%(aws_request_id)s\t%(module)s:%(funcName)s\t%(message)s\n", "%Y-%m-%dT%H:%M:%S"))
+if logger.handlers:
+    handler = logger.handlers[0]
+    handler.setFormatter(logging.Formatter("[%(levelname)s]\t%(asctime)s.%(msecs)dZ\t%(aws_request_id)s\t%(module)s:%(funcName)s\t%(message)s\n", "%Y-%m-%dT%H:%M:%S"))
 
 s3_client = boto3.client('s3')
 
