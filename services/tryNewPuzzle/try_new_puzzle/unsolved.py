@@ -14,11 +14,11 @@ s3_client = boto3.client('s3')
 
 
 def handler(event, context):
-    response = get_unsolved_puzzle_main()
+    response = unsolved_puzzle_main()
     return response
 
 
-def get_unsolved_puzzle_main():
+def unsolved_puzzle_main():
     try:
         bucket_name = get_bucket_name()
         key = get_random_key(bucket_name)
@@ -27,7 +27,7 @@ def get_unsolved_puzzle_main():
         # puzzle_data = get_random_key(bucket_name)
     except Exception as e:
         logger.error("Exception: {}".format(e))
-        response = create_response(500, json.dumps({'error': str(e)}))
+        response = create_response(500, {'error': str(e)})
         return response
 
     return_data = add_id_to_returned_json(puzzle_data, key)
