@@ -82,7 +82,7 @@ Resources:
       FunctionName: UnsolvedPuzzleFunction
       Handler: try_new_puzzle/unsolved.handler
       Runtime: python3.6
-      MemorySize: 128
+      MemorySize: 512
       Timeout: 3
       Description: Gets an unsolved puzzle from an s3 bucket
       Role: !GetAtt UnsolvedPuzzleFunctionRole.Arn

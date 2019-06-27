@@ -49,6 +49,7 @@ aws cloudformation describe-stacks \
 
 ## Deploying to Environments
 Add input parameter to template??
+Aliases to versions - https://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html 
 Using gradual code deployments to production, with automated test execution and automated roll back in case of errors.  A good test, would be to deploy with the wrong bucket name, so that it fails and rolls back.
 
 ## Logging
