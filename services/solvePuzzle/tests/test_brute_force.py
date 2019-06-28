@@ -1,5 +1,11 @@
 import pytest
 from solve_puzzle import brute_force
+import sys
+import logging
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+stream_handler = logging.StreamHandler(sys.stdout)
+logger.addHandler(stream_handler)
 
 
 @pytest.fixture

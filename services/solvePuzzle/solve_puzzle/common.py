@@ -1,23 +1,39 @@
 # A collection of methods that help interact with the puzzle
 import json
+import logging
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+if logger.handlers:
+    handler = logger.handlers[0]
+    handler.setFormatter(logging.Formatter("[%(levelname)s]\t%(asctime)s.%(msecs)dZ\t%(aws_request_id)s\t%(module)s:%(funcName)s\t%(message)s\n", "%Y-%m-%dT%H:%M:%S"))
 
 
-def get_puzzle_object(unsolved_puzzle_form_data):
-    # print("DEBUG: form data: " + unsolved_puzzle_form_data)
+def get_puzzle_from_event(event):
+    try:
+        body = event['body']
+        logger.info("Event body: " + json.dumps(body))
+    except Exception:
+        logger.error("API Event was empty.")
+        raise Exception('API Event was empty.')
 
-    data = json.loads(unsolved_puzzle_form_data)
-    body = data['body']
-    # print("DEBUG: Body data: " + body)
+    try:
+        body_data = json.loads(body)
+    except Exception:
+        logger.error("API Event did not contain a valid body.")
+        raise Exception('API Event did not contain a valid body.')
 
-    body_data = json.loads(body)
-    puzzle = body_data['puzzle_rows']
+    try:
+        puzzle = body_data['puzzle_rows']
+        logger.info("Unsolved puzzle object: " + json.dumps(puzzle))
+    except Exception:
+        logger.error("API Event did not contain a valid puzzle.")
+        raise Exception('API Event did not contain a valid puzzle.')
 
-    print("DEBUG: Unsolved puzzle object: " + json.dumps(puzzle))
     return puzzle
 
 
 def get_row(puzzle, row_num):
-    # print("INFO: Row number (" + str(row_num) + ") being returned (" + str(puzzle[row_num]) + ")")
     return puzzle[row_num]
 
 
@@ -27,7 +43,7 @@ def get_column(puzzle, col_num):
         cell_value = puzzle[r][col_num]
         column.append(cell_value)
 
-    # print("INFO: Column number (" + str(col_num) + ") being returned (" + str(column) + ")")
+    logger.debug("Column number ({}) being returned ()".format(col_num, column))
 
     return column
 
@@ -73,7 +89,7 @@ def get_grid(puzzle, grid_num):
         for c in range(first_col, last_col):
             grid.append(puzzle[r][c])
 
-    # print("Grid number (" + str(grid_num) + ") values are: " + str(grid))
+    logger.debug("Grid number ({}) being returned ()".format(grid_num, grid))
 
     return grid
 
@@ -92,17 +108,14 @@ def grid_top_left_cell_number(number):
     }
 
     coordinates = grids[number]
-    # print("Grid number (" + str(number) + ") coordinates: " + str(coordinates))
     return coordinates
 
 
 def cell_contains_number(puzzle, row_num, col_num):
     cell_value = puzzle[row_num][col_num]
     if cell_value > 0:
-        # print("Cell of row (" + str(row_num) + ") and col (" + str(col_num) + ") contains a value (" + str(cell_value) + ")")
         return True
 
-    # print("Cell of row (" + str(row_num) + ") and col (" + str(col_num) + ") does not contain a value (" + str(cell_value) + ")")
     return False
 
 

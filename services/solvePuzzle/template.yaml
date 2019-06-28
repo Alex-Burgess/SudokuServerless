@@ -80,7 +80,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: SolvePuzzleFunction
-      Handler: solve_puzzle/solve_handler.handler
+      Handler: solve_puzzle/solve.handler
       Runtime: python3.6
       MemorySize: 1024
       Timeout: 10

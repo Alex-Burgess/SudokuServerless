@@ -6,6 +6,13 @@ import boto3
 import copy
 from moto import mock_s3
 from get_new_puzzle_solution import solution
+import sys
+import logging
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+stream_handler = logging.StreamHandler(sys.stdout)
+logger.addHandler(stream_handler)
 
 
 @pytest.fixture

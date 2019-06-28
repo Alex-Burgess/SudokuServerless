@@ -1,6 +1,30 @@
 import pytest
 import copy
+import json
+import re
 from solve_puzzle import solve
+import sys
+import logging
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+stream_handler = logging.StreamHandler(sys.stdout)
+logger.addHandler(stream_handler)
+
+
+@pytest.fixture
+def empty_puzzle():
+    test_puzzle = [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    ]
+    return test_puzzle
 
 
 @pytest.fixture
@@ -175,6 +199,74 @@ def test_puzzle_extreme_after_methods_1_to_4():
     ]
 
     return {'incomplete_puzzle': incomplete_puzzle, 'complete_puzzle': complete_puzzle}
+
+
+@pytest.fixture()
+def api_gateway_event():
+    """ Generates API GW Event"""
+
+    return {
+      "body": "{\"puzzle_rows\":[[0,8,0,0,6,4,7,0,3],[7,2,0,5,0,3,6,9,8],[0,0,0,0,0,2,4,1,0],[0,0,0,0,0,7,0,0,9],[0,9,6,3,0,8,1,5,0],[8,0,0,1,0,0,0,0,0],[0,4,2,8,0,0,0,0,0],[9,7,8,6,0,5,0,4,1],[6,0,5,4,7,0,0,8,0]]}",
+      "resource": "/solvePuzzle",
+      "path": "/solvePuzzle",
+      "httpMethod": "POST",
+      "isBase64Encoded": "false",
+      "queryStringParameters": {
+        "foo": "bar"
+      },
+      "pathParameters": {
+        "proxy": "/path/to/resource"
+      },
+      "stageVariables": {
+        "baz": "qux"
+      },
+      "headers": {
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        "Accept-Encoding": "gzip, deflate, sdch",
+        "Accept-Language": "en-US,en;q=0.8",
+        "Cache-Control": "max-age=0",
+        "CloudFront-Forwarded-Proto": "https",
+        "CloudFront-Is-Desktop-Viewer": "true",
+        "CloudFront-Is-Mobile-Viewer": "false",
+        "CloudFront-Is-SmartTV-Viewer": "false",
+        "CloudFront-Is-Tablet-Viewer": "false",
+        "CloudFront-Viewer-Country": "US",
+        "Host": "1234567890.execute-api.us-east-1.amazonaws.com",
+        "Upgrade-Insecure-Requests": "1",
+        "User-Agent": "Custom User Agent String",
+        "Via": "1.1 08f323deadbeefa7af34d5feb414ce27.cloudfront.net (CloudFront)",
+        "X-Amz-Cf-Id": "cDehVQoZnx43VYQb9j2-nvCh-9z396Uhbp027Y2JvkCPNLmGJHqlaA==",
+        "X-Forwarded-For": "127.0.0.1, 127.0.0.2",
+        "X-Forwarded-Port": "443",
+        "X-Forwarded-Proto": "https"
+      },
+      "requestContext": {
+        "accountId": "123456789012",
+        "resourceId": "123456",
+        "stage": "prod",
+        "requestId": "c6af9ac6-7b61-11e6-9a41-93e8deadbeef",
+        "requestTime": "09/Apr/2015:12:34:56 +0000",
+        "requestTimeEpoch": 1428582896000,
+        "identity": {
+          "cognitoIdentityPoolId": "null",
+          "accountId": "null",
+          "cognitoIdentityId": "null",
+          "caller": "null",
+          "accessKey": "null",
+          "sourceIp": "127.0.0.1",
+          "cognitoAuthenticationType": "null",
+          "cognitoAuthenticationProvider": "null",
+          "userArn": "null",
+          "userAgent": "Custom User Agent String",
+          "user": "null"
+        },
+        "path": "/solvePuzzle",
+        "resourcePath": "/solvePuzzle",
+        "httpMethod": "POST",
+        "apiId": "1234567890",
+        "protocol": "HTTP/1.1"
+      }
+    }
 
 
 class TestSolveCompletePuzzles:
@@ -398,3 +490,59 @@ class TestUpdate:
 
         puzzle_result = solve.update_cell(incomplete_puzzle, 0, 0, 5)
         assert puzzle_result == complete_puzzle, "Cell was not updated."
+
+
+def test_create_response():
+    response = solve.create_response(200, 'Success message')
+
+    expected_response = {'statusCode': 200,
+                         'body': 'Success message',
+                         'headers': {
+                            'Content-Type': 'application/json',
+                            'Access-Control-Allow-Origin': '*'
+                         }}
+    assert response == expected_response, "Create_response did not return the expected response value."
+
+
+class TestSolvePuzzleMain:
+    def test_solve_main_returns_response(self, api_gateway_event):
+        response = solve.solve_main(api_gateway_event)
+        assert response['statusCode'] == 200
+        assert response['headers'] == {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}
+        assert re.match('{"status": .*}', response['body'])
+
+    def test_solve_main_no_body(self, api_gateway_event):
+        event_no_body = copy.deepcopy(api_gateway_event)
+        event_no_body['body'] = '{}'
+        response = solve.solve_main(event_no_body)
+        assert response['statusCode'] == 500
+        assert response['headers'] == {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}
+        assert response['body'] == '{"error": "API Event did not contain a valid puzzle."}'
+
+    def test_solve_main_data_validation_fail(self, api_gateway_event, empty_puzzle):
+        event_no_body = copy.deepcopy(api_gateway_event)
+        empty_puzzle[0][1] = "1"
+        event_no_body['body'] = "{\"puzzle_rows\": " + json.dumps(empty_puzzle) + "}"
+
+        response = solve.solve_main(event_no_body)
+        assert response['statusCode'] == 500
+        assert response['headers'] == {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}
+        assert response['body'] == '{"error": "Puzzle was not validated due to wrong data types."}'
+
+    def test_solve_main_puzzle_validation_fail(self, api_gateway_event, empty_puzzle):
+        event_no_body = copy.deepcopy(api_gateway_event)
+        empty_puzzle[0][1] = 1
+        empty_puzzle[0][8] = 1
+        event_no_body['body'] = "{\"puzzle_rows\": " + json.dumps(empty_puzzle) + "}"
+
+        response = solve.solve_main(event_no_body)
+        assert response['statusCode'] == 500
+        assert response['headers'] == {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}
+        assert response['body'] == '{"error": "Puzzle was not validated due to invalid row, column or grid."}'
+
+
+def test_handler(api_gateway_event):
+    response = solve.handler(api_gateway_event, None)
+    assert response['statusCode'] == 200
+    assert response['headers'] == {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}
+    assert re.match('{"status": .*}', response['body'])

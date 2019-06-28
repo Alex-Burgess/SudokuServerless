@@ -1,9 +1,18 @@
+# import sys
+# import logging
+# logger = logging.getLogger()
+# logger.setLevel(logging.INFO)
+# stream_handler = logging.StreamHandler(sys.stdout)
+# logger.addHandler(stream_handler)
+
+
 def solve_wrapper(s):
     s = convert_to_bf(s)
-    print("INFO: Executing brute force algorithm.  Puzzle ({})".format(s))
+    # logger.info("Executing brute force algorithm.  Puzzle ({})".format(s))
     s = solve(s)
     s = convert_from_bf(s)
 
+    # logger.info("Puzzle solved by brute force.  Solution ({})".format(s))
     return {'puzzle': s, 'status': True}
 
 
@@ -22,7 +31,6 @@ def solve(s):
         i = s.index(0)
     except ValueError:
         # No empty cell left: solution found
-        print("DEBUG: Puzzle solved by brute force.  Solution ({})".format(s))
         return s
 
     c = [s[j] for j in range(81)
@@ -36,8 +44,6 @@ def solve(s):
 
 
 def convert_to_bf(s):
-    print("DEBUG: Converting to brute force format")
-
     new_list = []
     for row in s:
         for cell in row:
@@ -47,8 +53,6 @@ def convert_to_bf(s):
 
 
 def convert_from_bf(s):
-    print("DEBUG: Converting from brute force format")
-
     new_list = []
 
     counter = 0

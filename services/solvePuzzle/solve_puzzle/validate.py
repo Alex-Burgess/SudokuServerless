@@ -1,8 +1,15 @@
 from solve_puzzle import common
+import logging
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+if logger.handlers:
+    handler = logger.handlers[0]
+    handler.setFormatter(logging.Formatter("[%(levelname)s]\t%(asctime)s.%(msecs)dZ\t%(aws_request_id)s\t%(module)s:%(funcName)s\t%(message)s\n", "%Y-%m-%dT%H:%M:%S"))
 
 
 def validate_puzzle(puzzle):
-    print("INFO: Validating puzzle (" + str(puzzle) + ")")
+    logger.info("Validating puzzle for incorrect format ({})".format(puzzle))
 
     for r in range(0, 9):
         row = puzzle[r]
@@ -23,21 +30,23 @@ def validate_puzzle(puzzle):
 
 
 def validata_data_types(puzzle):
+    logger.info("Validating puzzle for incorrect data types ({})".format(puzzle))
     for r in range(0, 9):
         row = puzzle[r]
         for x in row:
             if not isinstance(x, int):
+                logger.error("Puzzle failed data type validation.")
                 return False
     return True
 
 
 def validate_row_col_grid(number_list, type):
-    print("\nINFO: Validating " + type + " (" + str(number_list) + ")")
+    logger.debug("INFO: Validating {} ({})".format(type, number_list))
     max_cell_value_occurences = 1
     for x in range(1, 10):
         if number_list.count(x) > max_cell_value_occurences:
-            print("ERROR: Number (" + str(x) + ") occurred more than once in row (" + str(number_list) + ")")
+            logger.error("Number (" + str(x) + ") occurred more than once in row (" + str(number_list) + ")")
             return False
 
-    print("INFO: No duplicates found in " + type + " (" + str(number_list) + ")")
+    logger.debug("No duplicates found in {} ({})".format(type, number_list))
     return True
