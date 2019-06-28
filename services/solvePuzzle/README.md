@@ -46,6 +46,25 @@ aws cloudformation describe-stacks \
     --output table
 ```
 
+## Deploying Code Updates
+1. Create a new build of the code:
+    ```
+    sam build
+    ```
+1. Package
+    ```
+    sam package \
+        --output-template-file packaged.yaml \
+        --s3-bucket sam-builds-trynewpuzzle
+    ```
+1. Deploy
+    ```
+    sam deploy \
+        --template-file packaged.yaml \
+        --stack-name Service-TryNewPuzzle \
+        --capabilities CAPABILITY_NAMED_IAM
+    ```
+
 ## Logging
 Get logs for last 10 minutes:
 ```

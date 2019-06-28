@@ -47,9 +47,29 @@ aws cloudformation describe-stacks \
     --output table
 ```
 
+## Deploying Code Updates
+1. Create a new build of the code:
+    ```
+    sam build
+    ```
+1. Package
+    ```
+    sam package \
+        --output-template-file packaged.yaml \
+        --s3-bucket sam-builds-trynewpuzzle
+    ```
+1. Deploy
+    ```
+    sam deploy \
+        --template-file packaged.yaml \
+        --stack-name Service-TryNewPuzzle \
+        --capabilities CAPABILITY_NAMED_IAM
+    ```
+
+
 ## Deploying to Environments
 Add input parameter to template??
-Aliases to versions - https://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html 
+Aliases to versions - https://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html
 Using gradual code deployments to production, with automated test execution and automated roll back in case of errors.  A good test, would be to deploy with the wrong bucket name, so that it fails and rolls back.
 
 ## Logging
