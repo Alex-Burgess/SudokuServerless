@@ -139,6 +139,11 @@ class TestEnvironmentVariable:
             unsolved.get_bucket_name()
         assert str(e.value) == "UNSOLVED_BUCKET_NAME environment variable not set correctly"
 
+    def test_no_variable(self):
+        with pytest.raises(Exception) as e:
+            unsolved.get_bucket_name()
+        assert str(e.value) == "UNSOLVED_BUCKET_NAME environment variable not set correctly"
+
 
 class TestGetRandomKey:
     def test_get_random_key(self, s3_bucket_mock):
@@ -161,6 +166,12 @@ class TestGetPuzzleFromS3:
             unsolved.get_puzzle_from_s3('test-bucket', '4.json')
         assert str(e.value) == "An error occurred (NoSuchKey) when calling the GetObject operation: The specified key does not exist."
 
+    def test_bucket_does_not_exist(self, monkeypatch, s3_bucket_mock):
+        monkeypatch.setitem(os.environ, 'UNSOLVED_BUCKET_NAME', 'test-bucket2')
+        with pytest.raises(Exception) as e:
+            unsolved.get_puzzle_from_s3('test-bucket2', '1.json')
+        assert str(e.value) == "An error occurred (NoSuchBucket) when calling the GetObject operation: The specified bucket does not exist"
+
 
 class TestUnsolvedPuzzleMain:
     def test_unsolved_main_returns_response(self, monkeypatch, s3_bucket_mock):
@@ -175,7 +186,20 @@ class TestUnsolvedPuzzleMain:
         response = unsolved.unsolved_puzzle_main()
         assert response['statusCode'] == 500
         assert response['headers'] == {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}
-        assert response['body'] == {"error": "An error occurred (NoSuchBucket) when calling the ListObjects operation: The specified bucket does not exist"}
+        assert response['body'] == '{"error": "An error occurred (NoSuchBucket) when calling the ListObjects operation: The specified bucket does not exist"}'
+
+    def test_unsolved_main_no_env_variable(self, s3_bucket_mock, api_gateway_event):
+        response = unsolved.unsolved_puzzle_main()
+        assert response['statusCode'] == 500
+        assert response['headers'] == {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}
+        assert response['body'] == '{"error": "UNSOLVED_BUCKET_NAME environment variable not set correctly"}'
+
+    def test_unsolved_main_bucket_does_not_exist(self, monkeypatch, s3_bucket_mock, api_gateway_event):
+        monkeypatch.setitem(os.environ, 'UNSOLVED_BUCKET_NAME', 'test-bucket2')
+        response = unsolved.unsolved_puzzle_main()
+        assert response['statusCode'] == 500
+        assert response['headers'] == {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}
+        assert response['body'] == '{"error": "An error occurred (NoSuchBucket) when calling the ListObjects operation: The specified bucket does not exist"}'
 
 
 def test_handler(monkeypatch, api_gateway_event, s3_bucket_mock):

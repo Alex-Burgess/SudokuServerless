@@ -23,11 +23,10 @@ def unsolved_puzzle_main():
         bucket_name = get_bucket_name()
         key = get_random_key(bucket_name)
         puzzle_data = get_puzzle_from_s3(bucket_name, key)
-
-        # puzzle_data = get_random_key(bucket_name)
     except Exception as e:
         logger.error("Exception: {}".format(e))
-        response = create_response(500, {'error': str(e)})
+        response = create_response(500, json.dumps({'error': str(e)}))
+        logger.info("Returning response: {}".format(response))
         return response
 
     return_data = add_id_to_returned_json(puzzle_data, key)
@@ -35,35 +34,6 @@ def unsolved_puzzle_main():
 
     logger.info("Returning response: {}".format(response))
     return response
-
-
-def add_id_to_returned_json(puzzle_json, id):
-    logger.info("Adding id ({}) to puzzle json object ({})".format(id, puzzle_json))
-    complete_json = json.loads(puzzle_json)
-    complete_json['id'] = id
-    return json.dumps(complete_json)
-
-
-def create_response(code, message):
-    logger.info("Creating response with status code ({}) and message ({})".format(code, message))
-    response = {'statusCode': code,
-                'body': message,
-                'headers': {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                }}
-    return response
-
-
-def get_bucket_name():
-    try:
-        bucket_name = os.environ['UNSOLVED_BUCKET_NAME']
-        logger.info("UNSOLVED_BUCKET_NAME environment variable value: " + bucket_name)
-    except KeyError:
-        logger.error('UNSOLVED_BUCKET_NAME environment variable not set correctly')
-        raise Exception('UNSOLVED_BUCKET_NAME environment variable not set correctly')
-
-    return bucket_name
 
 
 def get_random_key(bucket_name):
@@ -87,6 +57,17 @@ def get_random_key(bucket_name):
     return random_key
 
 
+def get_bucket_name():
+    try:
+        bucket_name = os.environ['UNSOLVED_BUCKET_NAME']
+        logger.info("UNSOLVED_BUCKET_NAME environment variable value: " + bucket_name)
+    except KeyError:
+        logger.error('UNSOLVED_BUCKET_NAME environment variable not set correctly')
+        raise Exception('UNSOLVED_BUCKET_NAME environment variable not set correctly')
+
+    return bucket_name
+
+
 def get_puzzle_from_s3(bucket, key):
     s3 = boto3.resource('s3')
     logger.info("Getting S3 object (" + key + ") from bucket (" + bucket + ")")
@@ -96,3 +77,21 @@ def get_puzzle_from_s3(bucket, key):
     logger.info("Puzzle object: " + puzzle_data)
 
     return puzzle_data
+
+
+def create_response(code, message):
+    logger.info("Creating response with status code ({}) and message ({})".format(code, message))
+    response = {'statusCode': code,
+                'body': message,
+                'headers': {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                }}
+    return response
+
+
+def add_id_to_returned_json(puzzle_json, id):
+    logger.info("Adding id ({}) to puzzle json object ({})".format(id, puzzle_json))
+    complete_json = json.loads(puzzle_json)
+    complete_json['id'] = id
+    return json.dumps(complete_json)
