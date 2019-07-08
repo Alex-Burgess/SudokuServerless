@@ -173,8 +173,8 @@ Resources:
                 StackName: Service-tryNewPuzzle-Staging
                 ChangeSetName: Service-tryNewPuzzle-Staging-ChangeSet
                 TemplatePath: BuiltZip::tryNewPuzzle-packaged.yaml
-                Capabilities: CAPABILITY_IAM
-                # ParameterOverrides: '{ "Stage": "beta" }'
+                Capabilities: CAPABILITY_NAMED_IAM
+                ParameterOverrides: '{ "Environment": "staging" }'
               InputArtifacts:
                 - Name: BuiltZip
               RunOrder: 1
