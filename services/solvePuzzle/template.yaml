@@ -6,6 +6,17 @@ Parameters:
   CognitoUserPoolId:
     Type: String
     Default: eu-west-1_TGh4Ec2cx
+  Environment:
+    Description: Environment type.
+    Default: test
+    Type: String
+    AllowedValues:
+      - prod
+      - staging
+      - dev
+      - test
+    ConstraintDescription: must specify prod, staging, dev or test.
+
 
 Resources:
   SolvePuzzleApi:
@@ -79,7 +90,7 @@ Resources:
   SolvePuzzleFunction:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: SolvePuzzleFunction
+      FunctionName: !Sub 'SolvePuzzleFunction-${Environment}'
       Handler: solve_puzzle/solve.handler
       Runtime: python3.6
       MemorySize: 1024
@@ -97,7 +108,7 @@ Resources:
   SolvePuzzleFunctionRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: 'SudokuServerless-SolvePuzzle-Role'
+      RoleName: !Sub 'Service-SolvePuzzle-${Environment}-Role'
       AssumeRolePolicyDocument:
         Statement:
         - Effect: Allow
