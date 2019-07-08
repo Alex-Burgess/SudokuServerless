@@ -3,13 +3,10 @@ version: 0.1
 phases:
   pre_build:
     commands:
-      - python --version
-      - python3 --version
-      - pip install --upgrade pip
+      # - pip install --upgrade pip
       - pip install --user aws-sam-cli
-      # - echo "Installing dependencies - `pwd`"
-      # - unit tests
       - /root/.local/bin/sam --version
+      # - unit tests
   build:
     commands:
       - echo "Starting build `date` in `pwd`"
