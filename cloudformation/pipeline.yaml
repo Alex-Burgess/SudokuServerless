@@ -107,8 +107,12 @@ Resources:
                   - iam:GetPolicy
                   - iam:CreateRole
                   - iam:CreatePolicy
+                  - iam:DeleteRole
+                  - iam:DeletePolicy
                   - iam:UpdateRole
-                  - iam:CreatePolicy
+                  - iam:AttachRolePolicy
+                  - iam:DetachRolePolicy
+                  - iam:PassRole
                   - cloudformation:CreateStack
                   - cloudformation:DescribeStacks
                   - cloudformation:DeleteStack
@@ -117,6 +121,7 @@ Resources:
                   - cloudformation:ExecuteChangeSet
                   - cloudformation:DeleteChangeSet
                   - cloudformation:DescribeChangeSet
+                  - s3:GetObject
                 Effect: Allow
                 Resource: '*'
 
