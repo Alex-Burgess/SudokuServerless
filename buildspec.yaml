@@ -3,7 +3,7 @@ version: 0.1
 phases:
   pre_build:
     commands:
-      # - pip install --upgrade pip
+      - pip install --upgrade pip
       - pip install --user aws-sam-cli
       - /root/.local/bin/sam --version
       # - unit tests
