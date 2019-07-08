@@ -4,17 +4,13 @@ phases:
   build:
     commands:
       - echo "Starting build `date` in `pwd`"
-      - pip install --user aws-sam-cli
-      - sam --version
-      -
-      # - aws cloudformation package --template-file app-sam.yaml --s3-bucket $BUILD_OUTPUT_BUCKET --output-template-file app-output_sam.yaml
+      - aws cloudformation package --template-file services/tryNewPuzzle/template.yaml --s3-bucket $BUILD_OUTPUT_BUCKET --output-template-file tryNewPuzzle-packaged.yaml
       # - aws cloudformation package --template-file test-sam.yaml --s3-bucket $BUILD_OUTPUT_BUCKET --output-template-file test-output_sam.yaml
   post_build:
     commands:
       - echo "build completed on `date`"
 
-# artifacts:
-#   files:
-#     - app-output_sam.yaml
-#     - test-output_sam.yaml
-#   discard-paths: yes
+artifacts:
+  files:
+    - tryNewPuzzle-packaged.yaml
+  discard-paths: yes
