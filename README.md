@@ -88,6 +88,14 @@ A deployment pipeline is used to automate the build, packaging and deployment of
      --stack-name Sudoku-Pipeline
      ```
 
+Alternatively, straight forward update:
+```
+aws cloudformation update-stack --stack-name Sudoku-Pipeline \
+ --template-body file://pipeline.yaml \
+ --capabilities CAPABILITY_NAMED_IAM \
+ --parameters ParameterKey=GitHubToken,ParameterValue=`aws ssm get-parameter --name "/Sudoku/github" --with-decryption --query 'Parameter.Value' --output text`
+```
+
 ### Staging Environment
 The Pipeline above is just a POC for building, testing and deploying the serverless functions. There is no automated deployments for the content (such as demo'ed in devopsalex.com).  To deploy a staging web site:
 

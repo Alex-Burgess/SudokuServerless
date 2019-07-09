@@ -23,7 +23,9 @@ Parameters:
     Type: String
     NoEcho: true
     Description: Personal Access Token.
-
+  AdminAccessRoleId:
+    Description: Description of service.
+    Type: String
 
 Resources:
   BuildArtifactsBucket:
@@ -122,6 +124,9 @@ Resources:
                   - cloudformation:DeleteChangeSet
                   - cloudformation:DescribeChangeSet
                   - s3:GetObject
+                  - s3:CreateBucket
+                  - s3:DeleteBucket
+                  - s3:PutBucketPolicy
                 Effect: Allow
                 Resource: '*'
 
