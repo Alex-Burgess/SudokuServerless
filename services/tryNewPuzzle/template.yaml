@@ -30,7 +30,7 @@ Resources:
         swagger: "2.0"
         info:
           version: "1.0"
-          title: !Sub '{ServiceName}-${Environment}'
+          title: !Sub '${ServiceName}-${Environment}'
         schemes:
         - "https"
         paths:
@@ -45,7 +45,7 @@ Resources:
               security:
               - SudokuServerlessAuthorizer: []
               x-amazon-apigateway-integration:
-                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${UnsolvedPuzzleFunction.Arn}/invocations'
+                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${TryNewPuzzleFunction.Arn}/invocations'
                 passthroughBehavior: "when_no_match"
                 httpMethod: "POST"
                 type: "aws_proxy"
@@ -93,13 +93,13 @@ Resources:
   TryNewPuzzleFunction:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: !Sub '{ServiceName}-${Environment}'
+      FunctionName: !Sub '${ServiceName}-${Environment}'
       Handler: try_new_puzzle/unsolved.handler
       Runtime: python3.6
       MemorySize: 512
       Timeout: 3
       Description: Gets an unsolved puzzle from an s3 bucket
-      Role: !GetAtt UnsolvedPuzzleFunctionRole.Arn
+      Role: !GetAtt TryNewPuzzleFunctionRole.Arn
       Environment:
         Variables:
           UNSOLVED_BUCKET_NAME: 'sudoku-unsolved-puzzles'
@@ -107,14 +107,14 @@ Resources:
         GetNewPuzzle:
           Type: Api
           Properties:
-            RestApiId: !Ref UnsolvedPuzzleApi
+            RestApiId: !Ref TryNewPuzzleApi
             Path: /tryNewPuzzle
             Method: GET
 
   TryNewPuzzleFunctionRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub '{ServiceName}-${Environment}-Role'
+      RoleName: !Sub '${ServiceName}-${Environment}-Role'
       AssumeRolePolicyDocument:
         Statement:
         - Effect: Allow
