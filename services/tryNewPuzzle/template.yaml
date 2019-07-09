@@ -16,9 +16,13 @@ Parameters:
       - dev
       - test
     ConstraintDescription: must specify prod, staging, dev or test.
+  ServiceName:
+    Description: Environment type.
+    Default: tryNewPuzzle
+    Type: String
 
 Resources:
-  UnsolvedPuzzleApi:
+  TryNewPuzzleApi:
     Type: AWS::Serverless::Api
     Properties:
       StageName: Prod
@@ -26,7 +30,7 @@ Resources:
         swagger: "2.0"
         info:
           version: "1.0"
-          title: !Ref 'AWS::StackName'
+          title: !Sub '{ServiceName}-${Environment}'
         schemes:
         - "https"
         paths:
@@ -86,10 +90,10 @@ Resources:
               type: "cognito_user_pools"
 
 
-  UnsolvedPuzzleFunction:
+  TryNewPuzzleFunction:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: !Sub 'UnsolvedPuzzleFunction-${Environment}'
+      FunctionName: !Sub '{ServiceName}-${Environment}'
       Handler: try_new_puzzle/unsolved.handler
       Runtime: python3.6
       MemorySize: 512
@@ -107,10 +111,10 @@ Resources:
             Path: /tryNewPuzzle
             Method: GET
 
-  UnsolvedPuzzleFunctionRole:
+  TryNewPuzzleFunctionRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub 'Service-UnsolvedPuzzle-${Environment}-Role'
+      RoleName: !Sub '{ServiceName}-${Environment}-Role'
       AssumeRolePolicyDocument:
         Statement:
         - Effect: Allow
@@ -124,10 +128,10 @@ Resources:
         - "arn:aws:iam::aws:policy/AmazonS3FullAccess"
 
 Outputs:
-  UnsolvedPuzzleFunctionApi:
-    Description: "API Gateway endpoint URL for Prod stage for UnsolvedPuzzleFunction function"
-    Value: !Sub 'https://${UnsolvedPuzzleApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/tryNewPuzzle/'
+  TryNewPuzzleApi:
+    Description: "API Gateway endpoint URL for Prod stage of tryNewPuzzle Service"
+    Value: !Sub 'https://${TryNewPuzzleApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/tryNewPuzzle/'
 
-  UnsolvedPuzzleFunctionIamRole:
-    Description: "Implicit IAM Role created for UnsolvedPuzzleFunction function"
-    Value: !GetAtt UnsolvedPuzzleFunctionRole.Arn
+  TryNewPuzzleFunctionIamRole:
+    Description: "Implicit IAM Role created for tryNewPuzzle function"
+    Value: !GetAtt TryNewPuzzleFunctionRole.Arn
