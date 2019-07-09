@@ -108,11 +108,11 @@ Resources:
         Variables:
           SOLUTIONS_BUCKET_NAME: 'sudoku-unsolved-puzzle-solutions'
       Events:
-        GetNewPuzzle:
+        GetNewPuzzleSolution:
           Type: Api
           Properties:
             RestApiId: !Ref Api
-            Path: !Sub '/${ServiceName}/{id}'
+            Path: /getNewPuzzleSolution/{id}
             Method: GET
 
   FunctionRole:
@@ -133,9 +133,9 @@ Resources:
 
 Outputs:
   ApiUrl:
-    Description: !Sub 'API Gateway endpoint URL for Prod stage of ${ServiceName} Service'
+    Description: API Gateway endpoint URL for Prod stage of Service
     Value: !Sub 'https://${Api}.execute-api.${AWS::Region}.amazonaws.com/Prod/${ServiceName}/{id}'
 
   FunctionIamRole:
-    Description: !Sub 'Implicit IAM Role created for ${ServiceName} function'
+    Description: Implicit IAM Role created for function
     Value: !GetAtt FunctionRole.Arn
