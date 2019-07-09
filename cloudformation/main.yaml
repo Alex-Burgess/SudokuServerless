@@ -58,17 +58,6 @@ Resources:
       UserPoolId: !Ref UserPool
       GenerateSecret: false
 
-  UnsolvedPuzzleSolutionsBucket:
-    Type: 'AWS::S3::Bucket'
-    Properties:
-      BucketName: !Sub 'sudoku-unsolved-puzzle-solutions-${Environment}'
-      AccessControl: Private
-      PublicAccessBlockConfiguration:
-        BlockPublicAcls: True
-        BlockPublicPolicy: True
-        IgnorePublicAcls: True
-        RestrictPublicBuckets: True
-
 Outputs:
   WebsiteURL:
     Value: !GetAtt WebsiteBucket.WebsiteURL

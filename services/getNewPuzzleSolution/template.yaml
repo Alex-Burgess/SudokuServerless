@@ -106,7 +106,7 @@ Resources:
       Role: !GetAtt FunctionRole.Arn
       Environment:
         Variables:
-          SOLUTIONS_BUCKET_NAME: !Sub 'sudoku-unsolved-puzzle-solutions-${Environment}'
+          SOLUTIONS_BUCKET_NAME: !Ref PuzzleSolutionsBucket
       Events:
         GetNewPuzzleSolution:
           Type: Api
@@ -129,7 +129,29 @@ Resources:
             - sts:AssumeRole
       ManagedPolicyArns:
         - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-        - "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+        # - "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+      Policies:
+          - PolicyName: S3PuzzleBucketAccess
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                  - Action:
+                      - 's3:*'
+                    Effect: Allow
+                    Resource:
+                      - !Sub "arn:aws:s3:::${PuzzleSolutionsBucket}"
+                      - !Sub "arn:aws:s3:::${PuzzleSolutionsBucket}/*"
+
+  PuzzleSolutionsBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Sub 'sudoku-unsolved-puzzle-solutions-${Environment}'
+      AccessControl: Private
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: True
+        BlockPublicPolicy: True
+        IgnorePublicAcls: True
+        RestrictPublicBuckets: True
 
 Outputs:
   ApiUrl:

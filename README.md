@@ -116,6 +116,11 @@ The Pipeline above is just a POC for building, testing and deploying the serverl
     aws s3 cp data/example_puzzle_solutions/ s3://sudoku-unsolved-puzzle-solutions-staging --recursive
     ```
 
+Update stack:
+```
+aws cloudformation update-stack --stack-name Sudoku-Serverless-Staging --template-body file://main.yaml \
+ --parameters ParameterKey=Environment,ParameterValue=staging
+```
 
 # Reference
 
