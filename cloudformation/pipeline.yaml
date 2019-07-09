@@ -171,6 +171,18 @@ Resources:
                 - Name: SourceZip
               OutputArtifacts:
                 - Name: BuiltZip
+            - Name: UnitTests
+              ActionTypeId:
+                Category: Test
+                Owner: AWS
+                Provider: CodeBuild
+                Version: "1"
+              Configuration:
+                ProjectName: !Ref UnitTestsCodeBuildProject
+              InputArtifacts:
+                - Name: SourceZip
+              # OutputArtifacts:
+              #   - Name: BuiltZip
         - Name: Staging
           Actions:
             - Name: TryNewPuzzle-CreateChangeSet
@@ -399,10 +411,43 @@ Resources:
           StreamName: SudokuSamBuilds
       TimeoutInMinutes: 10
 
+  UnitTestsCodeBuildProject:
+    Type: AWS::CodeBuild::Project
+    # DependsOn: UnitTestsLogsGroup
+    Properties:
+      Name: !Sub ${ApplicationName}-UnitTests
+      Description: Performs the unit testing of the lambda functions.
+      ServiceRole: !GetAtt SamBuildsRole.Arn
+      Artifacts:
+        Type: CODEPIPELINE
+      Cache:
+        Type: LOCAL
+        Modes:
+        - LOCAL_DOCKER_LAYER_CACHE
+      Environment:
+        Type: LINUX_CONTAINER
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/standard:1.0
+      Source:
+        Type: CODEPIPELINE
+        BuildSpec: buildspec-unittests.yaml
+      LogsConfig:
+        CloudWatchLogs:
+          Status: ENABLED
+          GroupName: !Sub ${ApplicationName}-unittestlogs
+          StreamName: UnitTests
+      TimeoutInMinutes: 10
+
   BuildLogsGroup:
     Type: AWS::Logs::LogGroup
     Properties:
       LogGroupName: !Sub ${ApplicationName}-buildlogs
+      RetentionInDays: 30
+
+  UnitTestsLogsGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub ${ApplicationName}-unittestlogs
       RetentionInDays: 30
 
   SamBuildsRole:
@@ -430,6 +475,8 @@ Resources:
             Resource:
               - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:${ApplicationName}-buildlogs"
               - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:${ApplicationName}-buildlogs:*"
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:${ApplicationName}-unittestlogs"
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:${ApplicationName}-unittestlogs:*"
           - Effect: Allow
             Action:
               - s3:PutObject
