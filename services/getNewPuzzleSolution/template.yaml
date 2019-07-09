@@ -106,7 +106,7 @@ Resources:
       Role: !GetAtt FunctionRole.Arn
       Environment:
         Variables:
-          SOLUTIONS_BUCKET_NAME: 'sudoku-unsolved-puzzle-solutions'
+          SOLUTIONS_BUCKET_NAME: !Sub 'sudoku-unsolved-puzzle-solutions-${Environment}'
       Events:
         GetNewPuzzleSolution:
           Type: Api

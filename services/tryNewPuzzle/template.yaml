@@ -24,6 +24,7 @@ Parameters:
     Description: Description of service.
     Default: Gets an unsolved puzzle from an s3 bucket
     Type: String
+
 Resources:
   Api:
     Type: AWS::Serverless::Api
@@ -105,7 +106,7 @@ Resources:
       Role: !GetAtt FunctionRole.Arn
       Environment:
         Variables:
-          UNSOLVED_BUCKET_NAME: 'sudoku-unsolved-puzzles'
+          UNSOLVED_BUCKET_NAME: !Sub 'sudoku-unsolved-puzzles-${Environment}'
       Events:
         TryNewPuzzle:
           Type: Api
