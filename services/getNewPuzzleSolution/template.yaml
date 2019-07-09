@@ -134,7 +134,7 @@ Resources:
 Outputs:
   ApiUrl:
     Description: API Gateway endpoint URL for Prod stage of Service
-    Value: !Sub 'https://${Api}.execute-api.${AWS::Region}.amazonaws.com/Prod/${ServiceName}/{id}'
+    Value: !Sub 'https://${Api}.execute-api.${AWS::Region}.amazonaws.com/${Environment}/${ServiceName}/{id}'
 
   FunctionIamRole:
     Description: Implicit IAM Role created for function

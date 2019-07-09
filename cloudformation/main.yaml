@@ -6,11 +6,23 @@ Parameters:
     Type: String
     Description: The name for the bucket hosting your website, e.g. 'sudoku-serverless'
     Default: sudoku-serverless
+  Environment:
+    Description: Environment type.
+    Default: test
+    Type: String
+    AllowedValues:
+      - prod
+      - staging
+      - dev
+      - test
+
+Conditions:
+  Prod: !Equals [ !Ref Environment, prod ]
 
 Resources:
   WebsiteBucket:
     Properties:
-      BucketName: !Ref BucketName
+      BucketName: !If [Prod, !Ref BucketName, !Sub '${BucketName}-${Environment}']
       WebsiteConfiguration:
         IndexDocument: index.html
     Type: "AWS::S3::Bucket"
@@ -30,6 +42,7 @@ Resources:
 
   UserPool:
     Type: AWS::Cognito::UserPool
+    Condition: Prod
     Properties:
       UserPoolName: SudokuServerless
       UsernameAttributes:
@@ -39,6 +52,7 @@ Resources:
 
   UserPoolClient:
     Type: AWS::Cognito::UserPoolClient
+    Condition: Prod
     Properties:
       ClientName: SudokuServerlessWeb
       UserPoolId: !Ref UserPool
@@ -47,7 +61,7 @@ Resources:
   UnsolvedPuzzlesBucket:
     Type: 'AWS::S3::Bucket'
     Properties:
-      BucketName: 'sudoku-unsolved-puzzles'
+      BucketName: !If [Prod, 'sudoku-unsolved-puzzles', !Sub 'sudoku-unsolved-puzzles-${Environment}']
       AccessControl: Private
       PublicAccessBlockConfiguration:
         BlockPublicAcls: True
@@ -58,7 +72,7 @@ Resources:
   UnsolvedPuzzleSolutionsBucket:
     Type: 'AWS::S3::Bucket'
     Properties:
-      BucketName: 'sudoku-unsolved-puzzle-solutions'
+      BucketName: !If [Prod, 'sudoku-unsolved-puzzle-solutions', !Sub 'sudoku-unsolved-puzzle-solutions-${Environment}']
       AccessControl: Private
       PublicAccessBlockConfiguration:
         BlockPublicAcls: True
@@ -71,7 +85,9 @@ Outputs:
     Value: !GetAtt WebsiteBucket.WebsiteURL
 
   userPoolId:
+    Condition: Prod
     Value: !Ref UserPool
 
   userPoolClientId:
+    Condition: Prod
     Value: !Ref UserPoolClient

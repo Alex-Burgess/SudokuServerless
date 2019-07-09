@@ -84,7 +84,28 @@ A deployment pipeline is used to automate the build, packaging and deployment of
     aws cloudformation execute-change-set --change-set-name pipeline-updates \
      --stack-name Sudoku-Pipeline
      ```
-     
+
+### Staging Environment
+The Pipeline above is just a POC for building, testing and deploying the serverless functions. There is no automated deployments for the content (such as demo'ed in devopsalex.com).  To deploy a staging web site:
+
+1. Create stack:
+    ```
+    aws cloudformation create-stack --stack-name Sudoku-Serverless-Staging --template-body file://main.yaml \
+     --parameters ParameterKey=Environment,ParameterValue=test
+    ```
+1. Build and Copy website content:
+    ```
+    rm -Rf public/
+    hugo --config config.staging.toml
+    aws s3 sync public/ s3://sudoku-serverless-test --delete
+    ```
+1. Add data to sudoku unsolved puzzles bucket:
+    ```
+    aws s3 cp data/example_puzzles/ s3://sudoku-unsolved-puzzles --recursive
+    aws s3 cp data/example_puzzle_solutions/ s3://sudoku-unsolved-puzzle-solutions --recursive
+    ```
+
+
 # Reference
 
 ### Create a new lambda/api service using SAM
