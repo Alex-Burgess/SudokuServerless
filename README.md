@@ -83,7 +83,8 @@ A deployment pipeline is used to automate the build, packaging and deployment of
     ```
     aws cloudformation execute-change-set --change-set-name pipeline-updates \
      --stack-name Sudoku-Pipeline
-
+     ```
+     
 # Reference
 
 ### Create a new lambda/api service using SAM
