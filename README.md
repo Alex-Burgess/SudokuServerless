@@ -33,13 +33,16 @@ aws s3 sync public/ s3://sudoku-serverless --delete
 
 Update stack:
 ```
-aws cloudformation update-stack --stack-name Sudoku-Serverless-Main --template-body file://main.yaml
+aws cloudformation update-stack --stack-name Sudoku-Serverless-Main --template-body file://main.yaml \
+ --parameters ParameterKey=Environment,ParameterValue=prod
 ```
 
-Add data to sudoku unsolved puzzles bucket:
+*Create API Services*
+
+Add data to puzzle buckets:
 ```
-aws s3 cp data/example_puzzles/ s3://sudoku-unsolved-puzzles --recursive
-aws s3 cp data/example_puzzle_solutions/ s3://sudoku-unsolved-puzzle-solutions --recursive
+aws s3 cp data/example_puzzles/ s3://sudoku-unsolved-puzzles-prod --recursive
+aws s3 cp data/example_puzzle_solutions/ s3://sudoku-unsolved-puzzle-solutions-prod --recursive
 ```
 
 ### Deployments
@@ -91,18 +94,18 @@ The Pipeline above is just a POC for building, testing and deploying the serverl
 1. Create stack:
     ```
     aws cloudformation create-stack --stack-name Sudoku-Serverless-Staging --template-body file://main.yaml \
-     --parameters ParameterKey=Environment,ParameterValue=test
+     --parameters ParameterKey=Environment,ParameterValue=staging
     ```
 1. Build and Copy website content:
     ```
     rm -Rf public/
     hugo --config config.staging.toml
-    aws s3 sync public/ s3://sudoku-serverless-test --delete
+    aws s3 sync public/ s3://sudoku-serverless-staging --delete
     ```
 1. Add data to sudoku unsolved puzzles bucket:
     ```
-    aws s3 cp data/example_puzzles/ s3://sudoku-unsolved-puzzles --recursive
-    aws s3 cp data/example_puzzle_solutions/ s3://sudoku-unsolved-puzzle-solutions --recursive
+    aws s3 cp data/example_puzzles/ s3://sudoku-unsolved-puzzles-staging --recursive
+    aws s3 cp data/example_puzzle_solutions/ s3://sudoku-unsolved-puzzle-solutions-staging --recursive
     ```
 
 

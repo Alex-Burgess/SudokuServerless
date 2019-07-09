@@ -58,21 +58,10 @@ Resources:
       UserPoolId: !Ref UserPool
       GenerateSecret: false
 
-  UnsolvedPuzzlesBucket:
-    Type: 'AWS::S3::Bucket'
-    Properties:
-      BucketName: !If [Prod, 'sudoku-unsolved-puzzles', !Sub 'sudoku-unsolved-puzzles-${Environment}']
-      AccessControl: Private
-      PublicAccessBlockConfiguration:
-        BlockPublicAcls: True
-        BlockPublicPolicy: True
-        IgnorePublicAcls: True
-        RestrictPublicBuckets: True
-
   UnsolvedPuzzleSolutionsBucket:
     Type: 'AWS::S3::Bucket'
     Properties:
-      BucketName: !If [Prod, 'sudoku-unsolved-puzzle-solutions', !Sub 'sudoku-unsolved-puzzle-solutions-${Environment}']
+      BucketName: !Sub 'sudoku-unsolved-puzzle-solutions-${Environment}'
       AccessControl: Private
       PublicAccessBlockConfiguration:
         BlockPublicAcls: True

@@ -24,6 +24,10 @@ Parameters:
     Description: Description of service.
     Default: Gets an unsolved puzzle from an s3 bucket
     Type: String
+  AdminAccessRoleId:
+    Description: Description of service.
+    Type: String
+
 
 Resources:
   Api:
@@ -130,6 +134,35 @@ Resources:
       ManagedPolicyArns:
         - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
         - "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+
+  PuzzlesBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Sub 'sudoku-unsolved-puzzles-${Environment}'
+      AccessControl: Private
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: True
+        BlockPublicPolicy: True
+        IgnorePublicAcls: True
+        RestrictPublicBuckets: True
+
+  PuzzlesBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref "PuzzlesBucket"
+      PolicyDocument:
+        Statement:
+          - Effect: "Deny"
+            Action: "s3:*"
+            Principal: "*"
+            Resource:
+              - !Sub "arn:aws:s3:::${PuzzlesBucket}"
+              - !Sub "arn:aws:s3:::${PuzzlesBucket}/*"
+            Condition:
+              StringNotLike:
+                aws:userId:
+                  - !Ref AdminAccessRoleId
+                  - !GetAtt FunctionRole.RoleId
 
 Outputs:
   ApiUrl:

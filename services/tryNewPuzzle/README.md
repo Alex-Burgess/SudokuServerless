@@ -12,7 +12,6 @@ See project [README](../../README.md) for architecture diagram.
 * [Python 3 installed](https://www.python.org/downloads/)
 * Python dependencies, e.g. pytest, boto3, moto.
 * [Docker installed](https://www.docker.com/community-edition)
-* An S3 bucket with the unsolved puzzles
 
 ## Getting Started
 ### Build Bucket
@@ -47,6 +46,11 @@ aws cloudformation describe-stacks \
     --output table
 ```
 
+Add data to puzzle buckets:
+```
+aws s3 cp data/example_puzzles/ s3://sudoku-unsolved-puzzles-prod --recursive
+```
+
 ## Deploying Code Updates
 1. Create a new build of the code:
     ```
@@ -75,12 +79,12 @@ Using gradual code deployments to production, with automated test execution and 
 ## Logging
 Get logs for last 10 minutes:
 ```
-sam logs -n Function
+sam logs -n Function --stack-name Service-TryNewPuzzle-Prod
 ```
 
 Tail logs, e.g. whilst executing function test:
 ```
-sam logs -n Function --tail
+sam logs -n Function --stack-name Service-TryNewPuzzle-Prod --tail
 ```
 
 See [SAM CLI Logging](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-logging.html) for more options.
