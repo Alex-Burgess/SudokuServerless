@@ -20,9 +20,12 @@ Parameters:
     Description: Environment type.
     Default: tryNewPuzzle
     Type: String
-
+  Description:
+    Description: Description of service.
+    Default: Gets an unsolved puzzle from an s3 bucket
+    Type: String
 Resources:
-  TryNewPuzzleApi:
+  Api:
     Type: AWS::Serverless::Api
     Properties:
       StageName: Prod
@@ -45,7 +48,7 @@ Resources:
               security:
               - SudokuServerlessAuthorizer: []
               x-amazon-apigateway-integration:
-                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${TryNewPuzzleFunction.Arn}/invocations'
+                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Function.Arn}/invocations'
                 passthroughBehavior: "when_no_match"
                 httpMethod: "POST"
                 type: "aws_proxy"
@@ -90,7 +93,7 @@ Resources:
               type: "cognito_user_pools"
 
 
-  TryNewPuzzleFunction:
+  Function:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: !Sub '${ServiceName}-${Environment}'
@@ -98,8 +101,8 @@ Resources:
       Runtime: python3.6
       MemorySize: 512
       Timeout: 3
-      Description: Gets an unsolved puzzle from an s3 bucket
-      Role: !GetAtt TryNewPuzzleFunctionRole.Arn
+      Description: !Ref Description
+      Role: !GetAtt FunctionRole.Arn
       Environment:
         Variables:
           UNSOLVED_BUCKET_NAME: 'sudoku-unsolved-puzzles'
@@ -107,11 +110,11 @@ Resources:
         GetNewPuzzle:
           Type: Api
           Properties:
-            RestApiId: !Ref TryNewPuzzleApi
-            Path: /tryNewPuzzle
+            RestApiId: !Ref Api
+            Path: !Sub '/${ServiceName}'
             Method: GET
 
-  TryNewPuzzleFunctionRole:
+  FunctionRole:
     Type: AWS::IAM::Role
     Properties:
       RoleName: !Sub '${ServiceName}-${Environment}-Role'
@@ -128,10 +131,10 @@ Resources:
         - "arn:aws:iam::aws:policy/AmazonS3FullAccess"
 
 Outputs:
-  TryNewPuzzleApi:
-    Description: "API Gateway endpoint URL for Prod stage of tryNewPuzzle Service"
-    Value: !Sub 'https://${TryNewPuzzleApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/tryNewPuzzle/'
+  ApiUrl:
+    Description: !Sub 'API Gateway endpoint URL for Prod stage of ${ServiceName} Service'
+    Value: !Sub 'https://${Api}.execute-api.${AWS::Region}.amazonaws.com/Prod/${ServiceName}/'
 
-  TryNewPuzzleFunctionIamRole:
-    Description: "Implicit IAM Role created for tryNewPuzzle function"
-    Value: !GetAtt TryNewPuzzleFunctionRole.Arn
+  FunctionIamRole:
+    Description: !Sub 'Implicit IAM Role created for ${ServiceName} function'
+    Value: !GetAtt FunctionRole.Arn

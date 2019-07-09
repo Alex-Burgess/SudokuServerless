@@ -16,10 +16,17 @@ Parameters:
       - dev
       - test
     ConstraintDescription: must specify prod, staging, dev or test.
-
+  ServiceName:
+    Description: Environment type.
+    Default: getNewPuzzleSolution
+    Type: String
+  Description:
+    Description: Description of service.
+    Default: Gets a puzzle solution from an s3 bucket
+    Type: String
 
 Resources:
-  PuzzleSolutionApi:
+  Api:
     Type: AWS::Serverless::Api
     Properties:
       StageName: Prod
@@ -27,7 +34,7 @@ Resources:
         swagger: "2.0"
         info:
           version: "1.0"
-          title: !Ref 'AWS::StackName'
+          title: !Sub '${ServiceName}-${Environment}'
         schemes:
         - "https"
         paths:
@@ -42,7 +49,7 @@ Resources:
               security:
               - SudokuServerlessAuthorizer: []
               x-amazon-apigateway-integration:
-                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${PuzzleSolutionFunction.Arn}/invocations'
+                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Function.Arn}/invocations'
                 passthroughBehavior: "when_no_match"
                 httpMethod: "POST"
                 type: "aws_proxy"
@@ -87,16 +94,16 @@ Resources:
               type: "cognito_user_pools"
 
 
-  PuzzleSolutionFunction:
+  Function:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: !Sub 'PuzzleSolutionFunction-${Environment}'
+      FunctionName: !Sub '${ServiceName}-${Environment}'
       Handler: get_new_puzzle_solution/solution.handler
       Runtime: python3.6
       MemorySize: 512
       Timeout: 3
-      Description: Gets a puzzle solution from an s3 bucket
-      Role: !GetAtt PuzzleSolutionFunctionRole.Arn
+      Description: !Ref Description
+      Role: !GetAtt FunctionRole.Arn
       Environment:
         Variables:
           SOLUTIONS_BUCKET_NAME: 'sudoku-unsolved-puzzle-solutions'
@@ -104,14 +111,14 @@ Resources:
         GetNewPuzzle:
           Type: Api
           Properties:
-            RestApiId: !Ref PuzzleSolutionApi
-            Path: /getNewPuzzleSolution/{id}
+            RestApiId: !Ref Api
+            Path: !Sub '/${ServiceName}/{id}'
             Method: GET
 
-  PuzzleSolutionFunctionRole:
+  FunctionRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub 'Service-PuzzleSolution-${Environment}-Role'
+      RoleName: !Sub '${ServiceName}-${Environment}-Role'
       AssumeRolePolicyDocument:
         Statement:
         - Effect: Allow
@@ -125,10 +132,10 @@ Resources:
         - "arn:aws:iam::aws:policy/AmazonS3FullAccess"
 
 Outputs:
-  PuzzleSolutionFunctionApi:
-    Description: "API Gateway endpoint URL for Prod stage for PuzzleSolutionFunction function"
-    Value: !Sub 'https://${PuzzleSolutionApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/getNewPuzzleSolution/{id}'
+  ApiUrl:
+    Description: !Sub 'API Gateway endpoint URL for Prod stage of ${ServiceName} Service'
+    Value: !Sub 'https://${Api}.execute-api.${AWS::Region}.amazonaws.com/Prod/${ServiceName}/{id}'
 
-  PuzzleSolutionFunctionIamRole:
-    Description: "Implicit IAM Role created for PuzzleSolutionFunction function"
-    Value: !GetAtt PuzzleSolutionFunctionRole.Arn
+  FunctionIamRole:
+    Description: !Sub 'Implicit IAM Role created for ${ServiceName} function'
+    Value: !GetAtt FunctionRole.Arn
