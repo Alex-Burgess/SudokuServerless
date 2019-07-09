@@ -34,15 +34,15 @@ Create a Cloudformation Stack and deploy your SAM resources.
 ```
 sam deploy \
     --template-file packaged.yaml \
-    --stack-name Service-SolvePuzzle \
+    --stack-name SolvePuzzle-test \
     --capabilities CAPABILITY_NAMED_IAM
 ```
 
 After deployment is complete you can run the following command to retrieve the API Gateway Endpoint URL:
 ```
 aws cloudformation describe-stacks \
-    --stack-name Service-SolvePuzzle \
-    --query 'Stacks[].Outputs[?OutputKey==`SolvePuzzleApi`]' \
+    --stack-name SolvePuzzle-test \
+    --query 'Stacks[].Outputs[?OutputKey==`ApiUrl`]' \
     --output table
 ```
 
@@ -55,25 +55,25 @@ aws cloudformation describe-stacks \
     ```
     sam package \
         --output-template-file packaged.yaml \
-        --s3-bucket sam-builds-trynewpuzzle
+        --s3-bucket sam-builds-solvepuzzle
     ```
 1. Deploy
     ```
     sam deploy \
         --template-file packaged.yaml \
-        --stack-name Service-TryNewPuzzle \
+        --stack-name SolvePuzzle-test \
         --capabilities CAPABILITY_NAMED_IAM
     ```
 
 ## Logging
 Get logs for last 10 minutes:
 ```
-sam logs -n SolvePuzzleFunction
+sam logs -n Function
 ```
 
 Tail logs, e.g. whilst executing function test:
 ```
-sam logs -n SolvePuzzleFunction --tail
+sam logs -n Function --tail
 ```
 
 See [SAM CLI Logging](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-logging.html) for more options.
@@ -98,7 +98,7 @@ Local testing allows you to see how the function will work once deployed, e.g. w
     ```
 1. Invoke Function with Name (Option 2):
     ```
-    sam local invoke SolvePuzzleFunction --event events/api_solve_puzzle_event.json
+    sam local invoke Function --event events/api_solve_puzzle_event.json
     ```
 1. Invoke Function with stdin event (Option 3):
     ```
@@ -125,7 +125,7 @@ Local testing of the API, ensures that API and lambda function are correctly con
 In order to delete our Serverless Application recently deployed you can use the following AWS CLI Command:
 
 ```
-aws cloudformation delete-stack --stack-name Service-SolvePuzzle
+aws cloudformation delete-stack --stack-name SolvePuzzle-test
 ```
 
 # Appendix
@@ -138,7 +138,7 @@ All commands used throughout this document
 sam local generate-event apigateway aws-proxy > event.json
 
 # Invoke function locally with event.json as an input
-sam local invoke SolvePuzzleFunction --event event.json
+sam local invoke Function --event event.json
 
 # Run API Gateway locally
 sam local start-api
@@ -151,22 +151,22 @@ sam package \
 # Deploy SAM template as a CloudFormation stack
 sam deploy \
     --template-file packaged.yaml \
-    --stack-name Service-SolvePuzzle \
+    --stack-name SolvePuzzle-test \
     --capabilities CAPABILITY_IAM
 
 # Describe Output section of CloudFormation stack previously created
 aws cloudformation describe-stacks \
-    --stack-name Service-SolvePuzzle \
-    --query 'Stacks[].Outputs[?OutputKey==`SolvePuzzleApi]' \
+    --stack-name SolvePuzzle-test \
+    --query 'Stacks[].Outputs[?OutputKey==`ApiUrl]' \
     --output table
 
 # Tail Lambda function Logs using Logical name defined in SAM Template
-sam logs -n SolvePuzzleFunction --stack-name Service-SolvePuzzle --tail
+sam logs -n Function --stack-name SolvePuzzle-test --tail
 
 # Deploy the API Manually:
-aws apigateway get-rest-apis --query 'items[?name==`Service-SolvePuzzle`].{name:name, ID:id}'
+aws apigateway get-rest-apis --query 'items[?name==`SolvePuzzle-test`].{name:name, ID:id}'
 
-aws apigateway get-stages --rest-api-id <api-id> --query 'item[?stageName==`Prod`].{stageName:stageName, deploymentId:deploymentId}'
+aws apigateway get-stages --rest-api-id <api-id> --query 'item[?stageName==`prod`].{stageName:stageName, deploymentId:deploymentId}'
 
 aws apigateway update-stage \
  --rest-api-id <api-id> \
