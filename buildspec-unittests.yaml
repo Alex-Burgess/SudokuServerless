@@ -5,13 +5,13 @@ phases:
     commands:
       - pip install --upgrade pip
       - pip install --user pytest
-      - pytest --version
+      - /root/.local/bin/pytest --version
       # - /root/.local/bin/sam --version
   build:
     commands:
       - echo "Starting build `date` in `pwd`"
       - ls services/tryNewPuzzle/tests
-      - pytest services/tryNewPuzzle/tests
+      - /root/.local/bin/pytest services/tryNewPuzzle/tests
       # - /root/.local/bin/sam package --template-file services/tryNewPuzzle/template.yaml --s3-bucket $BUILD_OUTPUT_BUCKET --output-template-file tryNewPuzzle-packaged.yaml
       # - /root/.local/bin/sam package --template-file services/getNewPuzzleSolution/template.yaml --s3-bucket $BUILD_OUTPUT_BUCKET --output-template-file getNewPuzzleSolution-packaged.yaml
       # - /root/.local/bin/sam package --template-file services/solvePuzzle/template.yaml --s3-bucket $BUILD_OUTPUT_BUCKET --output-template-file solvePuzzle-packaged.yaml
