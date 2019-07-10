@@ -10,8 +10,9 @@ phases:
   build:
     commands:
       - echo "Starting build `date` in `pwd`"
-      - ls services/tryNewPuzzle/tests
-      - /root/.local/bin/pytest services/tryNewPuzzle/tests
+      - pwd
+      - cd services/tryNewPuzzle
+      - /root/.local/bin/pytest
       # - /root/.local/bin/sam package --template-file services/tryNewPuzzle/template.yaml --s3-bucket $BUILD_OUTPUT_BUCKET --output-template-file tryNewPuzzle-packaged.yaml
       # - /root/.local/bin/sam package --template-file services/getNewPuzzleSolution/template.yaml --s3-bucket $BUILD_OUTPUT_BUCKET --output-template-file getNewPuzzleSolution-packaged.yaml
       # - /root/.local/bin/sam package --template-file services/solvePuzzle/template.yaml --s3-bucket $BUILD_OUTPUT_BUCKET --output-template-file solvePuzzle-packaged.yaml
