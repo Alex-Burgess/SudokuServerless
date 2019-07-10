@@ -8,14 +8,6 @@ phases:
       - /root/.local/bin/pytest --version
   build:
     commands:
-      - echo "Starting build `date` in `pwd`"
-      - pwd
-      - ls
-      # - cd services/tryNewPuzzle
       - /root/.local/bin/pytest services/tryNewPuzzle/tests/
-      # - /root/.local/bin/sam package --template-file services/tryNewPuzzle/template.yaml --s3-bucket $BUILD_OUTPUT_BUCKET --output-template-file tryNewPuzzle-packaged.yaml
-      # - /root/.local/bin/sam package --template-file services/getNewPuzzleSolution/template.yaml --s3-bucket $BUILD_OUTPUT_BUCKET --output-template-file getNewPuzzleSolution-packaged.yaml
-      # - /root/.local/bin/sam package --template-file services/solvePuzzle/template.yaml --s3-bucket $BUILD_OUTPUT_BUCKET --output-template-file solvePuzzle-packaged.yaml
-  post_build:
-    commands:
-      - echo "build completed on `date`"
+      - /root/.local/bin/pytest services/getNewPuzzleSolution/tests/
+      - /root/.local/bin/pytest services/solvePuzzle/tests/
