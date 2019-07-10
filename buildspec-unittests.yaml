@@ -3,11 +3,11 @@ version: 0.1
 phases:
   pre_build:
     commands:
-      - pip install --upgrade pip
-      - pip install --user pytest moto boto3
+      - pip install -q --upgrade pip
+      - pip install -q --user pytest moto boto3
       - /root/.local/bin/pytest --version
   build:
     commands:
-      - /root/.local/bin/pytest services/tryNewPuzzle/tests/
-      - /root/.local/bin/pytest services/getNewPuzzleSolution/tests/
-      - /root/.local/bin/pytest services/solvePuzzle/tests/
+      - /root/.local/bin/pytest --disable-pytest-warnings services/tryNewPuzzle/tests/
+      - /root/.local/bin/pytest --disable-pytest-warnings services/getNewPuzzleSolution/tests/
+      - /root/.local/bin/pytest --disable-pytest-warnings services/solvePuzzle/tests/
