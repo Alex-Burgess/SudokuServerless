@@ -4,7 +4,7 @@ phases:
   pre_build:
     commands:
       - pip install --upgrade pip
-      - pip install --user pytest
+      - pip install --user pytest moto boto3
       - /root/.local/bin/pytest --version
       # - /root/.local/bin/sam --version
   build:
