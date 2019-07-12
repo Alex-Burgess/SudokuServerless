@@ -28,7 +28,7 @@ aws cloudformation create-stack --stack-name Sudoku-Serverless-Main --template-b
 Build and Copy website content:
 ```
 hugo
-aws s3 sync public/ s3://sudoku-serverless --delete
+aws s3 sync public/ s3://sudokuless --delete
 ```
 
 Update stack:

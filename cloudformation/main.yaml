@@ -5,7 +5,7 @@ Parameters:
   BucketName:
     Type: String
     Description: The name for the bucket hosting your website, e.g. 'sudoku-serverless'
-    Default: sudoku-serverless
+    Default: sudokuless
   Environment:
     Description: Environment type.
     Default: test
