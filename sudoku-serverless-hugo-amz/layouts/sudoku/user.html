@@ -1,0 +1,24 @@
+{{ define "title"}} {{ .Site.Title}} {{end}}
+{{ define "header"}} {{ partial "header_auth" .}} {{end}}
+{{ define "main"}}
+
+<div id="main">
+  <h1>{{.Title}}</h1>
+
+  <div id="action-buttons">
+    <button onclick="window.location.href = '/try/';" id="request" class="btn btn-primary">Try a New Puzzle</button>
+    <button onclick="window.location.href = '/solve/';" id="solve" class="btn btn-primary">Solve a Puzzle</button>
+  </div>
+
+  <div id="user">
+    <b class="welcomeMessage"></b>
+    <p>{{.Description}}</p>
+
+    <p>Puzzles you've recently attempted.</p>
+    <p></p>
+    <p>Puzzles you've cheated.</p>
+  </div>
+</div>
+
+
+{{ end }}

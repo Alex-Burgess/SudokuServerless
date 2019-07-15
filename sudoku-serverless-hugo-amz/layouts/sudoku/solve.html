@@ -1,0 +1,22 @@
+{{ define "title"}} {{ .Site.Title}} {{end}}
+{{ define "header"}} {{ partial "header_auth" .}} {{end}}
+{{ define "main"}}
+
+
+<div id="main">
+  <div id="puzzle-section">
+  Use the empty puzzle below to enter a sudoku puzzle.
+    <form id="solveForm">
+      <div class="puzzle" id="puzzle"></div>
+    </form>
+    <div id="solve-button">
+      <div id="action-buttons">
+        <button id="solve" type="button" class="btn btn-primary">Solve!</button>
+      </div>
+    </div>
+    <div class="puzzle" id="puzzle-solved"></div>
+  </div>
+</div>
+
+
+{{ end }}

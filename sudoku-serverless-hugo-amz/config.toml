@@ -1,0 +1,34 @@
+baseURL = "/"
+languageCode = "en-us"
+title = "Sudoku Serverless"
+theme = "kube"
+Paginate = 4
+[Params]
+  description = "A Serverless demo application using AWS"
+  custom_js = ["js/aws-cognito-sdk.min.js", "js/amazon-cognito-identity.min.js", "js/config.js", "js/cognito-auth.js", "js/sudoku.js"]
+  # custom_js = ["js/aws-cognito-sdk.min.js", "js/amazon-cognito-auth.js", "js/config.js", "js/cognito-auth-amz.js"]
+
+[[menu.login]]
+    name = "Log In"
+    url = "/signin/"
+
+[[menu.signup]]
+    name = "Sign Up"
+    url = "/register/"
+
+[[menu.account]]
+    name = "Account"
+    url = "/account/"
+
+[[menu.auth]]
+    name = "Dashboard"
+    weight = -100
+    url = "/user/"
+[[menu.auth]]
+    name = "Try"
+    weight = -90
+    url = "/try/"
+[[menu.auth]]
+    name = "Solve"
+    weight = -80
+    url = "/solve/"

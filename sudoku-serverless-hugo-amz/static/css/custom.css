@@ -1,0 +1,74 @@
+#puzzle-section div {
+  text-align: center;
+}
+
+.puzzle {
+  width: 100%
+}
+
+.puzzle table {
+    border: 2;
+    border-collapse: none;
+    border-spacing: 0;
+    empty-cells: show;
+    display: inline-block;
+    margin: 0 auto;
+    width: auto
+}
+
+.puzzle tbody {
+  border: solid medium;
+}
+
+.puzzle td {
+  border: solid thin;
+  padding: 0;
+  margin: 0;
+  height: 30px;
+  width: 30px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.puzzle tr:nth-of-type(3n) {
+    border-bottom: solid medium;
+}
+.puzzle td:nth-of-type(3n) {
+    border-right: solid medium;
+}
+
+.puzzle input {
+  width: 100%;
+  padding: 0;
+  border-radius: 0;
+  height: 100%;
+  border: 0;
+  text-align: center;
+  vertical-align: middle;
+  color: #313439;
+  font-family: Lato, sans-serif;
+  cursor: default;
+}
+
+button.amazon {
+    background:url(https://images-na.ssl-images-amazon.com/images/G/01/lwa/btnLWA_gold_156x32.png);
+    background-repeat: no-repeat;
+    padding:0 175px 0 0;
+    display: inline-block
+}
+
+@media screen and (max-width: 1200px) {
+#form-wrap {
+    width: 35%;
+    margin: 0 auto;
+}
+
+@media screen and (max-width: 768px) {
+#form-wrap {
+    width: 100%;
+    margin: 0 auto;
+}
+
+input[type=text], input[type=password], input[type=email] {
+    margin: 10px 0 10px;
+}

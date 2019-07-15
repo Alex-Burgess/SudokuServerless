@@ -1,0 +1,17 @@
+{{ define "title"}} {{ .Site.Title}} {{end}}
+{{ define "header"}} {{ partial "header_login" .}} {{end}}
+{{ define "main"}}
+
+<div id="main">
+  <div id="hero">
+    <div id="title">
+      <h1>{{.Title}}</h1>
+      <p>{{.Description}}</p>
+    </div>
+    <div>
+        <button id="AmazonLogin" type="button" class="amazon"></button>
+    </div>
+  </div>
+</div>
+
+{{ end }}

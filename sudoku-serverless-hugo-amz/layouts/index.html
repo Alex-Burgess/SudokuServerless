@@ -1,0 +1,15 @@
+{{ define "title"}} {{ .Site.Title}} {{end}}
+{{ define "header"}} {{ partial "header" .}} {{end}}
+{{ define "main"}}
+
+<div id="main">
+  <div id="hero">
+    <h1>{{.Title}}</h1>
+    <p>{{.Site.Params.description}}</p>
+  </div>
+  <div id="action-buttons">
+    <a class="button primary big" href="/register/">Sign Up with Email</a>
+  </div>
+</div>
+</div>
+{{ end }}
