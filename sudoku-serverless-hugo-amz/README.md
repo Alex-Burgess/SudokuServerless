@@ -1,8 +1,15 @@
 # Deploy LoginWithAmazon POC Notes
 
-1. Update Security Stack
+1. Update UserPool Configuration
     ```
-    ?
+    aws cognito-idp create-identity-provider --cli-input-json file://identity-provider-config.json
+
+    aws cognito-idp update-user-pool-client --user-pool-id eu-west-1_hcA217WJn --client-id f0vbt18vn4jf8n5v6q3gbi1tb \
+       --supported-identity-providers LoginWithAmazon \
+       --callback-urls '["https://sudokuless.com/signin/"]' \
+       --logout-urls '["https://sudokuless.com"]' \
+       --allowed-o-auth-scopes '["openid","profile","aws.cognito.signin.user.admin"]' \
+       --allowed-o-auth-flows '["implicit"]'
     ```
 1. Clean Public folder
     ```

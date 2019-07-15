@@ -3,18 +3,7 @@
 var Sudoku = window.Sudoku || {};
 
 (function scopeWrapper($) {
-    // // Could be useful
-    // var signinUrl = '/signin/';
-    // var verifyUrl = '/verify/';
-    // var starterUrl = '/user/';
     var dashboardUrl = '/user/';
-
-    var poolData = {
-        UserPoolId: _config.cognito.userPoolId,
-        ClientId: _config.cognito.userPoolClientId
-    };
-
-    var userPool;
 
     if (!(_config.cognito.userPoolId &&
           _config.cognito.userPoolClientId &&
@@ -60,13 +49,13 @@ var Sudoku = window.Sudoku || {};
   	function initCognitoSDK() {
       console.log('Initing cognito sdk');
   		var authData = {
-  			ClientId : '4jrud2iu1ja6esgjhkf4usfqh', // Your client id here
-  			AppWebDomain : 'sudokuless.auth.eu-west-1.amazoncognito.com', // Exclude the "https://" part.
+  			ClientId : _config.cognito.userPoolClientId, // Your client id here
+  			AppWebDomain : _config.cognito.appWebDomain, // Exclude the "https://" part.
   			TokenScopesArray : [], // like ['openid','email','phone']...
-  			RedirectUriSignIn : 'https://sudokuless.com/signin/',
-  			RedirectUriSignOut : 'https://sudokuless.com/',
-  			IdentityProvider : 'LoginWithAmazon',
-        UserPoolId : 'eu-west-1_TGh4Ec2cx',
+  			RedirectUriSignIn : _config.cognito.redirectUriSignIn,
+  			RedirectUriSignOut : _config.cognito.redirectUriSignOut,
+  			IdentityProvider : _config.cognito.identityProvider,
+        UserPoolId : _config.cognito.userPoolId,
         AdvancedSecurityDataCollectionFlag : false
   		};
   		var auth = new AmazonCognitoIdentity.CognitoAuth(authData);
