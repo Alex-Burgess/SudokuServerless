@@ -6,7 +6,7 @@ Paginate = 4
 [Params]
   description = "A Serverless demo application using AWS"
   custom_js = ["js/aws-cognito-sdk.min.js", "js/amazon-cognito-identity.min.js", "js/config_test.js", "js/cognito-auth.js", "js/sudoku.js"]
-  custom_signin_js = ["js/aws-cognito-sdk.min.js", "js/amazon-cognito-auth.js", "js/config_test.js", "js/cognito-auth-amz.js", "js/sudoku.js"]
+  custom_signin_js = ["js/aws-cognito-sdk.min.js", "js/amazon-cognito-auth.js", "js/config_test.js", "js/cognito-auth-amz.js"]
 
 [[menu.login]]
     name = "Log In"

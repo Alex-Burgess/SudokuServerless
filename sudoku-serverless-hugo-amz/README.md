@@ -19,19 +19,6 @@
     ```
     hugo
     ```
-1. Update signin page js scripts
-    ```
-    vi public/signin/index.html
-
-    Replace line 59 with:
-    <script type="text/javascript" src="/js/aws-cognito-sdk.min.js"></script><script type="text/javascript" src="/js/amazon-cognito-auth.js"></script><script type="text/javascript" src="/js/config.js"></script><script type="text/javascript" src="/js/cognito-auth-amz.js"></script>
-    ```
-
-    If staging:
-    ```
-    <script type="text/javascript" src="/js/aws-cognito-sdk.min.js"></script><script type="text/javascript" src="/js/amazon-cognito-auth.js"></script><script type="text/javascript" src="/js/config_staging.js"></script><script type="text/javascript" src="/js/cognito-auth-amz.js"></script>
-    ```
-
 1. Sync content
     ```
     aws s3 sync public/ s3://sudokuless.com --delete
