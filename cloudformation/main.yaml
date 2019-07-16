@@ -2,10 +2,12 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: Creates a static website using S3 for the Wild Rydes serverless web application workshop
 
 Parameters:
-  BucketName:
+  DomainName:
+    Description: Domain name for your website (example.com)
     Type: String
-    Description: The name for the bucket hosting your website, e.g. 'sudoku-serverless'
-    Default: sudokuless
+    AllowedPattern: "^[a-z0-9-]*.com$"
+    ConstraintDescription: Must be a web domain, ending in .com. Can include lower case letters, numbers and hypens.
+    Default: sudokuless.com
   Environment:
     Description: Environment type.
     Default: test
@@ -15,14 +17,23 @@ Parameters:
       - staging
       - dev
       - test
+  SSLCertificateId:
+    Description: Environment type.
+    Type: String
+  DefaultSSLCertificate:
+    Description: Boolean flag to define if cloudfront should use the default SSL certificate.  If not specified a custom SSL certificate ID is retrieved from parameter store.
+    Type: String
+    Default: false
 
 Conditions:
   Prod: !Equals [ !Ref Environment, prod ]
+  NotProd: !Not [!Equals [!Ref Environment, prod]]
+  DefaultCert: !Equals [ "true", !Ref DefaultSSLCertificate ]
 
 Resources:
   WebsiteBucket:
     Properties:
-      BucketName: !If [Prod, !Ref BucketName, !Sub '${BucketName}-${Environment}']
+      BucketName: !If [Prod, !Ref DomainName, !Sub "${Environment}.${DomainName}"]
       WebsiteConfiguration:
         IndexDocument: index.html
     Type: "AWS::S3::Bucket"
@@ -39,6 +50,74 @@ Resources:
             Principal: "*"
             Action: s3:GetObject
             Resource: !Sub "arn:aws:s3:::${WebsiteBucket}/*"
+
+  WebDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Origins:
+        - DomainName: !Sub "${WebsiteBucket}.s3-website-eu-west-1.amazonaws.com"
+          Id: !Sub 'S3-${WebsiteBucket}'
+          CustomOriginConfig:
+            HTTPPort: 80
+            HTTPSPort: 443
+            OriginProtocolPolicy: http-only
+        Enabled: true
+        Comment: "CDN for web bucket."
+        DefaultRootObject: index.html
+        HttpVersion: http2
+        Aliases:
+          - !Ref WebsiteBucket
+        DefaultCacheBehavior:
+          TargetOriginId: !Sub 'S3-${WebsiteBucket}'
+          ForwardedValues:
+            QueryString: false
+            Cookies:
+              Forward: none
+          ViewerProtocolPolicy: redirect-to-https
+        PriceClass: PriceClass_100
+        ViewerCertificate:
+          AcmCertificateArn:
+            !If [DefaultCert, !Ref "AWS::NoValue", !Sub 'arn:aws:acm:us-east-1:${AWS::AccountId}:certificate/${SSLCertificateId}']
+          SslSupportMethod:
+            !If [DefaultCert, !Ref "AWS::NoValue", sni-only]
+          MinimumProtocolVersion:
+            !If [DefaultCert, !Ref "AWS::NoValue", TLSv1.1_2016]
+          CloudFrontDefaultCertificate:
+            !If [DefaultCert, true, !Ref "AWS::NoValue" ]
+
+  SubDomainHostedZone:
+    Type: "AWS::Route53::HostedZone"
+    Condition: NotProd
+    Properties:
+      HostedZoneConfig:
+        Comment: "Hosted zone for a subdomain of main site, used for testing"
+      Name: !Ref 'WebsiteBucket'
+      HostedZoneTags:
+        - Key: "Environment"
+          Value: !Ref Environment
+
+  SubDomainRecord:
+    Type: AWS::Route53::RecordSet
+    Condition: NotProd
+    Properties:
+      HostedZoneName: !Join [ '', [ !Ref DomainName, "." ] ]
+      Comment: Naming servers for subdomain hosted zone.
+      Name: !Ref 'WebsiteBucket'
+      Type: NS
+      TTL: '172800'
+      ResourceRecords: !GetAtt SubDomainHostedZone.NameServers
+
+  WebsiteDNSName:
+    Type: AWS::Route53::RecordSetGroup
+    Properties:
+      HostedZoneName: !Join [ '', [ !Ref WebsiteBucket, "." ] ]
+      RecordSets:
+      - Name: !Ref 'WebsiteBucket'
+        Type: A
+        AliasTarget:
+          HostedZoneId: Z2FDTNDATAQYW2
+          DNSName: !GetAtt [WebDistribution, DomainName]
 
 Outputs:
   WebsiteURL:

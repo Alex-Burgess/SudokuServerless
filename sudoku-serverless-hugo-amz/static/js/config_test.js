@@ -1,10 +1,10 @@
 window._config = {
     cognito: {
-        userPoolId: 'eu-west-1_2eF2vZyKX', // e.g. us-east-2_uXboG5pAb
-        userPoolClientId: 'rp869po59eb66kflg5p25jgj7', // e.g. 25ddkmj4v6hfsfvruhpfi7n4hv
-        appWebDomain: 'sudokuless-staging.auth.eu-west-1.amazoncognito.com', // Exclude the "https://" part.
-        redirectUriSignIn: 'https://staging.sudokuless.com/signin/',
-        redirectUriSignOut: 'https://staging.sudokuless.com/',
+        userPoolId: 'eu-west-1_RLIJMD2h8', // e.g. us-east-2_uXboG5pAb
+        userPoolClientId: '46oae21o0mvse9kbdnngdslogh', // e.g. 25ddkmj4v6hfsfvruhpfi7n4hv
+        appWebDomain: 'sudokuless-test.auth.eu-west-1.amazoncognito.com', // Exclude the "https://" part.
+        redirectUriSignIn: 'http://localhost:1313/signin/',
+        redirectUriSignOut: 'http://localhost:1313/',
         identityProvider: 'LoginWithAmazon',
         region: 'eu-west-1' // e.g. us-east-2
     },

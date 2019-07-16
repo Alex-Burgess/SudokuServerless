@@ -19,7 +19,18 @@ A serverless website with a sudoku theme, based on [Build a Serverless Web App..
     ```
 1. Create Web stack:
     ```
-    aws cloudformation create-stack --stack-name Sudoku-Serverless-Main --template-body file://main.yaml
+    aws cloudformation create-stack --stack-name Sudoku-Serverless-Main --template-body file://main.yaml \
+     --parameters ParameterKey=Environment,ParameterValue=prod \
+     ParameterKey=DefaultSSLCertificate,ParameterValue=true
+    ```
+1. Create SSL Certificate in ACM Console
+1. Update Stack With SSL Certificate ID:
+    ```
+    aws acm list-certificates --region us-east-1 --query 'CertificateSummaryList[?DomainName==`sudokuless.com`].CertificateArn' --output text
+
+    aws cloudformation update-stack --stack-name Sudoku-Serverless-Main --template-body file://main.yaml \
+     --parameters ParameterKey=Environment,ParameterValue=prod \
+     ParameterKey=SSLCertificateId,ParameterValue=532933b8-20fc-....
     ```
 1. Create Auth stack (with termination protection):
     ```
@@ -29,17 +40,14 @@ A serverless website with a sudoku theme, based on [Build a Serverless Web App..
     ```
     aws cognito-idp list-user-pools --max-results 10 --query 'UserPools[*].{Id:Id, Name:Name}'
 
-    aws cognito-idp create-user-pool-domain --user-pool-id us-west-2_aaaaaaaaa  --domain sudokuless
+    aws cognito-idp create-user-pool-domain --user-pool-id us-west-1_aaaaaaaaa  --domain sudokuless
     ```
+1. If configuring LoginWithAmazon see [Procedure](sudoku-serverless-hugo-amz/README.md)
 1. Build and Copy website content:
     ```
+    rm -Rf public/
     hugo
-    aws s3 sync public/ s3://sudokuless --delete
-    ```
-1. Update stack:
-    ```
-    aws cloudformation update-stack --stack-name Sudoku-Serverless-Main --template-body file://main.yaml \
-     --parameters ParameterKey=Environment,ParameterValue=prod
+    aws s3 sync public/ s3://sudokuless.com --delete
     ```
 
 *Create API Services*
@@ -107,24 +115,47 @@ The Pipeline above is just a POC for building, testing and deploying the serverl
 1. Create stack:
     ```
     aws cloudformation create-stack --stack-name Sudoku-Serverless-Staging --template-body file://main.yaml \
-     --parameters ParameterKey=Environment,ParameterValue=staging
+     --parameters ParameterKey=Environment,ParameterValue=staging \
+     ParameterKey=DefaultSSLCertificate,ParameterValue=true
+    ```
+1. Create SSL Certificate
+1. Update Stack With SSL Certificate ID:
+    ```
+    aws acm list-certificates --region us-east-1 --query 'CertificateSummaryList[?DomainName==`staging.sudokuless.com`].CertificateArn' --output text
+
+    aws cloudformation update-stack --stack-name Sudoku-Serverless-Staging --template-body file://main.yaml \
+     --parameters ParameterKey=Environment,ParameterValue=staging \
+     ParameterKey=SSLCertificateId,ParameterValue=6f7aac3b-4e50-....
     ```
 1. Build and Copy website content:
     ```
     rm -Rf public/
     hugo --config config.staging.toml
-    aws s3 sync public/ s3://sudoku-serverless-staging --delete
+    aws s3 sync public/ s3://staging.sudokuless.com --delete
     ```
 1. Add data to sudoku unsolved puzzles bucket:
     ```
     aws s3 cp data/example_puzzles/ s3://sudoku-unsolved-puzzles-staging --recursive
     aws s3 cp data/example_puzzle_solutions/ s3://sudoku-unsolved-puzzle-solutions-staging --recursive
     ```
+1. Create Auth stack (with termination protection):
+    ```
+    aws cloudformation create-stack --stack-name Sudoku-Serverless-Auth-Staging --template-body file://auth.yaml \
+     --parameters ParameterKey=Environment,ParameterValue=staging \
+     --enable-termination-protection
+    ```
+1. Configure UserPool:
+    ```
+    aws cognito-idp list-user-pools --max-results 10 --query 'UserPools[*].{Id:Id, Name:Name}'
 
-Update stack:
+    aws cognito-idp create-user-pool-domain --user-pool-id us-west-1_aaaaaaaaa  --domain sudokuless-staging
+    ```
+1. If configuring LoginWithAmazon see [Procedure](sudoku-serverless-hugo-amz/README.md)
+
+### Local Environment
+To start the local environment:
 ```
-aws cloudformation update-stack --stack-name Sudoku-Serverless-Staging --template-body file://main.yaml \
- --parameters ParameterKey=Environment,ParameterValue=staging
+hugo server -D --config config.test.toml
 ```
 
 # Reference

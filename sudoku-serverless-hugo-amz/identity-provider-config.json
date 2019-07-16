@@ -1,5 +1,5 @@
 {
-    "UserPoolId": "eu-west-1_hcA217WJn",
+    "UserPoolId": "?",
     "ProviderName": "LoginWithAmazon",
     "ProviderType": "LoginWithAmazon",
     "ProviderDetails": {
@@ -7,10 +7,10 @@
         "attributes_url_add_attributes": "false",
         "authorize_url": "https://www.amazon.com/ap/oa",
         "token_url": "https://api.amazon.com/auth/o2/token",
-        "client_id": "amzn1.application-oa2-client.e6818149637c4cf4ba029273f3f1d0bd",
+        "client_id": "?",
         "attributes_url": "https://api.amazon.com/user/profile",
 
-        "client_secret": "7f7b575a38f994c9699166bb598687cb6fc1e79e92c8dd8df340972d5ce5cc26",
+        "client_secret": "?",
         "token_request_method": "POST"
     },
     "AttributeMapping": {
