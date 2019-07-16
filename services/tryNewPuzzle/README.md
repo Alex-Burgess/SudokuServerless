@@ -48,7 +48,7 @@ aws cloudformation describe-stacks \
 
 Add data to puzzle buckets:
 ```
-aws s3 cp data/example_puzzles/ s3://sudoku-unsolved-puzzles-prod --recursive
+aws s3 cp data/example_puzzles/ s3://sudoku-unsolved-puzzles-test --recursive
 ```
 
 ## Deploying Code Updates

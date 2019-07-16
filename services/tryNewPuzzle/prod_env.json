@@ -1,5 +1,5 @@
 {
   "Function": {
-    "UNSOLVED_BUCKET_NAME": "sudoku-unsolved-puzzles"
+    "UNSOLVED_BUCKET_NAME": "sudoku-unsolved-puzzles-prod"
   }
 }

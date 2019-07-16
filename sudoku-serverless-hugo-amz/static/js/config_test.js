@@ -9,8 +9,8 @@ window._config = {
         region: 'eu-west-1' // e.g. us-east-2
     },
     api: {
-        requestNewPuzzleUrl: 'https://ej4xecnx14.execute-api.eu-west-1.amazonaws.com/staging/tryNewPuzzle/',
-        getNewPuzzleSolutionUrl: 'https://pdkvj7254c.execute-api.eu-west-1.amazonaws.com/staging/getNewPuzzleSolution/',
-        solvePuzzle: 'https://nrvt0b0zoc.execute-api.eu-west-1.amazonaws.com/staging/solvePuzzle/'
+        requestNewPuzzleUrl: 'https://hsjqb93qkh.execute-api.eu-west-1.amazonaws.com/test/tryNewPuzzle/',
+        getNewPuzzleSolutionUrl: 'https://fh690lofdi.execute-api.eu-west-1.amazonaws.com/test/getNewPuzzleSolution/',
+        solvePuzzle: 'https://vpt95x5u8b.execute-api.eu-west-1.amazonaws.com/test/solvePuzzle/'
     }
 };

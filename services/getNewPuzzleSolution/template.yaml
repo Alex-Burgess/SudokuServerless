@@ -5,8 +5,7 @@ Description: Serverless resources for getNewPuzzleSolution service
 Parameters:
   CognitoUserPoolId:
     Type: String
-    Default: eu-west-1_hcA217WJn
-    # Default: eu-west-1_TGh4Ec2cx
+    Default: eu-west-1_RLIJMD2h8
   Environment:
     Description: Environment type.
     Default: test
