@@ -22,6 +22,7 @@ Conditions:
 Resources:
   UserPool:
     Type: AWS::Cognito::UserPool
+    DeletionPolicy: Retain
     Properties:
       UserPoolName: !If [Prod, !Ref UserPoolName, !Sub '${UserPoolName}-${Environment}']
       UsernameAttributes:
@@ -31,6 +32,7 @@ Resources:
 
   UserPoolClient:
     Type: AWS::Cognito::UserPoolClient
+    DeletionPolicy: Retain
     Properties:
       ClientName: !Ref UserPoolName
       UserPoolId: !Ref UserPool
