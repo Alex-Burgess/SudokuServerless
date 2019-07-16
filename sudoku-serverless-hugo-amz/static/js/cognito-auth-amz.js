@@ -71,7 +71,7 @@ var Sudoku = window.Sudoku || {};
   			}
   		};
   		// The default response_type is "token", uncomment the next line will make it be "code".
-  		// auth.useCodeGrantFlow();
+  		auth.useCodeGrantFlow();
   		return auth;
   	}
 

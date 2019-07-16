@@ -4,38 +4,43 @@ A serverless website with a sudoku theme, based on [Build a Serverless Web App..
 [Worlds hardest sudoku](https://www.telegraph.co.uk/news/science/science-news/9359579/Worlds-hardest-sudoku-can-you-crack-it.html)
 
 ### Quick start
-Create the website:
-```
-hugo new site sudoku-serverless-hugo
-git init
-```
+1. Create the website:
+    ```
+    hugo new site sudoku-serverless-hugo
+    git init
+    ```
+1. Add a theme:
+    ```
+    git submodule add git@github.com:Alex-Burgess/kube.git sudoku-serverless-hugo/themes/kube
+    ```
+1. Copy and Update the config:
+    ```
+    cp themes/kube/exampleSite/config.toml .
+    ```
+1. Create Web stack:
+    ```
+    aws cloudformation create-stack --stack-name Sudoku-Serverless-Main --template-body file://main.yaml
+    ```
+1. Create Auth stack:
+    ```
+    aws cloudformation create-stack --stack-name Sudoku-Serverless-Auth --template-body file://auth.yaml
+    ```
+1. Configure UserPool:
+    ```
+    aws cognito-idp list-user-pools --max-results 10 --query 'UserPools[*].{Id:Id, Name:Name}'
 
-Add a theme:
-```
-git submodule add git@github.com:Alex-Burgess/kube.git sudoku-serverless-hugo/themes/kube
-```
-
-Copy and Update the config:
-```
-cp themes/kube/exampleSite/config.toml .
-```
-
-Create main stack:
-```
-aws cloudformation create-stack --stack-name Sudoku-Serverless-Main --template-body file://main.yaml
-```
-
-Build and Copy website content:
-```
-hugo
-aws s3 sync public/ s3://sudokuless --delete
-```
-
-Update stack:
-```
-aws cloudformation update-stack --stack-name Sudoku-Serverless-Main --template-body file://main.yaml \
- --parameters ParameterKey=Environment,ParameterValue=prod
-```
+    aws cognito-idp create-user-pool-domain --user-pool-id us-west-2_aaaaaaaaa  --domain sudokuless
+    ```
+1. Build and Copy website content:
+    ```
+    hugo
+    aws s3 sync public/ s3://sudokuless --delete
+    ```
+1. Update stack:
+    ```
+    aws cloudformation update-stack --stack-name Sudoku-Serverless-Main --template-body file://main.yaml \
+     --parameters ParameterKey=Environment,ParameterValue=prod
+    ```
 
 *Create API Services*
 

@@ -1,0 +1,44 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Creates a static website using S3 for the Wild Rydes serverless web application workshop
+
+Parameters:
+  UserPoolName:
+    Type: String
+    Description: The name for the bucket hosting your website, e.g. 'sudoku-serverless'
+    Default: Sudokuless
+  Environment:
+    Description: Environment type.
+    Default: prod
+    Type: String
+    AllowedValues:
+      - prod
+      - staging
+      - dev
+      - test
+
+Conditions:
+  Prod: !Equals [ !Ref Environment, prod ]
+
+Resources:
+  UserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: !If [Prod, !Ref UserPoolName, !Sub '${UserPoolName}-${Environment}']
+      UsernameAttributes:
+        - email
+      AutoVerifiedAttributes:
+        - email
+
+  UserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      ClientName: !Ref UserPoolName
+      UserPoolId: !Ref UserPool
+      GenerateSecret: false
+
+Outputs:
+  userPoolId:
+    Value: !Ref UserPool
+
+  userPoolClientId:
+    Value: !Ref UserPoolClient

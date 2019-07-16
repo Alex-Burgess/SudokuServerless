@@ -302,6 +302,10 @@ var dashboardUrl = '/user/';
                       return;
                   }
 
+                  for (const attr of result){
+                    console.log('Attribute: ' + attr + ' Value: ' + attr.getValue());
+                  }
+
                   $('.welcomeMessage').text('Hi ' + result[2].getValue() + '!');
               });
           }

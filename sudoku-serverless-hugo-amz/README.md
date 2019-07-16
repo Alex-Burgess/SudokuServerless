@@ -8,7 +8,7 @@
        --supported-identity-providers LoginWithAmazon \
        --callback-urls '["https://sudokuless.com/signin/"]' \
        --logout-urls '["https://sudokuless.com"]' \
-       --allowed-o-auth-scopes '["openid","profile","aws.cognito.signin.user.admin"]' \
+       --allowed-o-auth-scopes '["email","openid","profile","aws.cognito.signin.user.admin"]' \
        --allowed-o-auth-flows '["implicit"]'
     ```
 1. Clean Public folder
