@@ -302,11 +302,16 @@ var dashboardUrl = '/user/';
                       return;
                   }
 
+                  var emailVal;
                   for (const attr of result){
                     console.log('Attribute: ' + attr + ' Value: ' + attr.getValue());
+                    if ( attr.Name === "email" ){
+                      console.log('Assigning email value: ' + attr.getValue());
+                      emailVal = attr.getValue();
+                    }
                   }
 
-                  $('.welcomeMessage').text('Hi ' + result[2].getValue() + '!');
+                  $('.welcomeMessage').text('Hi ' + emailVal + '!');
               });
           }
 
