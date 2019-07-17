@@ -13,6 +13,7 @@ var dashboardUrl = '/user/';
     Sudoku.authToken.then(function setAuthToken(token) {
         if (token) {
             authToken = token;
+            console.log("Setting authToken variable with new token")
 
             if ((/signin/.test(window.location.href)) || (/register/.test(window.location.href)) || (/verify/.test(window.location.href)) || (window.location.pathname == "/") ) {
               window.location.href = dashboardUrl;
@@ -259,6 +260,44 @@ var dashboardUrl = '/user/';
         $('#puzzle-solved').html(table_body);
     }
 
+    function printUserEmail(){
+      var data = {
+          UserPoolId: _config.cognito.userPoolId,
+          ClientId: _config.cognito.userPoolClientId
+      };
+
+      var userPool = new AmazonCognitoIdentity.CognitoUserPool(data);
+      var cognitoUser = userPool.getCurrentUser();
+
+      if (cognitoUser != null) {
+          cognitoUser.getSession(function(err, session) {
+              if (err) {
+                 alert(err);
+                  return;
+              }
+              console.log('session validity: ' + session.isValid());
+          });
+
+          cognitoUser.getUserAttributes(function(err, result) {
+              if (err) {
+                  alert(err);
+                  return;
+              }
+
+              var emailVal;
+              for (const attr of result){
+                console.log('Attribute: ' + attr + ' Value: ' + attr.getValue());
+                if ( attr.Name === "email" ){
+                  console.log('Assigning email value: ' + attr.getValue());
+                  emailVal = attr.getValue();
+                }
+              }
+
+              $('.welcomeMessage').text('Hi ' + emailVal + '!');
+          });
+      }
+    }
+
     $(function onDocReady() {
         if (/try/.test(window.location.href)) {
           requestNewPuzzle();
@@ -274,48 +313,14 @@ var dashboardUrl = '/user/';
 
         $('#signOut').click(function() {
             Sudoku.signOut();
-            alert("You have been signed out.");
+            // alert("You have been signed out.");
+            console.log("User was signed out.")
             window.location = homePageUrl;
         });
 
-        Sudoku.authToken.then(function printWelcome(token) {
-          var data = {
-              UserPoolId: _config.cognito.userPoolId,
-              ClientId: _config.cognito.userPoolClientId
-          };
-
-          var userPool = new AmazonCognitoIdentity.CognitoUserPool(data);
-          var cognitoUser = userPool.getCurrentUser();
-
-          if (cognitoUser != null) {
-              cognitoUser.getSession(function(err, session) {
-                  if (err) {
-                     alert(err);
-                      return;
-                  }
-                  console.log('session validity: ' + session.isValid());
-              });
-
-              cognitoUser.getUserAttributes(function(err, result) {
-                  if (err) {
-                      alert(err);
-                      return;
-                  }
-
-                  var emailVal;
-                  for (const attr of result){
-                    console.log('Attribute: ' + attr + ' Value: ' + attr.getValue());
-                    if ( attr.Name === "email" ){
-                      console.log('Assigning email value: ' + attr.getValue());
-                      emailVal = attr.getValue();
-                    }
-                  }
-
-                  $('.welcomeMessage').text('Hi ' + emailVal + '!');
-              });
-          }
-
-        });
+        if (/user/.test(window.location.href)) {
+          printUserEmail();
+        }
     });
 
 }(jQuery));

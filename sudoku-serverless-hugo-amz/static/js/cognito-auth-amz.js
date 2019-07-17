@@ -63,7 +63,8 @@ var Sudoku = window.Sudoku || {};
   		// auth.setState(<state parameter>);
   		auth.userhandler = {
   			onSuccess: function(result) {
-  				alert("Sign in success");
+  				// alert("Sign in success");
+          console.log("Sign in success.")
   				showSignedIn(result);
   			},
   			onFailure: function(err) {
