@@ -30,6 +30,12 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       StageName: !Ref Environment
+      MethodSettings:
+        - DataTraceEnabled: true
+          HttpMethod: "*"
+          LoggingLevel: INFO
+          ResourcePath: "/*"
+          MetricsEnabled: false
       DefinitionBody:
         swagger: "2.0"
         info:

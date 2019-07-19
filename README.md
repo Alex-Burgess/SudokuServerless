@@ -51,6 +51,12 @@ A serverless website with a sudoku theme, based on [Build a Serverless Web App..
     ```
 
 *Create API Services*
+1. Create Role for API Gateway to perform writes to CloudWatch Logs with.
+  ```
+  aws cloudformation create-stack --stack-name Sudoku-Serverless-Api-Role --template-body file://api-logging.yaml \
+   --enable-termination-protection \
+   --capabilities CAPABILITY_NAMED_IAM
+  ```
 
 Add data to puzzle buckets:
 ```

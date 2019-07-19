@@ -31,6 +31,12 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       StageName: !Ref Environment
+      MethodSettings:
+        - DataTraceEnabled: true
+          HttpMethod: "*"
+          LoggingLevel: INFO
+          ResourcePath: "/*"
+          MetricsEnabled: false
       DefinitionBody:
         swagger: "2.0"
         info:
@@ -93,7 +99,6 @@ Resources:
               providerARNs:
               - !Sub "arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${CognitoUserPoolId}"
               type: "cognito_user_pools"
-
 
   Function:
     Type: AWS::Serverless::Function
