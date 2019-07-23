@@ -24,6 +24,10 @@ Parameters:
     Description: Description of service.
     Default: Gets an unsolved puzzle from an s3 bucket
     Type: String
+  UnsolvedBucketPrefix:
+    Description: Description of service.
+    Default: sudoku-unsolved-puzzles
+    Type: String
 
 
 Resources:
@@ -151,7 +155,7 @@ Resources:
   PuzzlesBucket:
     Type: 'AWS::S3::Bucket'
     Properties:
-      BucketName: !Sub 'sudoku-unsolved-puzzles-${Environment}'
+      BucketName: !Sub '${UnsolvedBucketPrefix}-${Environment}'
       AccessControl: Private
       PublicAccessBlockConfiguration:
         BlockPublicAcls: True

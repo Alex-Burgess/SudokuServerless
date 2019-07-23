@@ -70,11 +70,18 @@ aws s3 cp data/example_puzzles/ s3://sudoku-unsolved-puzzles-test --recursive
         --capabilities CAPABILITY_NAMED_IAM
     ```
 
-
 ## Deploying to Environments
 Add input parameter to template??
 Aliases to versions - https://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html
 Using gradual code deployments to production, with automated test execution and automated roll back in case of errors.  A good test, would be to deploy with the wrong bucket name, so that it fails and rolls back.
+
+Deploying with overrides:
+```
+aws cloudformation create-stack --template-body file://packaged.yaml  \
+ --stack-name TryNewPuzzle2-test \
+ --capabilities CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND \
+ --parameters ParameterKey=UnsolvedBucketPrefix,ParameterValue=test-unsolved-puzzles
+```
 
 ## Logging
 Get logs for last 10 minutes:
