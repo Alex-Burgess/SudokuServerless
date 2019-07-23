@@ -53,7 +53,7 @@ Resources:
                     Access-Control-Allow-Origin:
                       type: "string"
               security:
-              - SudokuServerlessAuthorizer: []
+              - sigv4: []
               x-amazon-apigateway-integration:
                 uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Function.Arn}/invocations'
                 passthroughBehavior: "when_no_match"
@@ -89,15 +89,11 @@ Resources:
                 passthroughBehavior: "when_no_match"
                 type: "mock"
         securityDefinitions:
-          SudokuServerlessAuthorizer:
+          sigv4:
             type: "apiKey"
             name: "Authorization"
             in: "header"
-            x-amazon-apigateway-authtype: "cognito_user_pools"
-            x-amazon-apigateway-authorizer:
-              providerARNs:
-              - !Sub "arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${CognitoUserPoolId}"
-              type: "cognito_user_pools"
+            x-amazon-apigateway-authtype: "awsSigv4"
 
 
   Function:
