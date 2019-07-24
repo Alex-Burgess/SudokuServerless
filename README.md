@@ -66,6 +66,14 @@ aws s3 cp data/example_puzzles/ s3://sudoku-unsolved-puzzles-prod --recursive
 aws s3 cp data/example_puzzle_solutions/ s3://sudoku-unsolved-puzzle-solutions-prod --recursive
 ```
 
+### Deploy react application to S3
+Build content and copy to s3:
+```
+cd /Users/alexburgess/Development/sudokuless
+npm run build
+aws s3 sync build/ s3://test.sudokuless.com --delete
+```
+
 ### Deployments
 A deployment pipeline is used to automate the build, packaging and deployment of the SAM serverless services.
 
