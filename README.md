@@ -34,7 +34,9 @@ A serverless website with a sudoku theme, based on [Build a Serverless Web App..
     ```
 1. Create Auth stack (with termination protection):
     ```
-    aws cloudformation create-stack --stack-name Sudoku-Serverless-Auth --template-body file://auth.yaml --enable-termination-protection
+    aws cloudformation create-stack --stack-name Sudoku-Serverless-Auth --template-body file://auth.yaml \
+    --capabilities CAPABILITY_NAMED_IAM \
+    --enable-termination-protection
     ```
 1. Configure UserPool:
     ```
@@ -148,6 +150,7 @@ The Pipeline above is just a POC for building, testing and deploying the serverl
     ```
     aws cloudformation create-stack --stack-name Sudoku-Serverless-Auth-Staging --template-body file://auth.yaml \
      --parameters ParameterKey=Environment,ParameterValue=staging \
+     --capabilities CAPABILITY_NAMED_IAM \
      --enable-termination-protection
     ```
 1. Configure UserPool:
