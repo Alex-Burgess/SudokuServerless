@@ -36,6 +36,7 @@ Resources:
       BucketName: !If [Prod, !Ref DomainName, !Sub "${Environment}.${DomainName}"]
       WebsiteConfiguration:
         IndexDocument: index.html
+        ErrorDocument: index.html
     Type: "AWS::S3::Bucket"
 
   WebsiteBucketPolicy:
