@@ -14,7 +14,7 @@ Parameters:
   GitHubRepo:
     Type: String
     Description: GitHub Repository Name
-    Default: SudokuServerless
+    Default: Sudokuless
   GitHubBranch:
     Type: String
     Description: GitHub Branch
@@ -181,11 +181,9 @@ Resources:
                 ProjectName: !Ref UnitTestsCodeBuildProject
               InputArtifacts:
                 - Name: SourceZip
-              # OutputArtifacts:
-              #   - Name: BuiltZip
         - Name: Staging
           Actions:
-            - Name: TryNewPuzzle-CreateChangeSet
+            - Name: Puzzle-CreateChangeSet
               ActionTypeId:
                 Category: Deploy
                 Owner: AWS
@@ -194,28 +192,11 @@ Resources:
               Configuration:
                 ActionMode: CHANGE_SET_REPLACE
                 RoleArn: !GetAtt CFNRole.Arn
-                StackName: Service-tryNewPuzzle-Staging
-                ChangeSetName: tryNewPuzzle-Staging-ChangeSet
-                TemplatePath: BuiltZip::tryNewPuzzle-packaged.yaml
+                StackName: Service-Puzzle-Staging
+                ChangeSetName: Puzzle-Staging-ChangeSet
+                TemplatePath: BuiltZip::Puzzle-packaged.yaml
                 Capabilities: CAPABILITY_NAMED_IAM
-                ParameterOverrides: '{ "Environment": "staging", "CognitoUserPoolId": "eu-west-1_2eF2vZyKX" }'
-              InputArtifacts:
-                - Name: BuiltZip
-              RunOrder: 1
-            - Name: GetNewPuzzleSolution-CreateChangeSet
-              ActionTypeId:
-                Category: Deploy
-                Owner: AWS
-                Provider: CloudFormation
-                Version: "1"
-              Configuration:
-                ActionMode: CHANGE_SET_REPLACE
-                RoleArn: !GetAtt CFNRole.Arn
-                StackName: Service-getNewPuzzleSolution-Staging
-                ChangeSetName: getNewPuzzleSolution-Staging-ChangeSet
-                TemplatePath: BuiltZip::getNewPuzzleSolution-packaged.yaml
-                Capabilities: CAPABILITY_NAMED_IAM
-                ParameterOverrides: '{ "Environment": "staging", "CognitoUserPoolId": "eu-west-1_2eF2vZyKX" }'
+                ParameterOverrides: '{ "Environment": "staging" }'
               InputArtifacts:
                 - Name: BuiltZip
               RunOrder: 1
@@ -232,11 +213,11 @@ Resources:
                 ChangeSetName: solvePuzzle-Staging-ChangeSet
                 TemplatePath: BuiltZip::solvePuzzle-packaged.yaml
                 Capabilities: CAPABILITY_NAMED_IAM
-                ParameterOverrides: '{ "Environment": "staging", "CognitoUserPoolId": "eu-west-1_2eF2vZyKX" }'
+                ParameterOverrides: '{ "Environment": "staging" }'
               InputArtifacts:
                 - Name: BuiltZip
               RunOrder: 1
-            - Name: TryNewPuzzle-ExecuteChangeSet
+            - Name: Puzzle-ExecuteChangeSet
               ActionTypeId:
                 Category: Deploy
                 Owner: AWS
@@ -245,24 +226,10 @@ Resources:
               Configuration:
                 ActionMode: CHANGE_SET_EXECUTE
                 RoleArn: !GetAtt CFNRole.Arn
-                StackName: Service-tryNewPuzzle-Staging
-                ChangeSetName: tryNewPuzzle-Staging-ChangeSet
+                StackName: Service-Puzzle-Staging
+                ChangeSetName: Puzzle-Staging-ChangeSet
               OutputArtifacts:
-                - Name: tryNewPuzzleStagingChangeSet
-              RunOrder: 2
-            - Name: GetNewPuzzleSolution-ExecuteChangeSet
-              ActionTypeId:
-                Category: Deploy
-                Owner: AWS
-                Provider: CloudFormation
-                Version: "1"
-              Configuration:
-                ActionMode: CHANGE_SET_EXECUTE
-                RoleArn: !GetAtt CFNRole.Arn
-                StackName: Service-getNewPuzzleSolution-Staging
-                ChangeSetName: getNewPuzzleSolution-Staging-ChangeSet
-              OutputArtifacts:
-                - Name: getNewPuzzleSolutionStagingChangeSet
+                - Name: PuzzleStagingDeploy
               RunOrder: 2
             - Name: SolvePuzzle-ExecuteChangeSet
               ActionTypeId:
@@ -276,7 +243,7 @@ Resources:
                 StackName: Service-solvePuzzle-Staging
                 ChangeSetName: solvePuzzle-Staging-ChangeSet
               OutputArtifacts:
-                - Name: solvePuzzleStagingChangeSet
+                - Name: solvePuzzleStagingDeploy
               RunOrder: 2
         - Name: Prod
           Actions:
@@ -287,7 +254,7 @@ Resources:
                 Provider: Manual
                 Version: "1"
               RunOrder: 1
-            - Name: TryNewPuzzle-CreateChangeSet
+            - Name: Puzzle-CreateChangeSet
               ActionTypeId:
                 Category: Deploy
                 Owner: AWS
@@ -296,28 +263,11 @@ Resources:
               Configuration:
                 ActionMode: CHANGE_SET_REPLACE
                 RoleArn: !GetAtt CFNRole.Arn
-                StackName: Service-tryNewPuzzle-Prod
-                ChangeSetName: tryNewPuzzle-Prod-ChangeSet
-                TemplatePath: BuiltZip::tryNewPuzzle-packaged.yaml
+                StackName: Service-Puzzle-Prod
+                ChangeSetName: Puzzle-Prod-ChangeSet
+                TemplatePath: BuiltZip::Puzzle-packaged.yaml
                 Capabilities: CAPABILITY_NAMED_IAM
-                ParameterOverrides: '{ "Environment": "prod", "CognitoUserPoolId": "eu-west-1_hcA217WJn" }'
-              InputArtifacts:
-                - Name: BuiltZip
-              RunOrder: 2
-            - Name: GetNewPuzzleSolution-CreateChangeSet
-              ActionTypeId:
-                Category: Deploy
-                Owner: AWS
-                Provider: CloudFormation
-                Version: "1"
-              Configuration:
-                ActionMode: CHANGE_SET_REPLACE
-                RoleArn: !GetAtt CFNRole.Arn
-                StackName: Service-getNewPuzzleSolution-Prod
-                ChangeSetName: getNewPuzzleSolution-Prod-ChangeSet
-                TemplatePath: BuiltZip::getNewPuzzleSolution-packaged.yaml
-                Capabilities: CAPABILITY_NAMED_IAM
-                ParameterOverrides: '{ "Environment": "prod", "CognitoUserPoolId": "eu-west-1_hcA217WJn" }'
+                ParameterOverrides: '{ "Environment": "prod" }'
               InputArtifacts:
                 - Name: BuiltZip
               RunOrder: 2
@@ -334,11 +284,11 @@ Resources:
                 ChangeSetName: solvePuzzle-Prod-ChangeSet
                 TemplatePath: BuiltZip::solvePuzzle-packaged.yaml
                 Capabilities: CAPABILITY_NAMED_IAM
-                ParameterOverrides: '{ "Environment": "prod", "CognitoUserPoolId": "eu-west-1_hcA217WJn" }'
+                ParameterOverrides: '{ "Environment": "prod" }'
               InputArtifacts:
                 - Name: BuiltZip
               RunOrder: 2
-            - Name: TryNewPuzzle-ExecuteChangeSet
+            - Name: Puzzle-ExecuteChangeSet
               ActionTypeId:
                 Category: Deploy
                 Owner: AWS
@@ -347,24 +297,10 @@ Resources:
               Configuration:
                 ActionMode: CHANGE_SET_EXECUTE
                 RoleArn: !GetAtt CFNRole.Arn
-                StackName: Service-tryNewPuzzle-Prod
-                ChangeSetName: tryNewPuzzle-Prod-ChangeSet
+                StackName: Service-Puzzle-Prod
+                ChangeSetName: Puzzle-Prod-ChangeSet
               OutputArtifacts:
-                - Name: tryNewPuzzleProdChangeSet
-              RunOrder: 3
-            - Name: GetNewPuzzleSolution-ExecuteChangeSet
-              ActionTypeId:
-                Category: Deploy
-                Owner: AWS
-                Provider: CloudFormation
-                Version: "1"
-              Configuration:
-                ActionMode: CHANGE_SET_EXECUTE
-                RoleArn: !GetAtt CFNRole.Arn
-                StackName: Service-getNewPuzzleSolution-Prod
-                ChangeSetName: getNewPuzzleSolution-Prod-ChangeSet
-              OutputArtifacts:
-                - Name: getNewPuzzleSolutionProdChangeSet
+                - Name: PuzzleProdDeploy
               RunOrder: 3
             - Name: SolvePuzzle-ExecuteChangeSet
               ActionTypeId:
@@ -378,7 +314,7 @@ Resources:
                 StackName: Service-solvePuzzle-Prod
                 ChangeSetName: solvePuzzle-Prod-ChangeSet
               OutputArtifacts:
-                - Name: solvePuzzleProdChangeSet
+                - Name: solvePuzzleProdDeploy
               RunOrder: 3
 
   SamBuildsCodeBuildProject:

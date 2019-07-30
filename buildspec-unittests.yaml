@@ -8,6 +8,5 @@ phases:
       - /root/.local/bin/pytest --version
   build:
     commands:
-      - /root/.local/bin/pytest --disable-pytest-warnings services/tryNewPuzzle/tests/
-      - /root/.local/bin/pytest --disable-pytest-warnings services/getNewPuzzleSolution/tests/
+      - /root/.local/bin/pytest --disable-pytest-warnings services/PuzzleApi/tests/
       - /root/.local/bin/pytest --disable-pytest-warnings services/solvePuzzle/tests/
