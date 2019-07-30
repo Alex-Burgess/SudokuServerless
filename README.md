@@ -66,13 +66,24 @@ aws s3 cp data/example_puzzles/ s3://sudoku-unsolved-puzzles-prod --recursive
 aws s3 cp data/example_puzzle_solutions/ s3://sudoku-unsolved-puzzle-solutions-prod --recursive
 ```
 
-### Deploy react application to S3
-Build content and copy to s3:
+### React Commands
+Run the react server locally:
 ```
-cd /Users/alexburgess/Development/sudokuless
-npm run build
-aws s3 sync build/ s3://test.sudokuless.com --delete
+REACT_APP_STAGE=test npm start
 ```
+
+Build and Deploy to Staging:
+```
+REACT_APP_STAGE=staging npm run build
+aws s3 sync build/ s3://staging.sudokuless.com --delete
+```
+
+Build and Deploy to Production:
+```
+REACT_APP_STAGE=prod npm run build
+aws s3 sync build/ s3://sudokuless.com --delete
+```
+
 
 ### Deployments
 A deployment pipeline is used to automate the build, packaging and deployment of the SAM serverless services.
@@ -169,11 +180,6 @@ The Pipeline above is just a POC for building, testing and deploying the serverl
     ```
 1. If configuring LoginWithAmazon see [Procedure](sudoku-serverless-hugo-amz/README.md)
 
-### Local Environment
-To start the local environment:
-```
-hugo server -D --config config.test.toml
-```
 
 # Reference
 
