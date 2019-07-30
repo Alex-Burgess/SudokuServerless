@@ -187,3 +187,9 @@ The Pipeline above is just a POC for building, testing and deploying the serverl
 ```
 sam init --runtime python3.6 --name tryNewPuzzle
 ```
+
+### Tag a new git version
+```
+git tag -a v0.0.1 -m "Tag description..."
+git push origin v0.0.1
+```
