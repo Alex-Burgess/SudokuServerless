@@ -1,0 +1,16 @@
+@media all and (min-width: 480px) {
+  .Login {
+    padding: 0px 0;
+  }
+
+  .Login form {
+    margin: 0 auto;
+    max-width: 400px;
+  }
+}
+
+.Login h4 {
+  text-align: left;
+  font-family: "Open Sans", sans-serif;
+  font-size: 17px;
+}

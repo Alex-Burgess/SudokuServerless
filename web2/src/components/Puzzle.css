@@ -1,0 +1,43 @@
+.puzzle table {
+    border: 2;
+    border-collapse: none;
+    border-spacing: 0;
+    empty-cells: show;
+    display: inline-block;
+    margin: 0 auto;
+    width: auto
+}
+
+.puzzle tbody {
+  border: solid medium;
+}
+
+.puzzle td {
+  border: solid thin;
+  padding: 0;
+  margin: 0;
+  height: 30px;
+  width: 30px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.puzzle tr:nth-of-type(3n) {
+    border-bottom: solid medium;
+}
+.puzzle td:nth-of-type(3n) {
+    border-right: solid medium;
+}
+
+.puzzle input {
+  width: 100%;
+  padding: 0;
+  border-radius: 0;
+  height: 100%;
+  border: 0;
+  text-align: center;
+  vertical-align: middle;
+  color: #313439;
+  font-family: Lato, sans-serif;
+  cursor: default;
+}

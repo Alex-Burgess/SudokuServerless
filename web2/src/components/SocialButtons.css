@@ -1,0 +1,75 @@
+.socialButtonContainer {
+  width: 100%;
+  text-align: center;
+}
+
+.socialButtonGroup h4 {
+  text-align: left;
+  font-family: "Open Sans", sans-serif;
+  font-size: 17px;
+}
+
+.socialButtonGroup {
+  max-width: 400px;
+  display: inline-block;
+  padding-bottom: 10px;
+}
+
+.socialButtonGroup button {
+  padding: 10px 24px; /* Some padding */
+  cursor: pointer; /* Pointer/hand icon */
+  width: 400px; /* Set a width if needed */
+  display: block; /* Make the buttons appear below each other */
+  margin-bottom: 15px;
+}
+
+.fbButton {
+  background-color: #3b5998;
+  color: white; /* White text */
+}
+
+.fbButton:hover {
+  background-color: #2955ad;
+}
+
+.googleButton {
+  background-color: #d3d3d3;
+  color: black; /* White text */
+}
+
+.googleButton:hover {
+  background-color: #c4c4c4;
+}
+
+.amazonButton {
+  background-color: #f7bc22;
+  color: black; /* White text */
+}
+
+.amazonButton:hover {
+  background-color: #ffae00;
+}
+
+.socialLogo {
+    width: 35px;
+    height: 100%;
+    text-align: center;
+    padding-right: 10px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.socialButtonText {
+    text-align: left;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.LoginBorderTop {
+  max-width: 480px;
+  margin: 0 auto;
+  border-top-style: solid;
+  border-top-color: #F5F5F5;
+  border-top-width: 2px;
+  padding-bottom: 10px;
+}
