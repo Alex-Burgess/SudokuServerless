@@ -24,6 +24,11 @@ See project [README](../../README.md) for architecture diagram.
     ```
     sam build
     ```
+1. Test:
+    ```
+    sam local invoke UnsolvedFunction --event events/puzzle_api_unsolved_event.json --env-vars env_vars/test_env.json
+    sam local invoke SolvedFunction --event events/puzzle_api_solved_event.json --env-vars env_vars/test_env.json
+    ```
 1. Package our Lambda function to S3:
     ```
     sam package \
@@ -130,7 +135,7 @@ sam local generate-event apigateway aws-proxy > events/api_event.json
 
 ### API Gateway Manual Deployment
 ```
-aws apigateway get-rest-apis --query 'items[?name==`tryNewPuzzle-test`].{name:name, ID:id}'
+aws apigateway get-rest-apis --query 'items[?name==`puzzle-test`].{name:name, ID:id}'
 
 aws apigateway get-stages --rest-api-id <api-id> --query 'item[?stageName==`prod`].{stageName:stageName, deploymentId:deploymentId}'
 

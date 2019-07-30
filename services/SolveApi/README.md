@@ -1,4 +1,4 @@
-# solvePuzzle
+# Solve
 
 ## Description
 This API is called by a user submits a finished sudoku puzzle.  The service retrieves the puzzle solution from an s3 bucket which is used to compare against the users solution attempt.
@@ -17,8 +17,12 @@ See project [README](../../README.md) for architecture diagram.
 ### Build Bucket
 Create an S3 bucket to store the SAM builds:
 ```
-aws cloudformation create-stack --stack-name sam-builds-solvepuzzle --template-body file://sam-builds-bucket.yaml
+aws cloudformation create-stack --stack-name sam-builds-solve --template-body file://sam-builds-bucket.yaml
 ```
+
+sam local invoke Function --event events/solve_api_event.json
+
+sam build
 
 ### Packaging and deployment
 Package our Lambda function to S3:
@@ -26,7 +30,7 @@ Package our Lambda function to S3:
 ```
 sam package \
     --output-template-file packaged.yaml \
-    --s3-bucket sam-builds-solvepuzzle
+    --s3-bucket sam-builds-solve
 ```
 
 Create a Cloudformation Stack and deploy your SAM resources.
@@ -34,36 +38,17 @@ Create a Cloudformation Stack and deploy your SAM resources.
 ```
 sam deploy \
     --template-file packaged.yaml \
-    --stack-name SolvePuzzle-test \
+    --stack-name Service-Solve-test \
     --capabilities CAPABILITY_NAMED_IAM
 ```
 
 After deployment is complete you can run the following command to retrieve the API Gateway Endpoint URL:
 ```
 aws cloudformation describe-stacks \
-    --stack-name SolvePuzzle-test \
+    --stack-name Service-Solve-test \
     --query 'Stacks[].Outputs[?OutputKey==`ApiUrl`]' \
     --output table
 ```
-
-## Deploying Code Updates
-1. Create a new build of the code:
-    ```
-    sam build
-    ```
-1. Package
-    ```
-    sam package \
-        --output-template-file packaged.yaml \
-        --s3-bucket sam-builds-solvepuzzle
-    ```
-1. Deploy
-    ```
-    sam deploy \
-        --template-file packaged.yaml \
-        --stack-name SolvePuzzle-test \
-        --capabilities CAPABILITY_NAMED_IAM
-    ```
 
 ## Logging
 Get logs for last 10 minutes:
@@ -125,46 +110,26 @@ Local testing of the API, ensures that API and lambda function are correctly con
 In order to delete our Serverless Application recently deployed you can use the following AWS CLI Command:
 
 ```
-aws cloudformation delete-stack --stack-name SolvePuzzle-test
+aws cloudformation delete-stack --stack-name Service-Solve-test
 ```
 
 # Appendix
-## SAM and AWS CLI commands
-
-All commands used throughout this document
-
+### Deploying with overrides:
 ```
-# Generate event.json via generate-event command
-sam local generate-event apigateway aws-proxy > event.json
+aws cloudformation create-stack --template-body file://packaged.yaml  \
+ --stack-name RandomStack \
+ --capabilities CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND \
+ --parameters ParameterKey=UnsolvedBucketPrefix,ParameterValue=test-unsolved-puzzles
+```
 
-# Invoke function locally with event.json as an input
-sam local invoke Function --event event.json
+### Generate test event:
+```
+sam local generate-event apigateway aws-proxy > events/api_event.json
+```
 
-# Run API Gateway locally
-sam local start-api
-
-# Package Lambda function defined locally and upload to S3 as an artifact
-sam package \
-    --output-template-file packaged.yaml \
-    --s3-bucket sam-builds-solvepuzzle
-
-# Deploy SAM template as a CloudFormation stack
-sam deploy \
-    --template-file packaged.yaml \
-    --stack-name SolvePuzzle-test \
-    --capabilities CAPABILITY_IAM
-
-# Describe Output section of CloudFormation stack previously created
-aws cloudformation describe-stacks \
-    --stack-name SolvePuzzle-test \
-    --query 'Stacks[].Outputs[?OutputKey==`ApiUrl]' \
-    --output table
-
-# Tail Lambda function Logs using Logical name defined in SAM Template
-sam logs -n Function --stack-name SolvePuzzle-test --tail
-
-# Deploy the API Manually:
-aws apigateway get-rest-apis --query 'items[?name==`SolvePuzzle-test`].{name:name, ID:id}'
+### API Gateway Manual Deployment
+```
+aws apigateway get-rest-apis --query 'items[?name==`puzzle-test`].{name:name, ID:id}'
 
 aws apigateway get-stages --rest-api-id <api-id> --query 'item[?stageName==`prod`].{stageName:stageName, deploymentId:deploymentId}'
 

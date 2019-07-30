@@ -200,7 +200,7 @@ Resources:
               InputArtifacts:
                 - Name: BuiltZip
               RunOrder: 1
-            - Name: SolvePuzzle-CreateChangeSet
+            - Name: Solve-CreateChangeSet
               ActionTypeId:
                 Category: Deploy
                 Owner: AWS
@@ -209,9 +209,9 @@ Resources:
               Configuration:
                 ActionMode: CHANGE_SET_REPLACE
                 RoleArn: !GetAtt CFNRole.Arn
-                StackName: Service-solvePuzzle-Staging
-                ChangeSetName: solvePuzzle-Staging-ChangeSet
-                TemplatePath: BuiltZip::solvePuzzle-packaged.yaml
+                StackName: Service-Solve-Staging
+                ChangeSetName: Solve-Staging-ChangeSet
+                TemplatePath: BuiltZip::solve-packaged.yaml
                 Capabilities: CAPABILITY_NAMED_IAM
                 ParameterOverrides: '{ "Environment": "staging" }'
               InputArtifacts:
@@ -231,7 +231,7 @@ Resources:
               OutputArtifacts:
                 - Name: PuzzleStagingDeploy
               RunOrder: 2
-            - Name: SolvePuzzle-ExecuteChangeSet
+            - Name: Solve-ExecuteChangeSet
               ActionTypeId:
                 Category: Deploy
                 Owner: AWS
@@ -240,10 +240,10 @@ Resources:
               Configuration:
                 ActionMode: CHANGE_SET_EXECUTE
                 RoleArn: !GetAtt CFNRole.Arn
-                StackName: Service-solvePuzzle-Staging
-                ChangeSetName: solvePuzzle-Staging-ChangeSet
+                StackName: Service-Solve-Staging
+                ChangeSetName: Solve-Staging-ChangeSet
               OutputArtifacts:
-                - Name: solvePuzzleStagingDeploy
+                - Name: SolveStagingDeploy
               RunOrder: 2
         - Name: Prod
           Actions:
@@ -271,7 +271,7 @@ Resources:
               InputArtifacts:
                 - Name: BuiltZip
               RunOrder: 2
-            - Name: SolvePuzzle-CreateChangeSet
+            - Name: Solve-CreateChangeSet
               ActionTypeId:
                 Category: Deploy
                 Owner: AWS
@@ -280,9 +280,9 @@ Resources:
               Configuration:
                 ActionMode: CHANGE_SET_REPLACE
                 RoleArn: !GetAtt CFNRole.Arn
-                StackName: Service-solvePuzzle-Prod
-                ChangeSetName: solvePuzzle-Prod-ChangeSet
-                TemplatePath: BuiltZip::solvePuzzle-packaged.yaml
+                StackName: Service-Solve-Prod
+                ChangeSetName: Solve-Prod-ChangeSet
+                TemplatePath: BuiltZip::solve-packaged.yaml
                 Capabilities: CAPABILITY_NAMED_IAM
                 ParameterOverrides: '{ "Environment": "prod" }'
               InputArtifacts:
@@ -302,7 +302,7 @@ Resources:
               OutputArtifacts:
                 - Name: PuzzleProdDeploy
               RunOrder: 3
-            - Name: SolvePuzzle-ExecuteChangeSet
+            - Name: Solve-ExecuteChangeSet
               ActionTypeId:
                 Category: Deploy
                 Owner: AWS
@@ -311,10 +311,10 @@ Resources:
               Configuration:
                 ActionMode: CHANGE_SET_EXECUTE
                 RoleArn: !GetAtt CFNRole.Arn
-                StackName: Service-solvePuzzle-Prod
-                ChangeSetName: solvePuzzle-Prod-ChangeSet
+                StackName: Service-Solve-Prod
+                ChangeSetName: Solve-Prod-ChangeSet
               OutputArtifacts:
-                - Name: solvePuzzleProdDeploy
+                - Name: SolveProdDeploy
               RunOrder: 3
 
   SamBuildsCodeBuildProject:

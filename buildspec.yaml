@@ -11,7 +11,7 @@ phases:
     commands:
       - echo "Starting build `date` in `pwd`"
       - /root/.local/bin/sam package --template-file services/PuzzleApi/template.yaml --s3-bucket $BUILD_OUTPUT_BUCKET --output-template-file puzzle-packaged.yaml
-      - /root/.local/bin/sam package --template-file services/solvePuzzle/template.yaml --s3-bucket $BUILD_OUTPUT_BUCKET --output-template-file solvePuzzle-packaged.yaml
+      - /root/.local/bin/sam package --template-file services/SolveApi/template.yaml --s3-bucket $BUILD_OUTPUT_BUCKET --output-template-file solve-packaged.yaml
   post_build:
     commands:
       - echo "build completed on `date`"
@@ -19,5 +19,5 @@ phases:
 artifacts:
   files:
     - puzzle-packaged.yaml
-    - solvePuzzle-packaged.yaml
+    - solve-packaged.yaml
   discard-paths: yes

@@ -9,4 +9,4 @@ phases:
   build:
     commands:
       - /root/.local/bin/pytest --disable-pytest-warnings services/PuzzleApi/tests/
-      - /root/.local/bin/pytest --disable-pytest-warnings services/solvePuzzle/tests/
+      - /root/.local/bin/pytest --disable-pytest-warnings services/SolveApi/tests/

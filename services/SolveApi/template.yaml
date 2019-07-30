@@ -3,9 +3,6 @@ Transform: AWS::Serverless-2016-10-31
 Description: Serverless resources for SolvePuzzle service
 
 Parameters:
-  CognitoUserPoolId:
-    Type: String
-    Default: eu-west-1_RLIJMD2h8
   Environment:
     Description: Environment type.
     Default: test
@@ -18,7 +15,7 @@ Parameters:
     ConstraintDescription: must specify prod, staging, dev or test.
   ServiceName:
     Description: Environment type.
-    Default: solvePuzzle
+    Default: solve
     Type: String
   Description:
     Description: Description of service.
@@ -44,7 +41,7 @@ Resources:
         schemes:
         - "https"
         paths:
-          "/solvePuzzle":
+          "/solve":
             post:
               responses:
                 "200":
@@ -128,7 +125,7 @@ Resources:
           Type: Api
           Properties:
             RestApiId: !Ref Api
-            Path: '/solvePuzzle'
+            Path: '/solve'
             Method: POST
 
   FunctionRole:
@@ -150,6 +147,10 @@ Outputs:
   ApiUrl:
     Description: API Gateway endpoint URL for Prod stage of Service
     Value: !Sub 'https://${Api}.execute-api.${AWS::Region}.amazonaws.com/${Environment}/${ServiceName}/'
+
+  ApiId:
+    Description: ID for the API
+    Value: !Ref Api
 
   FunctionIamRole:
     Description: Implicit IAM Role created for function
