@@ -1,3 +1,0 @@
-[submodule "sudoku-serverless-hugo/themes/kube"]
-	path = sudoku-serverless-hugo/themes/kube
-	url = git@github.com:Alex-Burgess/kube.git
