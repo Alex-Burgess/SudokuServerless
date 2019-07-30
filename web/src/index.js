@@ -28,18 +28,13 @@ Amplify.configure({
   API: {
     endpoints: [
       {
-        name: "tryNewPuzzle",
-        endpoint: config.apiGateway.TRY,
+        name: "puzzle",
+        endpoint: config.apiGateway.PUZZLE,
         region: config.apiGateway.REGION
       },
       {
         name: "solvePuzzle",
         endpoint: config.apiGateway.SOLVE,
-        region: config.apiGateway.REGION
-      },
-      {
-        name: "getNewPuzzleSolution",
-        endpoint: config.apiGateway.SOLUTION,
         region: config.apiGateway.REGION
       }
     ]

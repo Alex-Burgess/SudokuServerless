@@ -52,8 +52,12 @@ export default class Try extends Component {
   }
 
   try() {
-    console.log('Calling tryNewPuzzle API');
-    return API.get("tryNewPuzzle", "/");
+    console.log('Calling Puzzle API');
+    return API.get("puzzle", "/");
+  }
+
+  solution() {
+    return API.get("puzzle", "/" + this.state.id);
   }
 
   validateForm() {
@@ -69,10 +73,6 @@ export default class Try extends Component {
     }
 
     return true;
-  }
-
-  solution() {
-    return API.get("getNewPuzzleSolution", "/" + this.state.id);
   }
 
   updateDataFromAPI(solutionJson) {

@@ -67,6 +67,11 @@ aws s3 cp data/example_puzzle_solutions/ s3://sudoku-unsolved-puzzle-solutions-p
 ```
 
 ### React Commands
+Before the first execution, it is necessary to install the node modules.
+```
+npm install
+```
+
 Run the react server locally:
 ```
 REACT_APP_STAGE=test npm start

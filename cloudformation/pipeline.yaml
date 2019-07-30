@@ -194,7 +194,7 @@ Resources:
                 RoleArn: !GetAtt CFNRole.Arn
                 StackName: Service-Puzzle-Staging
                 ChangeSetName: Puzzle-Staging-ChangeSet
-                TemplatePath: BuiltZip::Puzzle-packaged.yaml
+                TemplatePath: BuiltZip::puzzle-packaged.yaml
                 Capabilities: CAPABILITY_NAMED_IAM
                 ParameterOverrides: '{ "Environment": "staging" }'
               InputArtifacts:
@@ -265,7 +265,7 @@ Resources:
                 RoleArn: !GetAtt CFNRole.Arn
                 StackName: Service-Puzzle-Prod
                 ChangeSetName: Puzzle-Prod-ChangeSet
-                TemplatePath: BuiltZip::Puzzle-packaged.yaml
+                TemplatePath: BuiltZip::puzzle-packaged.yaml
                 Capabilities: CAPABILITY_NAMED_IAM
                 ParameterOverrides: '{ "Environment": "prod" }'
               InputArtifacts:
