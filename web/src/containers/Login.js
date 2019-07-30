@@ -75,7 +75,7 @@ export default class Login extends Component {
             text="Login"
             loadingText="Logging in…"
           />
-          <p class="redirect-customizable">
+          <p className="redirect-customizable">
             <span>Need an account?</span>&nbsp;
             <Link to="/signup">Sign Up</Link>
           </p>

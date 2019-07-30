@@ -186,6 +186,26 @@ The Pipeline above is just a POC for building, testing and deploying the serverl
 1. If configuring LoginWithAmazon see [Procedure](sudoku-serverless-hugo-amz/README.md)
 
 
+## Test pyramind
+
+### Browser
+1. Log in / Log out with username and password
+1. Log in / Log out with Amazon
+1. Log in / Log out with Google
+1. Log in / Log out with Facebook
+1. Pages requiring authentication should not show, when not logged in.  Instead user is redirected to sign in.
+1. Pages requiring authentication should show when logged in.  Home page should show user dash board when logged in.
+1. Try page retrieves puzzle from API.
+1. Try page, incorrect puzzle attempt.
+1. Try page, correct puzzle attempt.
+1. Solve page, valid puzzle attempt.
+1. Solve page, invalid puzzle attempt.
+
+### Integration Tests
+
+### Unit Tests
+
+
 # Reference
 
 ### Create a new lambda/api service using SAM
