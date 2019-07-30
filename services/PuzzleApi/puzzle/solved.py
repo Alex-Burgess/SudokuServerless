@@ -51,11 +51,11 @@ def get_puzzle_id_from_path(event):
 
 def get_bucket_name():
     try:
-        bucket_name = os.environ['SOLUTIONS_BUCKET_NAME']
-        logger.info("SOLUTIONS_BUCKET_NAME environment variable value: " + bucket_name)
+        bucket_name = os.environ['SOLVED_BUCKET_NAME']
+        logger.info("SOLVED_BUCKET_NAME environment variable value: " + bucket_name)
     except KeyError:
-        logger.error('SOLUTIONS_BUCKET_NAME environment variable not set correctly')
-        raise Exception('SOLUTIONS_BUCKET_NAME environment variable not set correctly')
+        logger.error('SOLVED_BUCKET_NAME environment variable not set correctly')
+        raise Exception('SOLVED_BUCKET_NAME environment variable not set correctly')
 
     return bucket_name
 

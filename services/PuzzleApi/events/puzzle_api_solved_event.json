@@ -1,14 +1,14 @@
 {
   "body": "eyJ0ZXN0IjoiYm9keSJ9",
-  "resource": "/{proxy+}",
-  "path": "/path/to/resource",
-  "httpMethod": "POST",
+  "resource": "/puzzle/{id}",
+  "path": "/puzzle/1.json",
+  "httpMethod": "GET",
   "isBase64Encoded": true,
   "queryStringParameters": {
     "foo": "bar"
   },
   "pathParameters": {
-    "proxy": "/path/to/resource"
+    "id": "1.json"
   },
   "stageVariables": {
     "baz": "qux"
@@ -53,9 +53,9 @@
       "userAgent": "Custom User Agent String",
       "user": null
     },
-    "path": "/prod/path/to/resource",
-    "resourcePath": "/{proxy+}",
-    "httpMethod": "POST",
+    "path": "/puzzle/{id}",
+    "resourcePath": "/puzzle/{id}",
+    "httpMethod": "GET",
     "apiId": "1234567890",
     "protocol": "HTTP/1.1"
   }

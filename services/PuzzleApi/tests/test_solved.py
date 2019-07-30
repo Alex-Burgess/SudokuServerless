@@ -5,7 +5,7 @@ import pytest
 import boto3
 import copy
 from moto import mock_s3
-from get_new_puzzle_solution import solution
+from puzzle import solved
 import sys
 import logging
 
@@ -70,8 +70,8 @@ def api_gateway_event():
 
     return {
       "body": "eyJ0ZXN0IjoiYm9keSJ9",
-      "resource": "/getNewPuzzleSolution/{id}",
-      "path": "/getNewPuzzleSolution/1.json",
+      "resource": "/puzzle/{id}",
+      "path": "/puzzle/1.json",
       "httpMethod": "GET",
       "isBase64Encoded": "true",
       "queryStringParameters": {
@@ -123,8 +123,8 @@ def api_gateway_event():
           "userAgent": "Custom User Agent String",
           "user": "null"
         },
-        "path": "/getNewPuzzleSolution/{id}",
-        "resourcePath": "/getNewPuzzleSolution/{id}",
+        "path": "/puzzle/{id}",
+        "resourcePath": "/puzzle/{id}",
         "httpMethod": "GET",
         "apiId": "1234567890",
         "protocol": "HTTP/1.1"
@@ -133,7 +133,7 @@ def api_gateway_event():
 
 
 def test_create_response():
-    response = solution.create_response(200, 'Success message')
+    response = solved.create_response(200, 'Success message')
 
     expected_response = {'statusCode': 200,
                          'body': 'Success message',
@@ -146,7 +146,7 @@ def test_create_response():
 
 class TestGetPuzzleIdFromPath:
     def test_puzzle_id_present(self, api_gateway_event):
-        puzzle_id = solution.get_puzzle_id_from_path(api_gateway_event)
+        puzzle_id = solved.get_puzzle_id_from_path(api_gateway_event)
         assert puzzle_id == '1.json'
 
     def test_puzzle_id_not_present(self, api_gateway_event):
@@ -154,77 +154,77 @@ class TestGetPuzzleIdFromPath:
         updated_event_path_parameters['pathParameters'].pop('id', None)
 
         with pytest.raises(Exception) as e:
-            solution.get_puzzle_id_from_path(updated_event_path_parameters)
+            solved.get_puzzle_id_from_path(updated_event_path_parameters)
         assert str(e.value) == "No id path parameter was provided."
 
 
 class TestEnvironmentVariable:
     def test_get_bucket_name(self, monkeypatch):
-        monkeypatch.setitem(os.environ, 'SOLUTIONS_BUCKET_NAME', 'test-bucket')
-        bucket_name = solution.get_bucket_name()
+        monkeypatch.setitem(os.environ, 'SOLVED_BUCKET_NAME', 'test-bucket')
+        bucket_name = solved.get_bucket_name()
         assert bucket_name == 'test-bucket'
 
     def test_wrong_variable_name(self, monkeypatch):
-        monkeypatch.setitem(os.environ, 'SOLUTIONS_BUCKET_NAM', 'test-bucket')
+        monkeypatch.setitem(os.environ, 'SOLVED_BUCKET_NAM', 'test-bucket')
         with pytest.raises(Exception) as e:
-            solution.get_bucket_name()
-        assert str(e.value) == "SOLUTIONS_BUCKET_NAME environment variable not set correctly"
+            solved.get_bucket_name()
+        assert str(e.value) == "SOLVED_BUCKET_NAME environment variable not set correctly"
 
     def test_no_variable(self, monkeypatch):
         with pytest.raises(Exception) as e:
-            solution.get_bucket_name()
-        assert str(e.value) == "SOLUTIONS_BUCKET_NAME environment variable not set correctly"
+            solved.get_bucket_name()
+        assert str(e.value) == "SOLVED_BUCKET_NAME environment variable not set correctly"
 
 
 class TestGetPuzzleFromS3:
     def test_get_puzzle_from_s3(self, s3_bucket_mock, test_puzzle_json):
-        puzzle_object = solution.get_puzzle_from_s3('test-bucket', '1.json')
+        puzzle_object = solved.get_puzzle_from_s3('test-bucket', '1.json')
         assert json.loads(puzzle_object) == test_puzzle_json
 
     def test_key_does_not_exist(self, s3_bucket_mock):
         with pytest.raises(Exception) as e:
-            solution.get_puzzle_from_s3('test-bucket', '4.json')
+            solved.get_puzzle_from_s3('test-bucket', '4.json')
         assert str(e.value) == "An error occurred (NoSuchKey) when calling the GetObject operation: The specified key does not exist."
 
     def test_bucket_does_not_exist(self, monkeypatch, s3_bucket_mock):
-        monkeypatch.setitem(os.environ, 'SOLUTIONS_BUCKET_NAME', 'test-bucket2')
+        monkeypatch.setitem(os.environ, 'SOLVED_BUCKET_NAME', 'test-bucket2')
         with pytest.raises(Exception) as e:
-            solution.get_puzzle_from_s3('test-bucket2', '1.json')
+            solved.get_puzzle_from_s3('test-bucket2', '1.json')
         assert str(e.value) == "An error occurred (NoSuchBucket) when calling the GetObject operation: The specified bucket does not exist"
 
 
 class TestSolutionMain:
     def test_solution_main_returns_response(self, monkeypatch, s3_bucket_mock, api_gateway_event):
-        monkeypatch.setitem(os.environ, 'SOLUTIONS_BUCKET_NAME', 'test-bucket')
-        response = solution.solution_main(api_gateway_event)
+        monkeypatch.setitem(os.environ, 'SOLVED_BUCKET_NAME', 'test-bucket')
+        response = solved.solution_main(api_gateway_event)
         assert response['statusCode'] == 200
         assert response['headers'] == {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}
         assert re.match('{"level": .*}', response['body'])
 
     def test_solution_main_exception_response(self, monkeypatch, s3_bucket_mock, api_gateway_event):
-        monkeypatch.setitem(os.environ, 'SOLUTIONS_BUCKET_NAME', 'test-bucke')
-        response = solution.solution_main(api_gateway_event)
+        monkeypatch.setitem(os.environ, 'SOLVED_BUCKET_NAME', 'test-bucke')
+        response = solved.solution_main(api_gateway_event)
         assert response['statusCode'] == 500
         assert response['headers'] == {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}
         assert response['body'] == '{"error": "An error occurred (NoSuchBucket) when calling the GetObject operation: The specified bucket does not exist"}'
 
     def test_solution_main_no_env_variable(self, s3_bucket_mock, api_gateway_event):
-        response = solution.solution_main(api_gateway_event)
+        response = solved.solution_main(api_gateway_event)
         assert response['statusCode'] == 500
         assert response['headers'] == {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}
-        assert response['body'] == '{"error": "SOLUTIONS_BUCKET_NAME environment variable not set correctly"}'
+        assert response['body'] == '{"error": "SOLVED_BUCKET_NAME environment variable not set correctly"}'
 
     def test_solution_main_bucket_does_not_exist(self, monkeypatch, s3_bucket_mock, api_gateway_event):
-        monkeypatch.setitem(os.environ, 'SOLUTIONS_BUCKET_NAME', 'test-bucket2')
-        response = solution.solution_main(api_gateway_event)
+        monkeypatch.setitem(os.environ, 'SOLVED_BUCKET_NAME', 'test-bucket2')
+        response = solved.solution_main(api_gateway_event)
         assert response['statusCode'] == 500
         assert response['headers'] == {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}
         assert response['body'] == '{"error": "An error occurred (NoSuchBucket) when calling the GetObject operation: The specified bucket does not exist"}'
 
 
 def test_handler(monkeypatch, api_gateway_event, s3_bucket_mock):
-    monkeypatch.setitem(os.environ, 'SOLUTIONS_BUCKET_NAME', 'test-bucket')
-    response = solution.handler(api_gateway_event, None)
+    monkeypatch.setitem(os.environ, 'SOLVED_BUCKET_NAME', 'test-bucket')
+    response = solved.handler(api_gateway_event, None)
     assert response['statusCode'] == 200
     assert response['headers'] == {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}
     assert re.match('{"level": .*}', response['body'])

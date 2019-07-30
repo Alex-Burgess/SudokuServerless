@@ -1,0 +1,8 @@
+{
+  "UnsolvedFunction": {
+    "UNSOLVED_BUCKET_NAME": "sudokuless-unsolved-test"
+  },
+  "SolvedFunction": {
+    "SOLVED_BUCKET_NAME": "sudokuless-solved-test"
+  }
+}

@@ -5,7 +5,7 @@ import copy
 import pytest
 import boto3
 from moto import mock_s3
-from try_new_puzzle import unsolved
+from puzzle import unsolved
 
 import sys
 import logging
@@ -69,8 +69,8 @@ def api_gateway_event():
     """ Generates API GW Event"""
 
     return {
-        "resource": "/unsolvedPuzzle",
-        "path": "/unsolvedPuzzle",
+        "resource": "/puzzle",
+        "path": "/puzzle",
         "httpMethod": "GET",
         "headers": "null",
         "multiValueHeaders": "null",
@@ -79,7 +79,7 @@ def api_gateway_event():
         "pathParameters": "null",
         "stageVariables": "null",
         "requestContext": {
-            "path": "/unsolvedPuzzle",
+            "path": "/puzzle",
             "accountId": "12345",
             "resourceId": "123456",
             "stage": "local",
@@ -98,7 +98,7 @@ def api_gateway_event():
                 "userAgent": "Custom User Agent String",
                 "user": "null"
             },
-            "resourcePath": "/unsolvedPuzzle",
+            "resourcePath": "/puzzle",
             "httpMethod": "GET",
             "apiId": "1234567890"
         },

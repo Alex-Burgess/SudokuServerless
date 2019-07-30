@@ -1,11 +1,8 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: Serverless resources for tryNewPuzzle service
+Description: Serverless resources for puzzle service
 
 Parameters:
-  CognitoUserPoolId:
-    Type: String
-    Default: eu-west-1_RLIJMD2h8
   Environment:
     Description: Environment type.
     Default: test
@@ -17,16 +14,20 @@ Parameters:
       - test
     ConstraintDescription: must specify prod, staging, dev or test.
   ServiceName:
-    Description: Environment type.
-    Default: tryNewPuzzle
+    Description: Service name.
+    Default: puzzle
     Type: String
   Description:
     Description: Description of service.
-    Default: Gets an unsolved puzzle from an s3 bucket
+    Default: Provides methods for retrieving unsolved and solved puzzles from s3 buckets.
     Type: String
   UnsolvedBucketPrefix:
     Description: Description of service.
-    Default: sudoku-unsolved-puzzles
+    Default: sudokuless-unsolved
+    Type: String
+  SolvedBucketPrefix:
+    Description: Description of service.
+    Default: sudokuless-solved
     Type: String
 
 
@@ -49,7 +50,7 @@ Resources:
         schemes:
         - "https"
         paths:
-          "/tryNewPuzzle":
+          "/puzzle":
             get:
               responses:
                 "200":
@@ -60,7 +61,22 @@ Resources:
               security:
               - sigv4: []
               x-amazon-apigateway-integration:
-                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Function.Arn}/invocations'
+                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${UnsolvedFunction.Arn}/invocations'
+                passthroughBehavior: "when_no_match"
+                httpMethod: "POST"
+                type: "aws_proxy"
+          "/puzzle/{id}":
+            get:
+              responses:
+                "200":
+                  description: "200 response"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
+              security:
+              - sigv4: []
+              x-amazon-apigateway-integration:
+                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${SolvedFunction.Arn}/invocations'
                 passthroughBehavior: "when_no_match"
                 httpMethod: "POST"
                 type: "aws_proxy"
@@ -118,11 +134,11 @@ Resources:
         ResponseType: DEFAULT_5XX
         RestApiId: !Ref Api
 
-  Function:
+  UnsolvedFunction:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: !Sub '${ServiceName}-${Environment}'
-      Handler: try_new_puzzle/unsolved.handler
+      FunctionName: !Sub '${ServiceName}-unsolved-${Environment}'
+      Handler: puzzle/unsolved.handler
       Runtime: python3.6
       MemorySize: 512
       Timeout: 3
@@ -130,13 +146,34 @@ Resources:
       Role: !GetAtt FunctionRole.Arn
       Environment:
         Variables:
-          UNSOLVED_BUCKET_NAME: !Ref PuzzlesBucket
+          UNSOLVED_BUCKET_NAME: !Ref UnsolvedBucket
       Events:
-        TryNewPuzzle:
+        UnsolvedPuzzle:
           Type: Api
           Properties:
             RestApiId: !Ref Api
-            Path: /tryNewPuzzle
+            Path: /puzzle
+            Method: GET
+
+  SolvedFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${ServiceName}-solved-${Environment}'
+      Handler: puzzle/solved.handler
+      Runtime: python3.6
+      MemorySize: 512
+      Timeout: 3
+      Description: !Ref Description
+      Role: !GetAtt FunctionRole.Arn
+      Environment:
+        Variables:
+          SOLVED_BUCKET_NAME: !Ref SolvedBucket
+      Events:
+        SolvedPuzzle:
+          Type: Api
+          Properties:
+            RestApiId: !Ref Api
+            Path: /puzzle/{id}
             Method: GET
 
   FunctionRole:
@@ -153,7 +190,6 @@ Resources:
             - sts:AssumeRole
       ManagedPolicyArns:
         - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-        # - "arn:aws:iam::aws:policy/AmazonS3FullAccess"
       Policies:
           - PolicyName: S3PuzzleBucketAccess
             PolicyDocument:
@@ -163,10 +199,12 @@ Resources:
                       - 's3:*'
                     Effect: Allow
                     Resource:
-                      - !Sub "arn:aws:s3:::${PuzzlesBucket}"
-                      - !Sub "arn:aws:s3:::${PuzzlesBucket}/*"
+                      - !Sub "arn:aws:s3:::${UnsolvedBucket}"
+                      - !Sub "arn:aws:s3:::${UnsolvedBucket}/*"
+                      - !Sub "arn:aws:s3:::${SolvedBucket}"
+                      - !Sub "arn:aws:s3:::${SolvedBucket}/*"
 
-  PuzzlesBucket:
+  UnsolvedBucket:
     Type: 'AWS::S3::Bucket'
     Properties:
       BucketName: !Sub '${UnsolvedBucketPrefix}-${Environment}'
@@ -177,10 +215,33 @@ Resources:
         IgnorePublicAcls: True
         RestrictPublicBuckets: True
 
+  SolvedBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Sub '${SolvedBucketPrefix}-${Environment}'
+      AccessControl: Private
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: True
+        BlockPublicPolicy: True
+        IgnorePublicAcls: True
+        RestrictPublicBuckets: True
+
 Outputs:
   ApiUrl:
-    Description: API Gateway endpoint URL for Prod stage of Service
+    Description: API Gateway endpoint URL for stage of Service
     Value: !Sub 'https://${Api}.execute-api.${AWS::Region}.amazonaws.com/${Environment}/${ServiceName}/'
+
+  ApiId:
+    Description: ID for the API
+    Value: !Ref Api
+
+  UnsolvedBucketName:
+    Description: Unsolved Bucket Name
+    Value: !Ref UnsolvedBucket
+
+  SolvedBucketName:
+    Description: Solved Bucket Name
+    Value: !Ref SolvedBucket
 
   FunctionIamRole:
     Description: Implicit IAM Role created for function
