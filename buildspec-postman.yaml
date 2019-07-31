@@ -3,7 +3,7 @@ version: 0.2
 env:
   parameter-store:
     POSTMAN: /Postman/Staging/Key
-    COLLECTION_ID: /Postman/Staging/CollectionId
+    COLLECTION_ID: /Postman/${Environment}/CollectionId
     ENVIRONMENT_ID: /Postman/Staging/EnvironmentId
     # POSTMAN: /Postman/${Environment}/Key
     # COLLECTION_ID: /Postman/${Environment}/CollectionId
