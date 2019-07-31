@@ -2,9 +2,12 @@ version: 0.2
 
 env:
   parameter-store:
-    POSTMAN: /Postman/${Environment}/Key
-    COLLECTION_ID: /Postman/${Environment}/CollectionId
-    ENVIRONMENT_ID: /Postman/${Environment}/EnvironmentId
+    POSTMAN: /Postman/Staging/Key
+    COLLECTION_ID: /Postman/Staging/CollectionId
+    ENVIRONMENT_ID: /Postman/Staging/EnvironmentId
+    # POSTMAN: /Postman/${Environment}/Key
+    # COLLECTION_ID: /Postman/${Environment}/CollectionId
+    # ENVIRONMENT_ID: /Postman/${Environment}/EnvironmentId
 
 phases:
   install:
