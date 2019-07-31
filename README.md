@@ -3,8 +3,14 @@
 ## Introduction
 A serverless website with a sudoku theme, based on [Build a Serverless Web App...](https://aws.amazon.com/getting-started/projects/build-serverless-web-app-lambda-apigateway-s3-dynamodb-cognito/).
 
-## Architecture
+[AWS Amplify Framework](https://aws-amplify.github.io) is used to provide user authentication.
 
+The web component is written in React.  Further inspiration is taken from [AWS Full Stack Template](https://github.com/awslabs/aws-full-stack-template).
+
+## Architecture
+The architecture in use is very similar to the diagrams in the [AWS Full Stack Template](https://github.com/awslabs/aws-full-stack-template).
+
+![alt text](../master/diagramsSudokuless.png "API Services")
 
 ## Deployment
 Split into following sections:
