@@ -2,7 +2,7 @@ const test = {
   apiGateway: {
     REGION: "eu-west-1",
     PUZZLE: "https://8vsecano3i.execute-api.eu-west-1.amazonaws.com/test/puzzle",
-    SOLVE: "https://vpt95x5u8b.execute-api.eu-west-1.amazonaws.com/test/solvePuzzle"
+    SOLVE: "https://dpb02w7qyi.execute-api.eu-west-1.amazonaws.com/test/solve"
   },
   cognito: {
     REGION: "eu-west-1",
@@ -21,7 +21,7 @@ const staging = {
   apiGateway: {
     REGION: "eu-west-1",
     PUZZLE: "https://y2x0n9e9ue.execute-api.eu-west-1.amazonaws.com/staging/puzzle",
-    SOLVE: "https://nrvt0b0zoc.execute-api.eu-west-1.amazonaws.com/staging/solvePuzzle"
+    SOLVE: "https://d8xwct5899.execute-api.eu-west-1.amazonaws.com/staging/solve"
   },
   cognito: {
     REGION: "eu-west-1",
@@ -40,7 +40,7 @@ const prod = {
   apiGateway: {
     REGION: "eu-west-1",
     PUZZLE: "https://935gfu062f.execute-api.eu-west-1.amazonaws.com/prod/puzzle",
-    SOLVE: "https://2qa0qpd1u4.execute-api.eu-west-1.amazonaws.com/prod/solvePuzzle"
+    SOLVE: "https://z7nmly1tg8.execute-api.eu-west-1.amazonaws.com/prod/solve"
   },
   cognito: {
     REGION: "eu-west-1",

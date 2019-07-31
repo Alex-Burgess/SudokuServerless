@@ -91,7 +91,7 @@ export default class Try extends Component {
   }
 
   solve(requestPuzzle) {
-    return API.post("solvePuzzle", "/", {
+    return API.post("solve", "/", {
       body: requestPuzzle
     });
   }

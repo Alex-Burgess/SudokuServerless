@@ -9,7 +9,7 @@
 			"name": "Local",
 			"item": [
 				{
-					"name": "solvePuzzle (Local)",
+					"name": "solve (Local)",
 					"event": [
 						{
 							"listen": "test",
@@ -69,8 +69,8 @@
 							{
 								"key": "Content-Type",
 								"name": "Content-Type",
-								"value": "application/json",
-								"type": "text"
+								"type": "text",
+								"value": "application/json"
 							}
 						],
 						"body": {
@@ -78,7 +78,7 @@
 							"raw": "{\n    \"puzzle_rows\":[\n        [0,8,0,0,6,4,7,0,3],\n        [7,2,0,5,0,3,6,9,8],\n        [0,0,0,0,0,2,4,1,0],\n        [0,0,0,0,0,7,0,0,9],\n        [0,9,6,3,0,8,1,5,0],\n        [8,0,0,1,0,0,0,0,0],\n        [0,4,2,8,0,0,0,0,0],\n        [9,7,8,6,0,5,0,4,1],\n        [6,0,5,4,7,0,0,8,0]\n    ]\n}"
 						},
 						"url": {
-							"raw": "http://127.0.0.1:3000/solvePuzzle",
+							"raw": "http://127.0.0.1:3000/solve",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -88,14 +88,14 @@
 							],
 							"port": "3000",
 							"path": [
-								"solvePuzzle"
+								"solve"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "tryNewPuzzle (Local)",
+					"name": "puzzle (Local)",
 					"event": [
 						{
 							"listen": "test",
@@ -149,7 +149,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:3000/tryNewPuzzle",
+							"raw": "http://127.0.0.1:3000/puzzle",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -159,14 +159,14 @@
 							],
 							"port": "3000",
 							"path": [
-								"tryNewPuzzle"
+								"puzzle"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "getNewPuzzleSolution (Local)",
+					"name": "puzzle with ID (Local)",
 					"event": [
 						{
 							"listen": "test",
@@ -233,7 +233,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:3000/getNewPuzzleSolution/1.json",
+							"raw": "http://127.0.0.1:3000/puzzle/1.json",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -243,7 +243,7 @@
 							],
 							"port": "3000",
 							"path": [
-								"getNewPuzzleSolution",
+								"puzzle",
 								"1.json"
 							]
 						}
@@ -256,7 +256,7 @@
 			"name": "Test",
 			"item": [
 				{
-					"name": "solvePuzzle (Test)",
+					"name": "solve (Test)",
 					"event": [
 						{
 							"listen": "test",
@@ -350,10 +350,10 @@
 							"raw": "{\n    \"puzzle_rows\":[\n        [0,8,0,0,6,4,7,0,3],\n        [7,2,0,5,0,3,6,9,8],\n        [0,0,0,0,0,2,4,1,0],\n        [0,0,0,0,0,7,0,0,9],\n        [0,9,6,3,0,8,1,5,0],\n        [8,0,0,1,0,0,0,0,0],\n        [0,4,2,8,0,0,0,0,0],\n        [9,7,8,6,0,5,0,4,1],\n        [6,0,5,4,7,0,0,8,0]\n    ]\n}"
 						},
 						"url": {
-							"raw": "https://vpt95x5u8b.execute-api.eu-west-1.amazonaws.com/test/solvePuzzle",
+							"raw": "https://dpb02w7qyi.execute-api.eu-west-1.amazonaws.com/test/solve",
 							"protocol": "https",
 							"host": [
-								"vpt95x5u8b",
+								"dpb02w7qyi",
 								"execute-api",
 								"eu-west-1",
 								"amazonaws",
@@ -361,14 +361,102 @@
 							],
 							"path": [
 								"test",
-								"solvePuzzle"
+								"solve"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "tryNewPuzzle (Test)",
+					"name": "solve with invalid puzzle (Test)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "29476423-2fd4-4ced-826d-06275364a50c",
+								"exec": [
+									"pm.test(\"response is ok\", function () {",
+									"    pm.response.to.have.status(500);",
+									"});",
+									"",
+									"pm.test(\"response must be valid and have a body\", function () {",
+									"     pm.response.to.be.error;",
+									"     ",
+									"     // assert that the response has a valid JSON body",
+									"     pm.response.to.be.withBody;",
+									"     pm.response.to.be.json; // this assertion also checks if a body  exists, so the above check is not needed",
+									"});",
+									"",
+									"pm.test(\"puzzle status should be an error\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var error = jsonData['error'];",
+									"    pm.expect(error).to.eql('Puzzle was not validated due to invalid row, column or grid.');",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "awsv4",
+							"awsv4": [
+								{
+									"key": "secretKey",
+									"value": "{{SecretKey}}",
+									"type": "string"
+								},
+								{
+									"key": "accessKey",
+									"value": "{{AccessKey}}",
+									"type": "string"
+								},
+								{
+									"key": "service",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "region",
+									"value": "eu-west-1",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"puzzle_rows\":[\n        [8,8,0,0,6,4,7,0,3],\n        [7,2,0,5,0,3,6,9,8],\n        [0,0,0,0,0,2,4,1,0],\n        [0,0,0,0,0,7,0,0,9],\n        [0,9,6,3,0,8,1,5,0],\n        [8,0,0,1,0,0,0,0,0],\n        [0,4,2,8,0,0,0,0,0],\n        [9,7,8,6,0,5,0,4,1],\n        [6,0,5,4,7,0,0,8,0]\n    ]\n}"
+						},
+						"url": {
+							"raw": "https://dpb02w7qyi.execute-api.eu-west-1.amazonaws.com/test/solve",
+							"protocol": "https",
+							"host": [
+								"dpb02w7qyi",
+								"execute-api",
+								"eu-west-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"test",
+								"solve"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "puzzle (Test)",
 					"event": [
 						{
 							"listen": "test",
@@ -438,10 +526,10 @@
 							}
 						],
 						"url": {
-							"raw": "https://hsjqb93qkh.execute-api.eu-west-1.amazonaws.com/test/tryNewPuzzle",
+							"raw": "https://8vsecano3i.execute-api.eu-west-1.amazonaws.com/test/puzzle",
 							"protocol": "https",
 							"host": [
-								"hsjqb93qkh",
+								"8vsecano3i",
 								"execute-api",
 								"eu-west-1",
 								"amazonaws",
@@ -449,14 +537,14 @@
 							],
 							"path": [
 								"test",
-								"tryNewPuzzle"
+								"puzzle"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "getNewPuzzleSolution (Test)",
+					"name": "puzzle with ID (Test)",
 					"event": [
 						{
 							"listen": "test",
@@ -533,10 +621,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://fh690lofdi.execute-api.eu-west-1.amazonaws.com/test/getNewPuzzleSolution/1.json",
+							"raw": "https://8vsecano3i.execute-api.eu-west-1.amazonaws.com/test/puzzle/1.json",
 							"protocol": "https",
 							"host": [
-								"fh690lofdi",
+								"8vsecano3i",
 								"execute-api",
 								"eu-west-1",
 								"amazonaws",
@@ -544,7 +632,7 @@
 							],
 							"path": [
 								"test",
-								"getNewPuzzleSolution",
+								"puzzle",
 								"1.json"
 							]
 						}
@@ -557,7 +645,7 @@
 			"name": "Staging",
 			"item": [
 				{
-					"name": "solvePuzzle (Staging)",
+					"name": "solve (Staging)",
 					"event": [
 						{
 							"listen": "test",
@@ -651,10 +739,10 @@
 							"raw": "{\n    \"puzzle_rows\":[\n        [0,8,0,0,6,4,7,0,3],\n        [7,2,0,5,0,3,6,9,8],\n        [0,0,0,0,0,2,4,1,0],\n        [0,0,0,0,0,7,0,0,9],\n        [0,9,6,3,0,8,1,5,0],\n        [8,0,0,1,0,0,0,0,0],\n        [0,4,2,8,0,0,0,0,0],\n        [9,7,8,6,0,5,0,4,1],\n        [6,0,5,4,7,0,0,8,0]\n    ]\n}"
 						},
 						"url": {
-							"raw": "https://nrvt0b0zoc.execute-api.eu-west-1.amazonaws.com/staging/solvePuzzle",
+							"raw": "https://d8xwct5899.execute-api.eu-west-1.amazonaws.com/staging/solve",
 							"protocol": "https",
 							"host": [
-								"nrvt0b0zoc",
+								"d8xwct5899",
 								"execute-api",
 								"eu-west-1",
 								"amazonaws",
@@ -662,14 +750,101 @@
 							],
 							"path": [
 								"staging",
-								"solvePuzzle"
+								"solve"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "tryNewPuzzle (Staging)",
+					"name": "solve with invalid puzzle (Staging)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "29476423-2fd4-4ced-826d-06275364a50c",
+								"exec": [
+									"pm.test(\"response is ok\", function () {",
+									"    pm.response.to.have.status(500);",
+									"});",
+									"",
+									"pm.test(\"response must be valid and have a body\", function () {",
+									"     pm.response.to.be.error;",
+									"     // assert that the response has a valid JSON body",
+									"     pm.response.to.be.withBody;",
+									"     pm.response.to.be.json; // this assertion also checks if a body  exists, so the above check is not needed",
+									"});",
+									"",
+									"pm.test(\"puzzle status should be an error\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var error = jsonData['error'];",
+									"    pm.expect(error).to.eql('Puzzle was not validated due to invalid row, column or grid.');",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "awsv4",
+							"awsv4": [
+								{
+									"key": "secretKey",
+									"value": "{{SecretKey}}",
+									"type": "string"
+								},
+								{
+									"key": "accessKey",
+									"value": "{{AccessKey}}",
+									"type": "string"
+								},
+								{
+									"key": "service",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "region",
+									"value": "eu-west-1",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"puzzle_rows\":[\n        [8,8,0,0,6,4,7,0,3],\n        [7,2,0,5,0,3,6,9,8],\n        [0,0,0,0,0,2,4,1,0],\n        [0,0,0,0,0,7,0,0,9],\n        [0,9,6,3,0,8,1,5,0],\n        [8,0,0,1,0,0,0,0,0],\n        [0,4,2,8,0,0,0,0,0],\n        [9,7,8,6,0,5,0,4,1],\n        [6,0,5,4,7,0,0,8,0]\n    ]\n}"
+						},
+						"url": {
+							"raw": "https://d8xwct5899.execute-api.eu-west-1.amazonaws.com/staging/solve",
+							"protocol": "https",
+							"host": [
+								"d8xwct5899",
+								"execute-api",
+								"eu-west-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"staging",
+								"solve"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "puzzle (Staging)",
 					"event": [
 						{
 							"listen": "test",
@@ -734,15 +909,15 @@
 						"header": [
 							{
 								"key": "auth",
-								"value": "allow",
-								"type": "text"
+								"type": "text",
+								"value": "allow"
 							}
 						],
 						"url": {
-							"raw": "https://ej4xecnx14.execute-api.eu-west-1.amazonaws.com/staging/tryNewPuzzle/",
+							"raw": "https://y2x0n9e9ue.execute-api.eu-west-1.amazonaws.com/staging/puzzle",
 							"protocol": "https",
 							"host": [
-								"ej4xecnx14",
+								"y2x0n9e9ue",
 								"execute-api",
 								"eu-west-1",
 								"amazonaws",
@@ -750,15 +925,14 @@
 							],
 							"path": [
 								"staging",
-								"tryNewPuzzle",
-								""
+								"puzzle"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "getNewPuzzleSolution (Staging)",
+					"name": "puzzle with ID (Staging)",
 					"event": [
 						{
 							"listen": "test",
@@ -835,10 +1009,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://pdkvj7254c.execute-api.eu-west-1.amazonaws.com/staging/getNewPuzzleSolution/1.json",
+							"raw": "https://y2x0n9e9ue.execute-api.eu-west-1.amazonaws.com/staging/puzzle/1.json",
 							"protocol": "https",
 							"host": [
-								"pdkvj7254c",
+								"y2x0n9e9ue",
 								"execute-api",
 								"eu-west-1",
 								"amazonaws",
@@ -846,7 +1020,7 @@
 							],
 							"path": [
 								"staging",
-								"getNewPuzzleSolution",
+								"puzzle",
 								"1.json"
 							]
 						}
@@ -859,7 +1033,7 @@
 			"name": "Prod",
 			"item": [
 				{
-					"name": "solvePuzzle (Prod)",
+					"name": "solve (Prod)",
 					"event": [
 						{
 							"listen": "test",
@@ -953,10 +1127,10 @@
 							"raw": "{\n    \"puzzle_rows\":[\n        [0,8,0,0,6,4,7,0,3],\n        [7,2,0,5,0,3,6,9,8],\n        [0,0,0,0,0,2,4,1,0],\n        [0,0,0,0,0,7,0,0,9],\n        [0,9,6,3,0,8,1,5,0],\n        [8,0,0,1,0,0,0,0,0],\n        [0,4,2,8,0,0,0,0,0],\n        [9,7,8,6,0,5,0,4,1],\n        [6,0,5,4,7,0,0,8,0]\n    ]\n}"
 						},
 						"url": {
-							"raw": "https://2qa0qpd1u4.execute-api.eu-west-1.amazonaws.com/prod/solvePuzzle",
+							"raw": "https://z7nmly1tg8.execute-api.eu-west-1.amazonaws.com/prod/solve",
 							"protocol": "https",
 							"host": [
-								"2qa0qpd1u4",
+								"z7nmly1tg8",
 								"execute-api",
 								"eu-west-1",
 								"amazonaws",
@@ -964,14 +1138,101 @@
 							],
 							"path": [
 								"prod",
-								"solvePuzzle"
+								"solve"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "tryNewPuzzle (Prod)",
+					"name": "solve with invalid puzzle (Prod)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "29476423-2fd4-4ced-826d-06275364a50c",
+								"exec": [
+									"pm.test(\"response is ok\", function () {",
+									"    pm.response.to.have.status(500);",
+									"});",
+									"",
+									"pm.test(\"response must be valid and have a body\", function () {",
+									"     pm.response.to.be.error;",
+									"     // assert that the response has a valid JSON body",
+									"     pm.response.to.be.withBody;",
+									"     pm.response.to.be.json; // this assertion also checks if a body  exists, so the above check is not needed",
+									"});",
+									"",
+									"pm.test(\"puzzle status should be an error\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var error = jsonData['error'];",
+									"    pm.expect(error).to.eql('Puzzle was not validated due to invalid row, column or grid.');",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "awsv4",
+							"awsv4": [
+								{
+									"key": "secretKey",
+									"value": "{{SecretKey}}",
+									"type": "string"
+								},
+								{
+									"key": "accessKey",
+									"value": "{{AccessKey}}",
+									"type": "string"
+								},
+								{
+									"key": "service",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "region",
+									"value": "eu-west-1",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"puzzle_rows\":[\n        [8,8,0,0,6,4,7,0,3],\n        [7,2,0,5,0,3,6,9,8],\n        [0,0,0,0,0,2,4,1,0],\n        [0,0,0,0,0,7,0,0,9],\n        [0,9,6,3,0,8,1,5,0],\n        [8,0,0,1,0,0,0,0,0],\n        [0,4,2,8,0,0,0,0,0],\n        [9,7,8,6,0,5,0,4,1],\n        [6,0,5,4,7,0,0,8,0]\n    ]\n}"
+						},
+						"url": {
+							"raw": "https://z7nmly1tg8.execute-api.eu-west-1.amazonaws.com/prod/solve",
+							"protocol": "https",
+							"host": [
+								"z7nmly1tg8",
+								"execute-api",
+								"eu-west-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"prod",
+								"solve"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "puzzle (Prod)",
 					"event": [
 						{
 							"listen": "test",
@@ -1035,10 +1296,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://wdygge7sq9.execute-api.eu-west-1.amazonaws.com/prod/tryNewPuzzle/",
+							"raw": "https://935gfu062f.execute-api.eu-west-1.amazonaws.com/prod/puzzle",
 							"protocol": "https",
 							"host": [
-								"wdygge7sq9",
+								"935gfu062f",
 								"execute-api",
 								"eu-west-1",
 								"amazonaws",
@@ -1046,15 +1307,14 @@
 							],
 							"path": [
 								"prod",
-								"tryNewPuzzle",
-								""
+								"puzzle"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "getNewPuzzleSolution (Prod)",
+					"name": "puzzle with ID (Prod)",
 					"event": [
 						{
 							"listen": "test",
@@ -1131,10 +1391,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://2lzeuedz07.execute-api.eu-west-1.amazonaws.com/prod/getNewPuzzleSolution/1.json",
+							"raw": "https://935gfu062f.execute-api.eu-west-1.amazonaws.com/prod/puzzle/1.json",
 							"protocol": "https",
 							"host": [
-								"2lzeuedz07",
+								"935gfu062f",
 								"execute-api",
 								"eu-west-1",
 								"amazonaws",
@@ -1142,36 +1402,8 @@
 							],
 							"path": [
 								"prod",
-								"getNewPuzzleSolution",
+								"puzzle",
 								"1.json"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Sudoku Solve Puzzle - Bad payload",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "'Test'"
-						},
-						"url": {
-							"raw": "https://djcfs5tzu5.execute-api.eu-west-1.amazonaws.com/Prod/solvePuzzle/",
-							"protocol": "https",
-							"host": [
-								"djcfs5tzu5",
-								"execute-api",
-								"eu-west-1",
-								"amazonaws",
-								"com"
-							],
-							"path": [
-								"Prod",
-								"solvePuzzle",
-								""
 							]
 						}
 					},

@@ -207,8 +207,8 @@ def api_gateway_event():
 
     return {
       "body": "{\"puzzle_rows\":[[0,8,0,0,6,4,7,0,3],[7,2,0,5,0,3,6,9,8],[0,0,0,0,0,2,4,1,0],[0,0,0,0,0,7,0,0,9],[0,9,6,3,0,8,1,5,0],[8,0,0,1,0,0,0,0,0],[0,4,2,8,0,0,0,0,0],[9,7,8,6,0,5,0,4,1],[6,0,5,4,7,0,0,8,0]]}",
-      "resource": "/solvePuzzle",
-      "path": "/solvePuzzle",
+      "resource": "/solve",
+      "path": "/solve",
       "httpMethod": "POST",
       "isBase64Encoded": "false",
       "queryStringParameters": {
@@ -260,8 +260,8 @@ def api_gateway_event():
           "userAgent": "Custom User Agent String",
           "user": "null"
         },
-        "path": "/solvePuzzle",
-        "resourcePath": "/solvePuzzle",
+        "path": "/solve",
+        "resourcePath": "/solve",
         "httpMethod": "POST",
         "apiId": "1234567890",
         "protocol": "HTTP/1.1"
@@ -504,7 +504,7 @@ def test_create_response():
     assert response == expected_response, "Create_response did not return the expected response value."
 
 
-class TestSolvePuzzleMain:
+class TestSolveMain:
     def test_solve_main_returns_response(self, api_gateway_event):
         response = solve.solve_main(api_gateway_event)
         assert response['statusCode'] == 200

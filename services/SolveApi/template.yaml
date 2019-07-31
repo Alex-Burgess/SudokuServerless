@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: Serverless resources for SolvePuzzle service
+Description: Serverless resources for Solve service
 
 Parameters:
   Environment:
@@ -121,7 +121,7 @@ Resources:
       Description: !Ref Description
       Role: !GetAtt FunctionRole.Arn
       Events:
-        SolvePuzzle:
+        Solve:
           Type: Api
           Properties:
             RestApiId: !Ref Api

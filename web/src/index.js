@@ -33,7 +33,7 @@ Amplify.configure({
         region: config.apiGateway.REGION
       },
       {
-        name: "solvePuzzle",
+        name: "solve",
         endpoint: config.apiGateway.SOLVE,
         region: config.apiGateway.REGION
       }

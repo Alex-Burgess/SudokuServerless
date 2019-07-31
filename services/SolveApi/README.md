@@ -13,42 +13,78 @@ See project [README](../../README.md) for architecture diagram.
 * Python dependencies, e.g. pytest, boto3, moto.
 * [Docker installed](https://www.docker.com/community-edition)
 
-## Getting Started
-### Build Bucket
-Create an S3 bucket to store the SAM builds:
+## Deployment
+1. Create an S3 bucket to store the SAM builds:
+    ```
+    aws cloudformation create-stack --stack-name sam-builds-solve --template-body file://sam-builds-bucket.yaml
+    ```
+1. Create a new build of the code:
+    ```
+    sam build
+    ```
+1. Test:
+    ```
+    sam local invoke Function --event events/solve_api_event.json
+    ```
+1. Package our Lambda function to S3:
+    ```
+    sam package \
+        --output-template-file packaged.yaml \
+        --s3-bucket sam-builds-solve
+    ```
+1.Create a Cloudformation Stack and deploy your SAM resources.
+    ```
+    sam deploy \
+        --template-file packaged.yaml \
+        --stack-name Service-Solve-test \
+        --capabilities CAPABILITY_NAMED_IAM
+    ```
+1. After deployment is complete you can run the following command to retrieve the API Gateway Endpoint URL:
+    ```
+    aws cloudformation describe-stacks \
+        --stack-name Service-Solve-test \
+        --query 'Stacks[].Outputs[?OutputKey==`ApiUrl`]' \
+        --output table
+    ```
+
+## Testing
+### Unit Testing
+Python version 3.6 is used with the lambda, so a matching local python environment is also used:
 ```
-aws cloudformation create-stack --stack-name sam-builds-solve --template-body file://sam-builds-bucket.yaml
+pyenv local 3.6.8
 ```
 
-sam local invoke Function --event events/solve_api_event.json
-
-sam build
-
-### Packaging and deployment
-Package our Lambda function to S3:
-
+To execute `pytest` against our `tests` folder to run our initial unit tests:
 ```
-sam package \
-    --output-template-file packaged.yaml \
-    --s3-bucket sam-builds-solve
+pytest
 ```
 
-Create a Cloudformation Stack and deploy your SAM resources.
-
+Test a specific file, class or test:
 ```
-sam deploy \
-    --template-file packaged.yaml \
-    --stack-name Service-Solve-test \
-    --capabilities CAPABILITY_NAMED_IAM
+File: pytest tests/test_solve.py
+Class: pytest tests/test_solve.py::TestSolveCompletePuzzles
+Unit Test: pytest tests/test_solve.py::TestSolveCompletePuzzles::test_solve_puzzle_easy
 ```
 
-After deployment is complete you can run the following command to retrieve the API Gateway Endpoint URL:
-```
-aws cloudformation describe-stacks \
-    --stack-name Service-Solve-test \
-    --query 'Stacks[].Outputs[?OutputKey==`ApiUrl`]' \
-    --output table
-```
+### Local Lambda Testing
+Local testing allows you to see how the function will work once deployed, e.g. with memory allocation and timeouts.
+
+1. Build:
+    ```
+    sam build
+    ```
+1. Invoke Function:
+    ```
+    sam local invoke Function --event events/solve_api_event.json
+    ```
+
+### Local API Testing
+Local testing of the API, ensures that API and lambda function are correctly configured.
+1. Start API
+    ```
+    sam local start-api
+    ```
+1. Use local endpoint in browser or with Postman: `http://localhost:3000/solve`
 
 ## Logging
 Get logs for last 10 minutes:
@@ -62,49 +98,6 @@ sam logs -n Function --tail
 ```
 
 See [SAM CLI Logging](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-logging.html) for more options.
-
-## Testing
-### Unit Testing
-To execute `pytest` against our `tests` folder to run our initial unit tests:
-```
-python -m pytest tests/ -v
-```
-
-### Local Lambda Testing
-Local testing allows you to see how the function will work once deployed, e.g. with memory allocation and timeouts.
-
-1. Build:
-    ```
-    sam build
-    ```
-1. Invoke Function (Option 1):
-    ```
-    sam local invoke --event events/api_solve_puzzle_event.json
-    ```
-1. Invoke Function with Name (Option 2):
-    ```
-    sam local invoke Function --event events/api_solve_puzzle_event.json
-    ```
-1. Invoke Function with stdin event (Option 3):
-    ```
-    echo '{"message": "Hey, are you there?" }' | sam local invoke
-    ```
-1. Invoke function with environment variables (Option 4).  In this example, we can specify the UNSOLVED_BUCKET_NAME environment variable, e.g. for testing purposes:
-    ```
-    echo '{"message": "Hey, are you there?" }' | sam local invoke --env-vars prod_env.json
-    ```
-
-### Local API Testing
-Local testing of the API, ensures that API and lambda function are correctly configured.
-1. Start API
-    ```
-    sam local start-api
-    ```
-1. Use local endpoint in browser or with Postman: `http://localhost:3000/getNewPuzzleSolution/1.json`
-1. (Optional) Just as with invoking functions, environment variables can also be specified for local api testing.
-    ```
-    sam local start-api --env-vars prod_env.json
-    ```
 
 ## Cleanup
 In order to delete our Serverless Application recently deployed you can use the following AWS CLI Command:
