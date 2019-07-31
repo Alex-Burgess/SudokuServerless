@@ -38,7 +38,7 @@ Split into following sections:
 1. Deploy React Application
     ```
     npm install
-    REACT_APP_STAGE=staging npm run build
+    REACT_APP_STAGE=test npm run build
     aws s3 sync build/ s3://test.sudokuless.com --delete
     ```
 

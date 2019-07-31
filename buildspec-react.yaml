@@ -10,7 +10,7 @@ phases:
       - npm install
   build:
     commands:
-      - REACT_APP_STAGE=staging npm run build
+      - REACT_APP_STAGE=${ENVIRONMENT} npm run build
   post_build:
     commands:
       - echo Uploaded to ${WEB_BUCKET}

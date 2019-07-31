@@ -7,6 +7,18 @@ Parameters:
     Default: sudoku
     AllowedPattern: "^[-a-z0-9]*$"
     ConstraintDescription: Application name can include numbers, lowercase letters, and hyphens (-).
+  WebBucketName:
+    Type: String
+    Description: Name of the web s3 bucket.
+    Default: sudokuless.com
+  CloudfrontStagingId:
+    Type: String
+    Description: Name of the web s3 bucket.
+    Default: E1JX82EWYYHQRT
+  CloudfrontProdId:
+    Type: String
+    Description: Name of the web s3 bucket.
+    Default: E2VSO5V8YCUZGI
   GitHubUser:
     Type: String
     Description: GitHub User
@@ -274,6 +286,19 @@ Resources:
               OutputArtifacts:
                 - Name: SolveStagingDeploy
               RunOrder: 2
+            - Name: ReactDeploy
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: '1'
+                Provider: CodeBuild
+              InputArtifacts:
+                - Name: SourceZip
+              OutputArtifacts:
+                - Name: StagingReactBuiltZip
+              Configuration:
+                ProjectName: !Sub ${ApplicationName}-React-Staging
+              RunOrder: 3
         - Name: Prod
           Actions:
             - Name: DeploymentApproval
@@ -345,6 +370,19 @@ Resources:
               OutputArtifacts:
                 - Name: SolveProdDeploy
               RunOrder: 3
+            - Name: ReactDeploy
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: '1'
+                Provider: CodeBuild
+              InputArtifacts:
+                - Name: SourceZip
+              OutputArtifacts:
+                - Name: ProdReactBuiltZip
+              Configuration:
+                ProjectName: !Sub ${ApplicationName}-React-Prod
+              RunOrder: 4
 
   SamBuildsCodeBuildProject:
     Type: AWS::CodeBuild::Project
@@ -378,7 +416,6 @@ Resources:
 
   UnitTestsCodeBuildProject:
     Type: AWS::CodeBuild::Project
-    # DependsOn: UnitTestsLogsGroup
     Properties:
       Name: !Sub ${ApplicationName}-UnitTests
       Description: Performs the unit testing of the lambda functions.
@@ -403,6 +440,82 @@ Resources:
           StreamName: UnitTests
       TimeoutInMinutes: 10
 
+  StagingReactCodeBuildProject:
+    Type: 'AWS::CodeBuild::Project'
+    Properties:
+      Name: !Sub ${ApplicationName}-React-Staging
+      Description: Builds react web application
+      Artifacts:
+        Type: CODEPIPELINE
+      Cache:
+        Type: LOCAL
+        Modes:
+        - LOCAL_DOCKER_LAYER_CACHE
+      Environment:
+        Type: LINUX_CONTAINER
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: 'aws/codebuild/standard:2.0'
+        EnvironmentVariables:
+          - Name: WEB_BUCKET
+            Value: !Sub 'staging.${WebBucketName}'
+          - Name: CLOUDFRONT_ID
+            Value: !Ref CloudfrontStagingId
+          - Name: ENVIRONMENT
+            Value: staging
+      ServiceRole: !GetAtt ReactBuildsRole.Arn
+      Source:
+        Type: CODEPIPELINE
+        BuildSpec: buildspec-react.yaml
+      LogsConfig:
+        CloudWatchLogs:
+          Status: ENABLED
+          GroupName: !Sub ${ApplicationName}-reactbuild-staging
+          StreamName: ReactBuild
+
+  ProdReactCodeBuildProject:
+    Type: 'AWS::CodeBuild::Project'
+    Properties:
+      Name: !Sub ${ApplicationName}-React-Prod
+      Description: Builds react web application
+      Artifacts:
+        Type: CODEPIPELINE
+      Cache:
+        Type: LOCAL
+        Modes:
+        - LOCAL_DOCKER_LAYER_CACHE
+      Environment:
+        Type: LINUX_CONTAINER
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: 'aws/codebuild/standard:2.0'
+        EnvironmentVariables:
+          - Name: WEB_BUCKET
+            Value: !Sub '${WebBucketName}'
+          - Name: CLOUDFRONT_ID
+            Value: !Ref CloudfrontProdId
+          - Name: ENVIRONMENT
+            Value: prod
+      ServiceRole: !GetAtt ReactBuildsRole.Arn
+      Source:
+        Type: CODEPIPELINE
+        BuildSpec: buildspec-react.yaml
+      LogsConfig:
+        CloudWatchLogs:
+          Status: ENABLED
+          GroupName: !Sub ${ApplicationName}-reactbuild-prod
+          StreamName: ReactBuild
+
+  StagingReactBuildLogsGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub ${ApplicationName}-reactbuild-staging
+      RetentionInDays: 30
+
+  ProdReactBuildLogsGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub ${ApplicationName}-reactbuild-prod
+      RetentionInDays: 30
+
   BuildLogsGroup:
     Type: AWS::Logs::LogGroup
     Properties:
@@ -414,6 +527,53 @@ Resources:
     Properties:
       LogGroupName: !Sub ${ApplicationName}-unittestlogs
       RetentionInDays: 30
+
+  ReactBuildsRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${ApplicationName}-ReactBuildsRole'
+      AssumeRolePolicyDocument:
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - codebuild.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: "/"
+      Policies:
+      - PolicyName: BuildServiceRolePolicy
+        PolicyDocument:
+          Statement:
+          - Effect: Allow
+            Action:
+              - logs:CreateLogGroup
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Resource:
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:${ApplicationName}-reactbuild-staging"
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:${ApplicationName}-reactbuild-staging:*"
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:${ApplicationName}-reactbuild-prod"
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:${ApplicationName}-reactbuild-prod:*"
+          - Effect: Allow
+            Action:
+              - s3:DeleteObject
+              - s3:PutObject
+              - s3:GetObject
+              - s3:GetObjectVersion
+              - s3:GetBucketVersioning
+              - s3:ListBucket
+            Resource:
+              - !Sub "arn:aws:s3:::${BuildArtifactsBucket}/*"
+              - !Sub "arn:aws:s3:::${WebBucketName}/*"
+              - !Sub "arn:aws:s3:::${WebBucketName}"
+              - !Sub "arn:aws:s3:::staging.${WebBucketName}/*"
+              - !Sub "arn:aws:s3:::staging.${WebBucketName}"
+          - Effect: Allow
+            Action:
+              - cloudfront:CreateInvalidation
+            Resource: '*'
+          Version: '2012-10-17'
 
   SamBuildsRole:
     Type: AWS::IAM::Role
