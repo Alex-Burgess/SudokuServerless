@@ -1,0 +1,26 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      nodejs: 8
+  pre_build:
+    commands:
+      - echo Installing NPM dependencies...
+      - npm install
+  build:
+    commands:
+      - cd web
+      - REACT_APP_STAGE=staging npm run build
+  post_build:
+    commands:
+      - echo Uploaded to ${WEB_BUCKET}
+      - aws s3 sync web/build/ s3://${WEB_BUCKET} --delete
+      # - echo Uploading to AssetsBucket
+      # - aws s3 cp --recursive ./web/build s3://${AssetsBucketName}/
+      # - aws s3 cp --cache-control="max-age=0, no-cache, no-store, must-revalidate" ./build/service-worker.js s3://${AssetsBucket}/
+      # - aws s3 cp --cache-control="max-age=0, no-cache, no-store, must-revalidate" ./build/index.html s3://${AssetsBucket}/
+      - aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_ID} --paths /index.html /service-worker.js
+artifacts:
+  files:
+    - '**/*'
+  base-directory: build
