@@ -14,7 +14,7 @@ phases:
   post_build:
     commands:
       - echo Uploaded to ${WEB_BUCKET}
-      - aws s3 sync web/build/ s3://${WEB_BUCKET} --delete
+      - aws s3 sync build/ s3://${WEB_BUCKET} --delete
       # - echo Uploading to AssetsBucket
       # - aws s3 cp --recursive ./web/build s3://${AssetsBucketName}/
       # - aws s3 cp --cache-control="max-age=0, no-cache, no-store, must-revalidate" ./build/service-worker.js s3://${AssetsBucket}/
