@@ -5,11 +5,11 @@ phases:
       nodejs: 8
   pre_build:
     commands:
+      - cd web
       - echo Installing NPM dependencies...
       - npm install
   build:
     commands:
-      - cd web
       - REACT_APP_STAGE=staging npm run build
   post_build:
     commands:
