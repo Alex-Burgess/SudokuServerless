@@ -10,7 +10,7 @@ The web component is written in React.  Further inspiration is taken from [AWS F
 ## Architecture
 The architecture in use is very similar to the diagrams in the [AWS Full Stack Template](https://github.com/awslabs/aws-full-stack-template).
 
-![alt text](../master/diagramsSudokuless.png "API Services")
+![alt text](../master/diagrams/Sudokuless.png "API Services")
 
 ## Deployment
 Split into following sections:
