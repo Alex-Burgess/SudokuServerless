@@ -914,10 +914,10 @@
 							}
 						],
 						"url": {
-							"raw": "https://y2x0n9e9ue.execute-api.eu-west-1.amazonaws.com/staging/puzzle",
+							"raw": "https://9hhdkgzgo9.execute-api.eu-west-1.amazonaws.com/staging/puzzle",
 							"protocol": "https",
 							"host": [
-								"y2x0n9e9ue",
+								"9hhdkgzgo9",
 								"execute-api",
 								"eu-west-1",
 								"amazonaws",
@@ -1009,10 +1009,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://y2x0n9e9ue.execute-api.eu-west-1.amazonaws.com/staging/puzzle/1.json",
+							"raw": "https://9hhdkgzgo9.execute-api.eu-west-1.amazonaws.com/staging/puzzle/1.json",
 							"protocol": "https",
 							"host": [
-								"y2x0n9e9ue",
+								"9hhdkgzgo9",
 								"execute-api",
 								"eu-west-1",
 								"amazonaws",

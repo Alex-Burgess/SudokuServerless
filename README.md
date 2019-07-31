@@ -62,8 +62,8 @@ A serverless website with a sudoku theme, based on [Build a Serverless Web App..
 
 Add data to puzzle buckets:
 ```
-aws s3 cp data/example_puzzles/ s3://sudoku-unsolved-puzzles-prod --recursive
-aws s3 cp data/example_puzzle_solutions/ s3://sudoku-unsolved-puzzle-solutions-prod --recursive
+aws s3 cp data/example_puzzles/ s3://sudokuless-unsolved-prod --recursive
+aws s3 cp data/example_puzzle_solutions/ s3://sudokuless-solved-prod --recursive
 ```
 
 ### React Commands

@@ -64,7 +64,8 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
-                  - s3:*
+                  - s3:PutObject
+                  - s3:GetObject
                   - cloudformation:CreateStack
                   - cloudformation:DescribeStacks
                   - cloudformation:DeleteStack
@@ -93,13 +94,46 @@ Resources:
         Version: '2012-10-17'
       Path: /
       Policies:
-        - PolicyName: CloudFormationRole
+        - PolicyName: ManageCloudFormation
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
               - Action:
-                  - lambda:*
-                  - apigateway:*
+                  - cloudformation:CreateStack
+                  - cloudformation:DescribeStacks
+                  - cloudformation:DeleteStack
+                  - cloudformation:UpdateStack
+                  - cloudformation:CreateChangeSet
+                  - cloudformation:ExecuteChangeSet
+                  - cloudformation:DeleteChangeSet
+                  - cloudformation:DescribeChangeSet
+                Effect: Allow
+                Resource: '*'
+        - PolicyName: ManageS3
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Action:
+                  - s3:GetObject
+                  - s3:CreateBucket
+                  - s3:DeleteBucket
+                  - s3:PutBucketPublicAccessBlock
+                Effect: Allow
+                Resource:
+                  - "arn:aws:s3:::sudokuless-solved-staging"
+                  - "arn:aws:s3:::sudokuless-solved-staging/*"
+                  - "arn:aws:s3:::sudokuless-unsolved-staging"
+                  - "arn:aws:s3:::sudokuless-unsolved-staging/*"
+                  - "arn:aws:s3:::sudokuless-solved-prod"
+                  - "arn:aws:s3:::sudokuless-solved-prod/*"
+                  - "arn:aws:s3:::sudokuless-unsolved-prod"
+                  - "arn:aws:s3:::sudokuless-unsolved-prod/*"
+                  - "arn:aws:s3:::sudoku-pipeline-artifacts/*"
+        - PolicyName: ManageIam
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Action:
                   - iam:ListRoles
                   - iam:ListPolicies
                   - iam:GetRole
@@ -115,20 +149,15 @@ Resources:
                   - iam:PutRolePolicy
                   - iam:DeleteRolePolicy
                   - iam:getRolePolicy
-                  - cloudformation:CreateStack
-                  - cloudformation:DescribeStacks
-                  - cloudformation:DeleteStack
-                  - cloudformation:UpdateStack
-                  - cloudformation:CreateChangeSet
-                  - cloudformation:ExecuteChangeSet
-                  - cloudformation:DeleteChangeSet
-                  - cloudformation:DescribeChangeSet
-                  - s3:*
-                  # - s3:GetObject
-                  # - s3:CreateBucket
-                  # - s3:DeleteBucket
-                  # - s3:PutBucketPolicy
-                  # - s3:PutPublicAccessBlock
+                Effect: Allow
+                Resource: '*'
+        - PolicyName: ManageServerless
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Action:
+                  - lambda:*
+                  - apigateway:*
                 Effect: Allow
                 Resource: '*'
 

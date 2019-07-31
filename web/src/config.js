@@ -20,7 +20,7 @@ const test = {
 const staging = {
   apiGateway: {
     REGION: "eu-west-1",
-    PUZZLE: "https://y2x0n9e9ue.execute-api.eu-west-1.amazonaws.com/staging/puzzle",
+    PUZZLE: "https://9hhdkgzgo9.execute-api.eu-west-1.amazonaws.com/staging/puzzle",
     SOLVE: "https://d8xwct5899.execute-api.eu-west-1.amazonaws.com/staging/solve"
   },
   cognito: {
