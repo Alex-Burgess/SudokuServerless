@@ -1,0 +1,19 @@
+version: 0.2
+
+# Requires following environment environment variables
+# POSTMAN
+# COLLECTION_ID
+# ENVIRONMENT_ID
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 8
+  pre_build:
+    commands:
+      # - cd web
+      - echo Installing Newman
+      - npm install -g newman
+  build:
+    commands:
+      - newman run https://api.getpostman.com/collections/${COLLECTION_ID}?apikey=$POSTMAN --environment https://api.getpostman.com/environments/${ENVIRONMENT_ID}?apikey=$POSTMAN
