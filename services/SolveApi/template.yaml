@@ -21,6 +21,16 @@ Parameters:
     Description: Description of service.
     Default: Takes an unsolved puzzle and returns the solution.
     Type: String
+  DomainName:
+    Description: Domain name for your website (example.com)
+    Type: String
+    AllowedPattern: "^[a-z0-9-]*.com$"
+    ConstraintDescription: Must be a web domain, ending in .com. Can include lower case letters, numbers and hypens.
+    Default: sudokuless.com
+
+Conditions:
+  Staging: !Equals [ !Ref Environment, staging ]
+  Prod: !Equals [ !Ref Environment, prod ]
 
 Resources:
   Api:
@@ -78,7 +88,9 @@ Resources:
                     responseParameters:
                       method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS,POST'"
                       method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                      method.response.header.Access-Control-Allow-Origin: !If [Prod, !Sub "'https://${DomainName}'",
+                                                                            !If [Staging, !Sub "'https://${Environment}.${DomainName}'", "'*'"]
+                                                                          ]
                     responseTemplates:
                       application/json: "{}\n"
                 requestTemplates:

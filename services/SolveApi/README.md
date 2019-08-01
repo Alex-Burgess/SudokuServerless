@@ -89,12 +89,12 @@ Local testing of the API, ensures that API and lambda function are correctly con
 ## Logging
 Get logs for last 10 minutes:
 ```
-sam logs -n Function
+sam logs -n Function --stack-name Service-Solve-Staging
 ```
 
 Tail logs, e.g. whilst executing function test:
 ```
-sam logs -n Function --tail
+sam logs -n Function --stack-name Service-Solve-Staging --tail
 ```
 
 See [SAM CLI Logging](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-logging.html) for more options.
