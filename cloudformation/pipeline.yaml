@@ -286,6 +286,17 @@ Resources:
               OutputArtifacts:
                 - Name: SolveStagingDeploy
               RunOrder: 2
+            - Name: PostmanTests
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: '1'
+                Provider: CodeBuild
+              InputArtifacts:
+                - Name: SourceZip
+              Configuration:
+                ProjectName: !Sub ${ApplicationName}-Postman-Staging
+              RunOrder: 3
             - Name: ReactDeploy
               ActionTypeId:
                 Category: Build
@@ -298,7 +309,7 @@ Resources:
                 - Name: StagingReactBuiltZip
               Configuration:
                 ProjectName: !Sub ${ApplicationName}-React-Staging
-              RunOrder: 3
+              RunOrder: 4
         - Name: Prod
           Actions:
             - Name: DeploymentApproval
@@ -370,6 +381,17 @@ Resources:
               OutputArtifacts:
                 - Name: SolveProdDeploy
               RunOrder: 3
+            - Name: PostmanTests
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: '1'
+                Provider: CodeBuild
+              InputArtifacts:
+                - Name: SourceZip
+              Configuration:
+                ProjectName: !Sub ${ApplicationName}-Postman-Prod
+              RunOrder: 4
             - Name: ReactDeploy
               ActionTypeId:
                 Category: Build
@@ -382,7 +404,7 @@ Resources:
                 - Name: ProdReactBuiltZip
               Configuration:
                 ProjectName: !Sub ${ApplicationName}-React-Prod
-              RunOrder: 4
+              RunOrder: 5
 
   SamBuildsCodeBuildProject:
     Type: AWS::CodeBuild::Project
@@ -504,6 +526,78 @@ Resources:
           GroupName: !Sub ${ApplicationName}-reactbuild-prod
           StreamName: ReactBuild
 
+  StagingPostmanCodeBuildProject:
+    Type: 'AWS::CodeBuild::Project'
+    Properties:
+      Name: !Sub ${ApplicationName}-Postman-Staging
+      Description: Performs integration testing via Postman API.
+      Artifacts:
+        Type: CODEPIPELINE
+      Cache:
+        Type: LOCAL
+        Modes:
+        - LOCAL_DOCKER_LAYER_CACHE
+      Environment:
+        Type: LINUX_CONTAINER
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: 'aws/codebuild/standard:2.0'
+        EnvironmentVariables:
+          - Name: COLLECTION_ID
+            Value: '{{resolve:ssm:/Postman/Staging/CollectionId:1}}'
+          - Name: ENVIRONMENT_ID
+            Value: '{{resolve:ssm:/Postman/Staging/EnvironmentId:1}}'
+      ServiceRole: !GetAtt PostmanBuildsRole.Arn
+      Source:
+        Type: CODEPIPELINE
+        BuildSpec: buildspec-postman.yaml
+      LogsConfig:
+        CloudWatchLogs:
+          Status: ENABLED
+          GroupName: !Sub ${ApplicationName}-postman-staging
+          StreamName: ReactBuild
+
+  ProdPostmanCodeBuildProject:
+    Type: 'AWS::CodeBuild::Project'
+    Properties:
+      Name: !Sub ${ApplicationName}-Postman-Prod
+      Description: Performs integration testing via Postman API.
+      Artifacts:
+        Type: CODEPIPELINE
+      Cache:
+        Type: LOCAL
+        Modes:
+        - LOCAL_DOCKER_LAYER_CACHE
+      Environment:
+        Type: LINUX_CONTAINER
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: 'aws/codebuild/standard:2.0'
+        EnvironmentVariables:
+          - Name: COLLECTION_ID
+            Value: '{{resolve:ssm:/Postman/Prod/CollectionId:1}}'
+          - Name: ENVIRONMENT_ID
+            Value: '{{resolve:ssm:/Postman/Prod/EnvironmentId:1}}'
+      ServiceRole: !GetAtt PostmanBuildsRole.Arn
+      Source:
+        Type: CODEPIPELINE
+        BuildSpec: buildspec-postman.yaml
+      LogsConfig:
+        CloudWatchLogs:
+          Status: ENABLED
+          GroupName: !Sub ${ApplicationName}-postman-prod
+          StreamName: ReactBuild
+
+  StagingPostmanBuildLogsGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub ${ApplicationName}-postman-staging
+      RetentionInDays: 30
+
+  ProdPostmanBuildLogsGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub ${ApplicationName}-postman-prod
+      RetentionInDays: 30
+
   StagingReactBuildLogsGroup:
     Type: AWS::Logs::LogGroup
     Properties:
@@ -527,6 +621,50 @@ Resources:
     Properties:
       LogGroupName: !Sub ${ApplicationName}-unittestlogs
       RetentionInDays: 30
+
+  PostmanBuildsRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${ApplicationName}-PostmanTestsRole'
+      AssumeRolePolicyDocument:
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - codebuild.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: "/"
+      Policies:
+      - PolicyName: BuildServiceRolePolicy
+        PolicyDocument:
+          Statement:
+          - Effect: Allow
+            Action:
+              - logs:CreateLogGroup
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Resource:
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:${ApplicationName}-postman-staging"
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:${ApplicationName}-postman-staging:*"
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:${ApplicationName}-postman-prod"
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:${ApplicationName}-postman-prod:*"
+          - Effect: Allow
+            Action:
+              - s3:DeleteObject
+              - s3:PutObject
+              - s3:GetObject
+              - s3:GetObjectVersion
+              - s3:GetBucketVersioning
+              - s3:ListBucket
+            Resource:
+              - !Sub "arn:aws:s3:::${BuildArtifactsBucket}/*"
+          - Effect: Allow
+            Action:
+              - ssm:GetParameters
+            Resource:
+              - "*"
+          Version: '2012-10-17'
 
   ReactBuildsRole:
     Type: AWS::IAM::Role
