@@ -3,8 +3,8 @@ version: 0.2
 env:
   parameter-store:
     POSTMAN: /Postman/Staging/Key
-    COLLECTION_ID: /Postman/${Environment}/CollectionId
-    ENVIRONMENT_ID: /Postman/Staging/EnvironmentId
+    # COLLECTION_ID: /Postman/${Environment}/CollectionId
+    # ENVIRONMENT_ID: /Postman/Staging/EnvironmentId
     # POSTMAN: /Postman/${Environment}/Key
     # COLLECTION_ID: /Postman/${Environment}/CollectionId
     # ENVIRONMENT_ID: /Postman/${Environment}/EnvironmentId
@@ -19,7 +19,7 @@ phases:
       - echo Installing Newman
       - npm install -g newman
       - echo Collection ID ${COLLECTION_ID}
-      - echo Environment ${Environment}
+      - echo Environment $ENVIRONMENT_ID
   build:
     commands:
       - newman run https://api.getpostman.com/collections/${COLLECTION_ID}?apikey=$POSTMAN --environment https://api.getpostman.com/environments/${ENVIRONMENT_ID}?apikey=$POSTMAN
