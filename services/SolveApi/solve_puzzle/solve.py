@@ -353,7 +353,7 @@ def create_response(code, message):
                 'body': message,
                 'headers': {
                     'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': 'https:staging.sudokuless.com'
+                    'Access-Control-Allow-Origin': 'https://staging.sudokuless.com'
                 }}
     logger.info("Returning response: {}".format(response))
     return response
