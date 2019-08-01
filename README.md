@@ -17,7 +17,7 @@ Split into following sections:
 1. Web infrastructure
 1. User authentication.
 1. API Services
-1. Pipeline - Covered in [CI/CD Pipeline](#ci/cd-pipeline))
+1. Pipeline - Covered in [CI/CD Pipeline](#cicd-pipeline)
 
 ### Web Infastructure
 1. Create Web stack:
@@ -126,6 +126,13 @@ A deployment pipeline is used to automate the build, packaging and deployment of
     ```
     aws ssm get-parameter --name "/Sudoku/github" --with-decryption
     ```
+1. Add Postman Collection and Environment IDs to parameter store (See [Postman](#Postman) reference commands for retrieving IDs.):
+    ```
+    aws ssm put-parameter --name /Postman/Staging/CollectionId --type String --value "6596444-38afc6ee-????"
+    aws ssm put-parameter --name /Postman/Staging/EnvironmentId --type String --value "6596444-ea7ff6c9-??????"
+    aws ssm put-parameter --name /Postman/Prod/CollectionId --type String --value "6596444-38afc6ee-????"
+    aws ssm put-parameter --name /Postman/Prod/EnvironmentId --type String --value "6596444-ea7ff6c9-??????"
+    ```
 1. Create the stack, using the cli to import the oauth token from the parameter store:
     ```
     aws cloudformation create-stack --stack-name Sudoku-Pipeline \
@@ -184,7 +191,11 @@ Browser test list:
 1. Solve page, invalid puzzle attempt.
 
 ### Integration Tests
-Postman is used to test the service APIs.  AWS SAM can also be used to test Lambda functions and APIs locally.  See the following for more information:
+Postman is used to test the service APIs.  AWS SAM can also be used to test Lambda functions and APIs locally.  
+
+See [Postman](#Postman) reference commands for details of running the tests using Newman the CLI tool.
+
+See the following for more information:
 * (Puzzle)[services/PuzzleApi/README.md]
 * (Solve)[services/SolveApi/README.md]
 
@@ -214,6 +225,32 @@ Build and Deploy to Production:
 ```
 REACT_APP_STAGE=prod npm run build
 aws s3 sync build/ s3://sudokuless.com --delete
+```
+
+### Postman
+Set a local environment variable for the Postman API key:
+```
+export POSTMAN=??????
+```
+
+To find your collection uid:
+```
+curl https://api.getpostman.com/collections?apikey=$POSTMAN
+```
+
+To find your environment uid:
+```
+curl https://api.getpostman.com/environments?apikey=$POSTMAN
+```
+
+Install Newman:
+```
+npm i newman -g;
+```
+
+Test a collection:
+```
+newman run https://api.getpostman.com/collections/<Collection UID>?apikey=$POSTMAN --environment https://api.getpostman.com/environments/<Environment UID>?apikey=$POSTMAN
 ```
 
 ### Create a new lambda/api service using SAM
