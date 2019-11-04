@@ -35,6 +35,15 @@ Parameters:
     Type: String
     NoEcho: true
     Description: Personal Access Token.
+  Staging:
+    Description: Create staging build resources and pipeline stage.
+    Default: false
+    Type: String
+    AllowedValues: [true, false]
+
+Conditions:
+  CreateStaging:
+    !Equals [true, !Ref Staging]
 
 Resources:
   BuildArtifactsBucket:
@@ -222,94 +231,97 @@ Resources:
                 ProjectName: !Ref UnitTestsCodeBuildProject
               InputArtifacts:
                 - Name: SourceZip
-        - Name: Staging
-          Actions:
-            - Name: Puzzle-CreateChangeSet
-              ActionTypeId:
-                Category: Deploy
-                Owner: AWS
-                Provider: CloudFormation
-                Version: "1"
-              Configuration:
-                ActionMode: CHANGE_SET_REPLACE
-                RoleArn: !GetAtt CFNRole.Arn
-                StackName: Service-Puzzle-Staging
-                ChangeSetName: Puzzle-Staging-ChangeSet
-                TemplatePath: BuiltZip::puzzle-packaged.yaml
-                Capabilities: CAPABILITY_NAMED_IAM
-                ParameterOverrides: '{ "Environment": "staging" }'
-              InputArtifacts:
-                - Name: BuiltZip
-              RunOrder: 1
-            - Name: Solve-CreateChangeSet
-              ActionTypeId:
-                Category: Deploy
-                Owner: AWS
-                Provider: CloudFormation
-                Version: "1"
-              Configuration:
-                ActionMode: CHANGE_SET_REPLACE
-                RoleArn: !GetAtt CFNRole.Arn
-                StackName: Service-Solve-Staging
-                ChangeSetName: Solve-Staging-ChangeSet
-                TemplatePath: BuiltZip::solve-packaged.yaml
-                Capabilities: CAPABILITY_NAMED_IAM
-                ParameterOverrides: '{ "Environment": "staging" }'
-              InputArtifacts:
-                - Name: BuiltZip
-              RunOrder: 1
-            - Name: Puzzle-ExecuteChangeSet
-              ActionTypeId:
-                Category: Deploy
-                Owner: AWS
-                Provider: CloudFormation
-                Version: "1"
-              Configuration:
-                ActionMode: CHANGE_SET_EXECUTE
-                RoleArn: !GetAtt CFNRole.Arn
-                StackName: Service-Puzzle-Staging
-                ChangeSetName: Puzzle-Staging-ChangeSet
-              OutputArtifacts:
-                - Name: PuzzleStagingDeploy
-              RunOrder: 2
-            - Name: Solve-ExecuteChangeSet
-              ActionTypeId:
-                Category: Deploy
-                Owner: AWS
-                Provider: CloudFormation
-                Version: "1"
-              Configuration:
-                ActionMode: CHANGE_SET_EXECUTE
-                RoleArn: !GetAtt CFNRole.Arn
-                StackName: Service-Solve-Staging
-                ChangeSetName: Solve-Staging-ChangeSet
-              OutputArtifacts:
-                - Name: SolveStagingDeploy
-              RunOrder: 2
-            - Name: PostmanTests
-              ActionTypeId:
-                Category: Build
-                Owner: AWS
-                Version: '1'
-                Provider: CodeBuild
-              InputArtifacts:
-                - Name: SourceZip
-              Configuration:
-                ProjectName: !Sub ${ApplicationName}-Postman-Staging
-              RunOrder: 3
-            - Name: ReactDeploy
-              ActionTypeId:
-                Category: Build
-                Owner: AWS
-                Version: '1'
-                Provider: CodeBuild
-              InputArtifacts:
-                - Name: SourceZip
-              OutputArtifacts:
-                - Name: StagingReactBuiltZip
-              Configuration:
-                ProjectName: !Sub ${ApplicationName}-React-Staging
-              RunOrder: 4
+        - !If
+          - CreateStaging
+          - Name: Staging
+            Actions:
+              - Name: Puzzle-CreateChangeSet
+                ActionTypeId:
+                  Category: Deploy
+                  Owner: AWS
+                  Provider: CloudFormation
+                  Version: "1"
+                Configuration:
+                  ActionMode: CHANGE_SET_REPLACE
+                  RoleArn: !GetAtt CFNRole.Arn
+                  StackName: Service-Puzzle-Staging
+                  ChangeSetName: Puzzle-Staging-ChangeSet
+                  TemplatePath: BuiltZip::puzzle-packaged.yaml
+                  Capabilities: CAPABILITY_NAMED_IAM
+                  ParameterOverrides: '{ "Environment": "staging" }'
+                InputArtifacts:
+                  - Name: BuiltZip
+                RunOrder: 1
+              - Name: Solve-CreateChangeSet
+                ActionTypeId:
+                  Category: Deploy
+                  Owner: AWS
+                  Provider: CloudFormation
+                  Version: "1"
+                Configuration:
+                  ActionMode: CHANGE_SET_REPLACE
+                  RoleArn: !GetAtt CFNRole.Arn
+                  StackName: Service-Solve-Staging
+                  ChangeSetName: Solve-Staging-ChangeSet
+                  TemplatePath: BuiltZip::solve-packaged.yaml
+                  Capabilities: CAPABILITY_NAMED_IAM
+                  ParameterOverrides: '{ "Environment": "staging" }'
+                InputArtifacts:
+                  - Name: BuiltZip
+                RunOrder: 1
+              - Name: Puzzle-ExecuteChangeSet
+                ActionTypeId:
+                  Category: Deploy
+                  Owner: AWS
+                  Provider: CloudFormation
+                  Version: "1"
+                Configuration:
+                  ActionMode: CHANGE_SET_EXECUTE
+                  RoleArn: !GetAtt CFNRole.Arn
+                  StackName: Service-Puzzle-Staging
+                  ChangeSetName: Puzzle-Staging-ChangeSet
+                OutputArtifacts:
+                  - Name: PuzzleStagingDeploy
+                RunOrder: 2
+              - Name: Solve-ExecuteChangeSet
+                ActionTypeId:
+                  Category: Deploy
+                  Owner: AWS
+                  Provider: CloudFormation
+                  Version: "1"
+                Configuration:
+                  ActionMode: CHANGE_SET_EXECUTE
+                  RoleArn: !GetAtt CFNRole.Arn
+                  StackName: Service-Solve-Staging
+                  ChangeSetName: Solve-Staging-ChangeSet
+                OutputArtifacts:
+                  - Name: SolveStagingDeploy
+                RunOrder: 2
+              - Name: PostmanTests
+                ActionTypeId:
+                  Category: Build
+                  Owner: AWS
+                  Version: '1'
+                  Provider: CodeBuild
+                InputArtifacts:
+                  - Name: SourceZip
+                Configuration:
+                  ProjectName: !Sub ${ApplicationName}-Postman-Staging
+                RunOrder: 3
+              - Name: ReactDeploy
+                ActionTypeId:
+                  Category: Build
+                  Owner: AWS
+                  Version: '1'
+                  Provider: CodeBuild
+                InputArtifacts:
+                  - Name: SourceZip
+                OutputArtifacts:
+                  - Name: StagingReactBuiltZip
+                Configuration:
+                  ProjectName: !Sub ${ApplicationName}-React-Staging
+                RunOrder: 4
+          - !Ref AWS::NoValue
         - Name: Prod
           Actions:
             - Name: DeploymentApproval
@@ -406,6 +418,7 @@ Resources:
                 ProjectName: !Sub ${ApplicationName}-React-Prod
               RunOrder: 5
 
+
   SamBuildsCodeBuildProject:
     Type: AWS::CodeBuild::Project
     DependsOn: BuildLogsGroup
@@ -464,6 +477,7 @@ Resources:
 
   StagingReactCodeBuildProject:
     Type: 'AWS::CodeBuild::Project'
+    Condition: CreateStaging
     Properties:
       Name: !Sub ${ApplicationName}-React-Staging
       Description: Builds react web application
@@ -528,6 +542,7 @@ Resources:
 
   StagingPostmanCodeBuildProject:
     Type: 'AWS::CodeBuild::Project'
+    Condition: CreateStaging
     Properties:
       Name: !Sub ${ApplicationName}-Postman-Staging
       Description: Performs integration testing via Postman API.
@@ -588,6 +603,7 @@ Resources:
 
   StagingPostmanBuildLogsGroup:
     Type: AWS::Logs::LogGroup
+    Condition: CreateStaging
     Properties:
       LogGroupName: !Sub ${ApplicationName}-postman-staging
       RetentionInDays: 30
@@ -600,6 +616,7 @@ Resources:
 
   StagingReactBuildLogsGroup:
     Type: AWS::Logs::LogGroup
+    Condition: CreateStaging
     Properties:
       LogGroupName: !Sub ${ApplicationName}-reactbuild-staging
       RetentionInDays: 30

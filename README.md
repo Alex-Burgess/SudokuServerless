@@ -146,6 +146,15 @@ A deployment pipeline is used to automate the build, packaging and deployment of
 aws cloudformation update-stack --stack-name Sudoku-Pipeline \
  --template-body file://pipeline.yaml \
  --capabilities CAPABILITY_NAMED_IAM \
+ --parameters ParameterKey=Staging,ParameterValue=true \
+    ParameterKey=GitHubToken,ParameterValue=`aws ssm get-parameter --name "/Sudoku/github" --with-decryption --query 'Parameter.Value' --output text`
+```
+
+Or without staging:
+```
+aws cloudformation update-stack --stack-name Sudoku-Pipeline \
+ --template-body file://pipeline.yaml \
+ --capabilities CAPABILITY_NAMED_IAM \
  --parameters ParameterKey=GitHubToken,ParameterValue=`aws ssm get-parameter --name "/Sudoku/github" --with-decryption --query 'Parameter.Value' --output text`
 ```
 
